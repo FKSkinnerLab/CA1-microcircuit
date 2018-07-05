@@ -8,29 +8,82 @@ clc
  
 f = fullfile('/home','melisagumus','Documents', ...
     'MATLAB','CA1_SimTracker','pyr',{...
+    'pyr_29097_1000';...
     'pyr_36884_1000';...
+    'pyr_52458_1000';...
     'pyr_68032_1000';...
     'pyr_83606_1000';...
     'pyr_99180_1000';...
     'pyr_106967_1000';...
     'pyr_114754_1000';...
+    'pyr_153689_1000';...
+    'pyr_177050_1000';...
     'pyr_200411_1000';...
     'pyr_254920_1000';...
     'pyr_286068_1000';...
-    'pyr_301642_1000'...
+    'pyr_301642_1000';...
+    'pyr_325003_1000'...
     },{...
+    'mytrace_29097_syns.dat';...
     'mytrace_36884_syns.dat';...
+    'mytrace_52458_syns.dat';...
     'mytrace_68032_syns.dat';...
     'mytrace_83606_syns.dat';...
     'mytrace_99180_syns.dat';...
     'mytrace_106967_syns.dat';...
     'mytrace_114754_syns.dat';...
+    'mytrace_153689_syns.dat';...
+    'mytrace_177050_syns.dat';...
     'mytrace_200411_syns.dat';...
     'mytrace_254920_syns.dat';...
     'mytrace_286068_syns.dat';...
-    'mytrace_301642_syns.dat'...
+    'mytrace_301642_syns.dat';...
+    'mytrace_325003_syns.dat'...
     });
 
+%% Alternative - does not work
+clear all 
+clc
+
+start_path = fullfile(matlabroot, '/home','melisagumus','Documents', ...
+    'MATLAB','CA1_SimTracker','pyr');
+topLevelFolder = uigetdir(start_path);
+if topLevelFolder == 0
+    return;
+end 
+
+% To get list of all subfolders
+allSubFolders = genpath(topLevelFolder);
+remain = allSubFolders;
+listOfFolderNames = {};
+while true
+    [singleSubFolder, remain] = strtok(remain, ';');
+    if isempty(singleSubFolder)
+        break;
+    end
+    listOfFolderNames = [listOfFolderNames singleSubFolder];
+end
+numberOfFolders = length(listOfFolderNames);
+
+% process text files in the folders
+for k = 1:numberOfFolders
+    thisFolder = listOfFolderNames{k};
+    fprintf('Processing folder %s\n', thisFolder);
+    
+    filePattern = sprintf('mytrace %s/*.dat', thisFolder);
+    baseFileNames = dir(filePattern);
+    numberOfFiles = length(baseFileNames);
+    
+    if numberOfFiles >= 1 
+        for f = 1:numberOfFiles
+            fullFileName = fullfile(thisFolder, baseFileNames{f}.name);
+            fprint('Processing text files %s\n', fullFileName);
+        end
+    else 
+        fprintf('Folder %s has no text files in it.\n', thisFolder);
+    end
+end 
+        
 
 %% 
 %cd C:\Users\Melisa\Documents\MATLAB\CA1_SimTracker\pyr\
@@ -38,44 +91,68 @@ f = fullfile('/home','melisagumus','Documents', ...
 %pyr_names = f.names;
 
 alldata = [];
-for m = 1:1:10
+for m = 1:1:15
     temp_data = readtable(f{m},'Delimiter','\t');
     temp_data = table2array(temp_data);
     alldata = [alldata temp_data];
 end
 
 data = mat2cell(alldata, 40000, ...
-    [12, 12, 12, 12, 12, 12, 12, 12, 12, 12]);
+    [12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12]);
 
 %% Creates a big table consists of inputs from AAC BiC PYR and BC in order
 
 M = [];
 test = [];
-for m = 1:10  % number of cells 
+for m = 1:15  % number of cells 
     for k = 2:12  % number of input 
-        [pks, locs] = findpeaks(abs(data{m}(:,k))); % peak detection 
-        temp = data{m}(:,k);
-        allrows = (1:40000)';
-        notpeak = setdiff(allrows,locs);
-        for t = 1:1:numel(notpeak)
-            element = notpeak(t,:);
-            temp(element,:) = 0;  
-        end 
-        if k == 2
-            AAC = abs(temp);
+        if k ==2
+            [pks, locs] = findpeaks(data{m}(:,k),'MinPeakDistance',4000); % peak detection with interval based threshold
+            allrows = (1:40000)';
+            notpeak = setdiff(allrows,locs);
+            for t = 1:1:numel(notpeak)
+                element = notpeak(t,:);
+                temp(element,:) = 0;
+            end 
+            AAC = temp;
         elseif k == 3
-            BiC = abs(temp);
+            [pks, locs] = findpeaks(data{m}(:,k),'MinPeakDistance',4000); % peak detection
+            temp = data{m}(:,k);
+            allrows = (1:40000)';
+            notpeak = setdiff(allrows,locs);
+            for t = 1:1:numel(notpeak)
+                element = notpeak(t,:);
+                temp(element,:) = 0;
+            end 
+            BiC = temp;
         elseif k == 8
-            PYR_cell = abs(temp);
-        elseif k == 9 
-            BC = abs(temp);       
-        end         
+            [pks, locs] = findpeaks(-data{m}(:,k),'MinPeakDistance',4000); % peak detection
+            temp = data{m}(:,k);
+            allrows = (1:40000)';
+            notpeak = setdiff(allrows,locs);
+            for t = 1:1:numel(notpeak)
+                element = notpeak(t,:);
+                temp(element,:) = 0;
+            end 
+            PYR = temp;
+        elseif k == 9
+            [pks, locs] = findpeaks(data{m}(:,k),'MinPeakDistance',4000); % peak detection
+            %findpeaks(data{m}(:,k),M
+            temp = data{m}(:,k);
+            allrows = (1:40000)';
+            notpeak = setdiff(allrows,locs);
+            for t = 1:1:numel(notpeak)
+                element = notpeak(t,:);
+                temp(element,:) = 0;
+            end 
+            BC = temp;
+        end 
     end 
-    M = [M AAC BiC PYR_cell BC];
+    M = [M AAC BiC PYR BC];
 end 
 
 allcells = mat2cell(M, 40000, ...
-    [4, 4, 4, 4, 4, 4, 4, 4, 4, 4]); 
+    [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4]); 
 
 %% Graph EPSCs on PYR
 
