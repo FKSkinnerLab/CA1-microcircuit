@@ -103,14 +103,14 @@ data = mat2cell(alldata, 40000, ...
 %% Creates a big table consists of inputs from AAC BiC PYR and BC in order
 
 M = [];
-test = [];
-peak_AAC = [];
-peak_BC = [];
-peak_PYR = [];
-peak_BiC = [];
+current_AAC = [];
+current_BC = [];
+current_PYR = [];
+current_BiC = [];
 for m = 1:15  % number of cells 
     for k = 2:12  % number of input 
         if k ==2
+            temp_current_AAC = data{m}(:,k);
             [pks, locs] = findpeaks(data{m}(:,k),'MinPeakDistance',4000); % peak detection with interval based threshold
             temp_AAC = data{m}(:,k);
             allrows = (1:40000)';
@@ -121,6 +121,7 @@ for m = 1:15  % number of cells
             end
             AAC = temp_AAC;
         elseif k == 3
+            temp_current_BiC = data{m}(:,k);
             [pks, locs] = findpeaks(data{m}(:,k),'MinPeakDistance',4000); % peak detection
             temp_BiC = data{m}(:,k);
             allrows = (1:40000)';
@@ -131,6 +132,7 @@ for m = 1:15  % number of cells
             end 
             BiC = temp_BiC;
         elseif k == 8
+            temp_current_PYR = data{m}(:,k);
             [pks, locs] = findpeaks(-data{m}(:,k),'MinPeakDistance',4000); % peak detection
             temp_PYR = data{m}(:,k);
             allrows = (1:40000)';
@@ -141,6 +143,7 @@ for m = 1:15  % number of cells
             end 
             PYR = temp_PYR;
         elseif k == 9
+            temp_current_BC = data{m}(:,k);
             [pks, locs] = findpeaks(data{m}(:,k),'MinPeakDistance',4000); % peak detection
             %findpeaks(data{m}(:,k),M
             temp_BC = data{m}(:,k);
@@ -152,7 +155,11 @@ for m = 1:15  % number of cells
             end 
             BC = temp_BC;
         end 
-    end 
+    end
+    current_AAC = [current_AAC temp_current_AAC];
+    current_PYR = [current_PYR temp_current_PYR];
+    current_BiC = [current_BiC temp_current_BiC];
+    current_BC = [current_BC temp_current_BC];
     M = [M AAC BiC PYR BC];
 end 
 
@@ -216,6 +223,7 @@ suptitle('IPSC Distribution from BC onto PYR')
 
 
 %% EPSCs from PYR
+
 EPSC = [];
 epsc = [];
 for i = 1:1:15 % number of PYR cells
@@ -245,35 +253,37 @@ errorbar(x,EPSC_mean,EPSC_std,'b','LineStyle','none')
 title('Mean Peak EPSC onto PYR cells','FontSize',15,'FontWeight','bold')
 
 %% IPSCs only from AAC
-IPSC_BC = [];
-ipsc_BC = [];
+
+IPSC_AAC = [];
+ipsc_AAC = [];
 for i = 1:1:15 % number of PYR cells
-    pks_ipsc_BC = allcells{i}(:,4);
-    pks_ipsc_BC(pks_ipsc_BC==0)=[];
-    ipsc_BC_mean = mean(pks_ipsc_BC);
-    ipsc_BC_std = std(pks_ipsc_BC);
-    ipsc_BC = [ipsc_BC_mean;ipsc_BC_std];
-    IPSC_BC = [IPSC_BC ipsc_BC];
+    pks_ipsc_AAC = allcells{i}(:,1);
+    pks_ipsc_AAC(pks_ipsc_AAC==0)=[];
+    ipsc_AAC_mean = mean(pks_ipsc_AAC);
+    ipsc_AAC_std = std(pks_ipsc_AAC);
+    ipsc_AAC = [ipsc_AAC_mean;ipsc_AAC_std];
+    IPSC_AAC = [IPSC_AAC ipsc_AAC];
 end 
 
-IPSC_BC = array2table(IPSC_BC);
-IPSC_BC.Properties.VariableNames = {'pyr1'...
+IPSC_AAC = array2table(IPSC_AAC);
+IPSC_AAC.Properties.VariableNames = {'pyr1'...
     'pyr2' 'pyr3' 'pyr4' 'pyr5' 'pyr6'...
     'pyr7' 'pyr8' 'pyr9' 'pyr10' 'pyr11'...
     'pyr12' 'pyr13' 'pyr14' 'pyr15'};
 
-subplot(2,2,4)
-IPSC_BC_mean = table2array(IPSC_BC(1,:));
-IPSC_BC_std = table2array(IPSC_BC(2,:));
-x = linspace(0,15,length(IPSC_BC_mean));
-scatter(x,IPSC_BC_mean,'black','filled');
+subplot(2,2,2)
+IPSC_AAC_mean = table2array(IPSC_AAC(1,:));
+IPSC_AAC_std = table2array(IPSC_AAC(2,:));
+x = linspace(0,15,length(IPSC_AAC_mean));
+scatter(x,IPSC_AAC_mean,'black','filled');
 xlabel('Individual PYR Cells','FontSize',13,'FontWeight','bold');
-ylabel('Mean Peak IPSC from BC','FontSize',13,'FontWeight','bold');
+ylabel('Mean Peak IPSC from AAC','FontSize',13,'FontWeight','bold');
 hold on;
-errorbar(x,IPSC_BC_mean,IPSC_BC_std,'b','LineStyle','none')
-title('Mean Peak IPSC from BC onto PYR cells','FontSize',15,'FontWeight','bold')
+errorbar(x,IPSC_AAC_mean,IPSC_AAC_std,'b','LineStyle','none')
+title('Mean Peak IPSC from AAC onto PYR cells','FontSize',15,'FontWeight','bold')
 
 %% IPSCs only from BiC
+
 IPSC_BiC = [];
 ipsc_BiC = [];
 for i = 1:1:15 % number of PYR cells
@@ -302,21 +312,90 @@ hold on;
 errorbar(x,IPSC_BiC_mean,IPSC_BiC_std,'b','LineStyle','none')
 title('Mean Peak IPSC from BiC onto PYR cells','FontSize',15,'FontWeight','bold')
 
-
-%% IPSCs only from BC
+%% IPSCs only from BC 
 
 IPSC_BC = [];
-for i = 1:1:10 % number of PYR cells
-    ipsc_bc = mean(allcells{i}(:,4));
-    IPSC_BC = [IPSC_BC ipsc_bc];
+ipsc_BC = [];
+for i = 1:1:15 % number of PYR cells
+    pks_ipsc_BC = allcells{i}(:,4);
+    pks_ipsc_BC(pks_ipsc_BC==0)=[];
+    ipsc_BC_mean = mean(pks_ipsc_BC);
+    ipsc_BC_std = std(pks_ipsc_BC);
+    ipsc_BC = [ipsc_BC_mean;ipsc_BC_std];
+    IPSC_BC = [IPSC_BC ipsc_BC];
 end 
 
 IPSC_BC = array2table(IPSC_BC);
 IPSC_BC.Properties.VariableNames = {'pyr1'...
-    'pyr2' 'pyr3' 'pyr4' 'pyr5' 'pyr6' 'pyr7' 'pyr8' 'pyr9' 'pyr10'};
+    'pyr2' 'pyr3' 'pyr4' 'pyr5' 'pyr6'...
+    'pyr7' 'pyr8' 'pyr9' 'pyr10' 'pyr11'...
+    'pyr12' 'pyr13' 'pyr14' 'pyr15'};
+
+subplot(2,2,4)
+IPSC_BC_mean = table2array(IPSC_BC(1,:));
+IPSC_BC_std = table2array(IPSC_BC(2,:));
+x = linspace(0,15,length(IPSC_BC_mean));
+scatter(x,IPSC_BC_mean,'black','filled');
+xlabel('Individual PYR Cells','FontSize',13,'FontWeight','bold');
+ylabel('Mean Peak IPSC from BC','FontSize',13,'FontWeight','bold');
+hold on;
+errorbar(x,IPSC_BC_mean,IPSC_BC_std,'b','LineStyle','none')
+title('Mean Peak IPSC from BC onto PYR cells','FontSize',15,'FontWeight','bold')
+
 
 %% all current onto PYR gathered
 
+% Sum all ipsc currents
+all_ipsc = [];
+for i = 1:1:15
+    tot_cur_ipsc = current_AAC(:,i) + current_BiC(:,i) + current_BC(:,i);
+    all_ipsc = [all_ipsc tot_cur_ipsc];
+end
+
+% Find the peaks of the summed ipsc currents
+peaks_all_PV = [];
+for k = 1:1:15
+    [pks, locs] = findpeaks(all_ipsc(:,k),'MinPeakDistance',4000); % peak detection
+    temp_cur = all_ipsc(:,k);
+    allrows = (1:40000)';
+    notpeak = setdiff(allrows,locs);
+    for t = 1:1:numel(notpeak)
+        element = notpeak(t,:);
+        temp_cur(element,:) = 0;
+    end
+    peaks_all = temp_cur;
+    peaks_all_PV = [peaks_all_PV peaks_all];
+end
+%% All ipsc currents together onto PYR
+
+IPSC_all = [];
+ipsc_all = [];
+for i = 1:1:15 % number of PYR cells
+    pks_ipsc_all = peaks_all_PV(:,i);
+    pks_ipsc_all(pks_ipsc_all == 0) = [];
+    ipsc_all_mean = mean(pks_ipsc_all);
+    ipsc_all_std = std(pks_ipsc_all);
+    ipsc_all = [ipsc_all_mean;ipsc_all_std];
+    IPSC_all = [IPSC_all ipsc_all];
+end 
+
+IPSC_all = array2table(IPSC_all);
+IPSC_all.Properties.VariableNames = {'pyr1'...
+    'pyr2' 'pyr3' 'pyr4' 'pyr5' 'pyr6'...
+    'pyr7' 'pyr8' 'pyr9' 'pyr10' 'pyr11'...
+    'pyr12' 'pyr13' 'pyr14' 'pyr15'};
+
+ 
+IPSC_all_mean = table2array(IPSC_all(1,:));
+IPSC_all_std = table2array(IPSC_all(2,:));
+x = linspace(0,15,length(IPSC_all_mean));
+figure
+scatter(x,IPSC_all_mean,'black','filled');
+xlabel('Individual PYR Cells','FontSize',13,'FontWeight','bold');
+ylabel('Mean Peak IPSC','FontSize',13,'FontWeight','bold');
+hold on;
+errorbar(x,IPSC_all_mean,IPSC_all_std,'b','LineStyle','none')
+title('Mean Peak IPSC from BC, BiC and AAC onto PYR cells','FontSize',15,'FontWeight','bold')
 
 
 %% Raster Plot for one neuron
