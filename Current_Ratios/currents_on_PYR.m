@@ -1,11 +1,11 @@
-% Load Data 
+% Load Data
 clear all
-clc 
+clc
 
 % datafile = '/home/melisagumus/Documents/MATLAB/CA1_SimTracker/pyr/pyr_36884_1000/mytrace_36884_syns.dat';
-% 
+%
 % ls('/home/melisagumus/Documents/MATLAB/CA1_SimTracker/pyr/pyr*1000');
- 
+
 f = fullfile('/home','melisagumus','Documents', ...
     'MATLAB','CA1_SimTracker','pyr',{...
     'pyr_29097_1000';...
@@ -42,7 +42,7 @@ f = fullfile('/home','melisagumus','Documents', ...
     });
 
 %% Alternative - does not work
-clear all 
+clear all
 clc
 
 start_path = fullfile(matlabroot, '/home','melisagumus','Documents', ...
@@ -50,7 +50,7 @@ start_path = fullfile(matlabroot, '/home','melisagumus','Documents', ...
 topLevelFolder = uigetdir(start_path);
 if topLevelFolder == 0
     return;
-end 
+end
 
 % To get list of all subfolders
 allSubFolders = genpath(topLevelFolder);
@@ -69,23 +69,23 @@ numberOfFolders = length(listOfFolderNames);
 for k = 1:numberOfFolders
     thisFolder = listOfFolderNames{k};
     fprintf('Processing folder %s\n', thisFolder);
-    
+
     filePattern = sprintf('mytrace %s/*.dat', thisFolder);
     baseFileNames = dir(filePattern);
     numberOfFiles = length(baseFileNames);
-    
-    if numberOfFiles >= 1 
+
+    if numberOfFiles >= 1
         for f = 1:numberOfFiles
             fullFileName = fullfile(thisFolder, baseFileNames{f}.name);
             fprint('Processing text files %s\n', fullFileName);
         end
-    else 
+    else
         fprintf('Folder %s has no text files in it.\n', thisFolder);
     end
-end 
-        
+end
 
-%% 
+
+%%
 %cd C:\Users\Melisa\Documents\MATLAB\CA1_SimTracker\pyr\
 %files = dir('pyr*1000\mytrace*syns.dat');
 %pyr_names = f.names;
@@ -107,8 +107,8 @@ current_AAC = [];
 current_BC = [];
 current_PYR = [];
 current_BiC = [];
-for m = 1:15  % number of cells 
-    for k = 2:12  % number of input 
+for m = 1:15  % number of cells
+    for k = 2:12  % number of input
         if k ==2
             temp_current_AAC = data{m}(:,k);
             [pks, locs] = findpeaks(data{m}(:,k),'MinPeakDistance',4000); % peak detection with interval based threshold
@@ -129,7 +129,7 @@ for m = 1:15  % number of cells
             for t = 1:1:numel(notpeak)
                 element = notpeak(t,:);
                 temp_BiC(element,:) = 0;
-            end 
+            end
             BiC = temp_BiC;
         elseif k == 8
             temp_current_PYR = data{m}(:,k);
@@ -140,7 +140,7 @@ for m = 1:15  % number of cells
             for t = 1:1:numel(notpeak)
                 element = notpeak(t,:);
                 temp_PYR(element,:) = 0;
-            end 
+            end
             PYR = temp_PYR;
         elseif k == 9
             temp_current_BC = data{m}(:,k);
@@ -152,23 +152,23 @@ for m = 1:15  % number of cells
             for t = 1:1:numel(notpeak)
                 element = notpeak(t,:);
                 temp_BC(element,:) = 0;
-            end 
+            end
             BC = temp_BC;
-        end 
+        end
     end
     current_AAC = [current_AAC temp_current_AAC];
     current_PYR = [current_PYR temp_current_PYR];
     current_BiC = [current_BiC temp_current_BiC];
     current_BC = [current_BC temp_current_BC];
     M = [M AAC BiC PYR BC];
-end 
+end
 
 allcells = mat2cell(M, 40000, ...
-    [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4]); 
+    [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4]);
 
 %% Graph EPSCs on PYR
 
-figure 
+figure
 for i = 1:1:10
     temp = allcells{i}(:,3);
     temp(temp == 0) = [];   %get rid of zeros
@@ -176,49 +176,49 @@ for i = 1:1:10
     histfit(temp)
     hold on
     title (['Pyr' num2str(i)]) % name each graph with the corresponding pyr #
-end 
+end
 suptitle('EPSC Distribution on PYR Cells')
 
 %% Graph IPSCs from AAC onto PYR
 
-figure 
+figure
 for i = 1:1:10
     temp = allcells{i}(:,1);
     temp(temp == 0) = [];   %get rid of zeros
-    subplot(5,2,i)  
+    subplot(5,2,i)
     histfit(temp,100)
     xlim([-2 2])
-    hold on 
+    hold on
     title (['Pyr' num2str(i)]) % name each graph with the corresponding pyr #
-end 
+end
 suptitle('IPSC Distribution from AAC onto PYR')
 
 %% Graph IPSCs from BiC onto PYR
 
-figure 
+figure
 for i = 1:1:10
     temp = allcells{i}(:,2);
     temp(temp == 0) = [];   %get rid of zeros
-    subplot(5,2,i)  
+    subplot(5,2,i)
     histfit(temp,50)
     xlim([-2 2])
-    hold on 
+    hold on
     title (['Pyr' num2str(i)]) % name each graph with the corresponding pyr #
-end 
+end
 suptitle('IPSC Distribution from BiC onto PYR')
 
 %% Graph IPSCs from BC onto PYR
 
-figure 
+figure
 for i = 1:1:10
     temp = allcells{i}(:,2);
     temp(temp == 0) = [];   %get rid of zeros
-    subplot(5,2,i)  
+    subplot(5,2,i)
     histfit(temp,50)
     xlim([-2 2])
-    hold on 
+    hold on
     title (['Pyr' num2str(i)]) % name each graph with the corresponding pyr #
-end 
+end
 suptitle('IPSC Distribution from BC onto PYR')
 
 
@@ -233,7 +233,7 @@ for i = 1:1:15 % number of PYR cells
     epsc_std = std(pks_epsc);
     epsc = [epsc_mean;epsc_std];
     EPSC = [EPSC epsc];
-end 
+end
 
 EPSC = array2table(EPSC);
 EPSC.Properties.VariableNames = {'pyr1'...
@@ -263,7 +263,7 @@ for i = 1:1:15 % number of PYR cells
     ipsc_AAC_std = std(pks_ipsc_AAC);
     ipsc_AAC = [ipsc_AAC_mean;ipsc_AAC_std];
     IPSC_AAC = [IPSC_AAC ipsc_AAC];
-end 
+end
 
 IPSC_AAC = array2table(IPSC_AAC);
 IPSC_AAC.Properties.VariableNames = {'pyr1'...
@@ -293,7 +293,7 @@ for i = 1:1:15 % number of PYR cells
     ipsc_BiC_std = std(pks_ipsc_BiC);
     ipsc_BiC = [ipsc_BiC_mean;ipsc_BiC_std];
     IPSC_BiC = [IPSC_BiC ipsc_BiC];
-end 
+end
 
 IPSC_BiC = array2table(IPSC_BiC);
 IPSC_BiC.Properties.VariableNames = {'pyr1'...
@@ -312,7 +312,7 @@ hold on;
 errorbar(x,IPSC_BiC_mean,IPSC_BiC_std,'b','LineStyle','none')
 title('Mean Peak IPSC from BiC onto PYR cells','FontSize',15,'FontWeight','bold')
 
-%% IPSCs only from BC 
+%% IPSCs only from BC
 
 IPSC_BC = [];
 ipsc_BC = [];
@@ -323,7 +323,7 @@ for i = 1:1:15 % number of PYR cells
     ipsc_BC_std = std(pks_ipsc_BC);
     ipsc_BC = [ipsc_BC_mean;ipsc_BC_std];
     IPSC_BC = [IPSC_BC ipsc_BC];
-end 
+end
 
 IPSC_BC = array2table(IPSC_BC);
 IPSC_BC.Properties.VariableNames = {'pyr1'...
@@ -378,7 +378,7 @@ for i = 1:1:15 % number of PYR cells
     ipsc_all_std = std(pks_ipsc_all);
     ipsc_all = [ipsc_all_mean;ipsc_all_std];
     IPSC_all = [IPSC_all ipsc_all];
-end 
+end
 
 IPSC_all = array2table(IPSC_all);
 IPSC_all.Properties.VariableNames = {'pyr1'...
@@ -386,7 +386,7 @@ IPSC_all.Properties.VariableNames = {'pyr1'...
     'pyr7' 'pyr8' 'pyr9' 'pyr10' 'pyr11'...
     'pyr12' 'pyr13' 'pyr14' 'pyr15'};
 
- 
+
 IPSC_all_mean = table2array(IPSC_all(1,:));
 IPSC_all_std = table2array(IPSC_all(2,:));
 x = linspace(0,15,length(IPSC_all_mean));
@@ -433,7 +433,7 @@ for i = 1:1:15 % number of PYR cells
     ipsc_AAC_BC_std = std(pks_ipsc_AAC_BC);
     ipsc_AAC_BC = [ipsc_AAC_BC_mean;ipsc_AAC_BC_std];
     IPSC_AAC_BC = [IPSC_AAC_BC ipsc_AAC_BC];
-end 
+end
 
 IPSC_AAC_BC = array2table(IPSC_AAC_BC);
 IPSC_AAC_BC.Properties.VariableNames = {'pyr1'...
@@ -441,7 +441,7 @@ IPSC_AAC_BC.Properties.VariableNames = {'pyr1'...
     'pyr7' 'pyr8' 'pyr9' 'pyr10' 'pyr11'...
     'pyr12' 'pyr13' 'pyr14' 'pyr15'};
 
- 
+
 IPSC_AAC_BC_mean = table2array(IPSC_AAC_BC(1,:));
 IPSC_AAC_BC_std = table2array(IPSC_AAC_BC(2,:));
 x = linspace(0,15,length(IPSC_AAC_BC_mean));
@@ -483,7 +483,7 @@ uitable('Data',Ratios_PYR{:,:},'ColumnName',Ratios_PYR.Properties.VariableNames,
     'Units', 'Normalized', 'Position',[0, 0, 1, 1]);
 
 
-%% Raster Plot for one neuron 
+%% Raster Plot for one neuron - NOT FIXED
 
 rasterfile = fullfile('/home','melisagumus','Documents', ...
                         'MATLAB','CA1_SimTracker','pyr',{...
@@ -522,18 +522,18 @@ num_spikes = raster.Var1';
 plot([var2; var2], [num_spikes; num_spikes], 'b')
 
 
-%% 
+%%
 t = raster(:,1);
 nspikes = numel(t);
 
 for ii = 1:nspikes
     line([t(ii) t(ii)]);%[8474 8475], 'Color', 'k');
-end 
+end
 
-%% 
+%%
 
 
-%% 
+%%
 pd = fitdist(AAC, 'Normal');
 mean_cell = mean(pd);
 x = 0:10:10000;
