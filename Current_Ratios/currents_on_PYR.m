@@ -6,8 +6,8 @@ clc
 %
 % ls('/home/melisagumus/Documents/MATLAB/CA1_SimTracker/pyr/pyr*1000');
 
-f = fullfile('/home','melisagumus','Documents', ...
-    'MATLAB','CA1_SimTracker','pyr',{...
+f = fullfile('C:\','Users','Melisa', ...
+    'Desktop','Netclamp','PYR','pyr',{...
     'pyr_29097_1000';...
     'pyr_36884_1000';...
     'pyr_52458_1000';...
@@ -107,6 +107,11 @@ current_AAC = [];
 current_BC = [];
 current_PYR = [];
 current_BiC = [];
+current_cck = [];
+current_ivy = [];
+current_ngf = [];
+current_olm = [];
+current_sca = [];
 for m = 1:15  % number of cells
     for k = 2:12  % number of input
         if k ==2
@@ -154,12 +159,27 @@ for m = 1:15  % number of cells
                 temp_BC(element,:) = 0;
             end
             BC = temp_BC;
+        elseif k == 4
+            temp_current_cck = data{m}(:,k);
+        elseif k == 5
+            temp_current_ivy = data{m}(:,k);
+        elseif k == 6
+            temp_current_ngf = data{m}(:,k);
+        elseif k == 7
+            temp_current_olm = data{m}(:,k);
+        elseif k == 10
+            temp_current_sca = data{m}(:,k);
         end
     end
     current_AAC = [current_AAC temp_current_AAC];
     current_PYR = [current_PYR temp_current_PYR];
     current_BiC = [current_BiC temp_current_BiC];
     current_BC = [current_BC temp_current_BC];
+    current_cck = [current_cck temp_current_cck];
+    current_ivy = [current_ivy temp_current_ivy];
+    current_ngf = [current_ngf temp_current_ngf];
+    current_olm = [current_olm temp_current_olm];
+    current_sca = [current_sca temp_current_sca];
     M = [M AAC BiC PYR BC];
 end
 
@@ -347,9 +367,22 @@ title('Mean Peak IPSC from BC onto PYR cells','FontSize',15,'FontWeight','bold')
 
 % Sum all ipsc currents
 all_ipsc = [];
+all_ipsc_together = [];
+
 for i = 1:1:15
     tot_cur_ipsc = current_AAC(:,i) + current_BiC(:,i) + current_BC(:,i);
+    tot_ipsc_together = current_BiC(:,i)...
+        +current_AAC(:,i)...
+        +current_BC(:,i)...
+        +current_cck(:,i)...
+        +current_ivy(:,i)...
+        +current_ngf(:,i)...
+        +current_olm(:,i)...
+        +current_sca(:,i);
+    
     all_ipsc = [all_ipsc tot_cur_ipsc];
+    all_ipsc_together = [all_ipsc_together tot_ipsc_together];
+
 end
 
 % Find the peaks of the summed ipsc currents
@@ -367,7 +400,21 @@ for k = 1:1:15
     peaks_all_PV = [peaks_all_PV peaks_all];
 end
 
-%% All ipsc currents together onto PYR - graph and table
+peaks_all_PV_together = [];
+for k = 1:1:15
+    [pks, locs] = findpeaks(all_ipsc_together(:,k),'MinPeakDistance',4000); % peak detection
+    temp_cur_together = all_ipsc_together(:,k);
+    allrows = (1:40000)';
+    notpeak = setdiff(allrows,locs);
+    for t = 1:1:numel(notpeak)
+        element = notpeak(t,:);
+        temp_cur(element,:) = 0;
+    end
+    peaks_all_together = temp_cur_together;
+    peaks_all_PV_together = [peaks_all_PV_together peaks_all_together];
+end
+
+%% All PV ipsc currents together onto PYR - graph and table
 
 IPSC_all = [];
 ipsc_all = [];
@@ -397,6 +444,36 @@ ylabel('Mean Peak IPSC','FontSize',13,'FontWeight','bold');
 hold on;
 errorbar(x,IPSC_all_mean,IPSC_all_std,'b','LineStyle','none')
 title('Mean Peak IPSC from BC, BiC and AAC onto PYR cells','FontSize',15,'FontWeight','bold')
+
+%% All ipsc currents together onto BC - graph and table
+
+IPSC_all_together = [];
+ipsc_all_together = [];
+for i = 1:1:15% number of PYR cells
+    pks_ipsc_all_together = peaks_all_PV_together(:,i);
+    pks_ipsc_all_together(pks_ipsc_all_together == 0) = [];
+    ipsc_all_mean_together = mean(pks_ipsc_all_together);
+    ipsc_all_std_together = std(pks_ipsc_all_together);
+    ipsc_all_together = [ipsc_all_mean_together;ipsc_all_std_together];
+    IPSC_all_together = [IPSC_all_together ipsc_all_together];
+end 
+
+IPSC_all_together = array2table(IPSC_all_together);
+IPSC_all_together.Properties.VariableNames = {'pyr1'...
+    'pyr2' 'pyr3' 'pyr4' 'pyr5' 'pyr6'...
+    'pyr7' 'pyr8' 'pyr9' 'pyr10' 'pyr11'...
+    'pyr12' 'pyr13' 'pyr14' 'pyr15'};
+ 
+IPSC_all_mean_together = table2array(IPSC_all_together(1,:));
+IPSC_all_std_together = table2array(IPSC_all_together(2,:));
+x = linspace(0,14,length(IPSC_all_mean_together));
+figure
+scatter(x,IPSC_all_mean_together,'black','filled');
+xlabel('Individual PYR Cells','FontSize',13,'FontWeight','bold');
+ylabel('Mean Peak IPSC','FontSize',13,'FontWeight','bold');
+hold on;
+errorbar(x,IPSC_all_mean_together,IPSC_all_std_together,'b','LineStyle','none')
+title('Mean Peak IPSC from all inhibitory cells onto PYR','FontSize',15,'FontWeight','bold')
 
 %% AAC and BC ipsc current onto PYR gathered
 
@@ -460,22 +537,25 @@ IPSC_AAC = table2array(IPSC_AAC);
 IPSC_BiC = table2array(IPSC_BiC);
 IPSC_BC = table2array(IPSC_BC);
 IPSC_all= table2array(IPSC_all);
-IPSC_AAC_BC = table2array(IPSC_AAC_BC);
+%IPSC_AAC_BC = table2array(IPSC_AAC_BC);
+IPSC_all_together= table2array(IPSC_all_together);
 EPSC = table2array(EPSC);
-
+%%
 Ratios_PYR = [];
 E_I_AAC = abs(EPSC(1,:)./IPSC_AAC(1,:))';
 E_I_BC = abs(EPSC(1,:)./IPSC_BC(1,:))';
 E_I_BiC = abs(EPSC(1,:)./IPSC_BiC(1,:))';
-E_I_AAC_BC = abs(EPSC(1,:)./IPSC_AAC_BC(1,:))';
+%E_I_AAC_BC = abs(EPSC(1,:)./IPSC_AAC_BC(1,:))';
 E_I_all = abs(EPSC(1,:)./IPSC_all(1,:))';
+E_I_all_together = abs(EPSC(1,:)./IPSC_all_together(1,:))';
+%%
 
 pyr = 1:15;
-Ratios_PYR = [pyr' E_I_AAC E_I_BC E_I_BiC E_I_AAC_BC E_I_all];
+Ratios_PYR = [pyr' E_I_AAC E_I_BC E_I_BiC E_I_all E_I_all_together];
 Ratios_PYR = array2table(Ratios_PYR);
 
-Ratios_PYR.Properties.VariableNames = {'pyr_no' 'Ratio_AAC_PYR'...
-    'Ratio_BC_PYR' 'Ratio_BiC_PYR' 'Ratio_AAC_BC_on_PYR' 'Ratio_All_PYR'};
+Ratios_PYR.Properties.VariableNames = {'pyr_no' 'Ratio_AAC_on_PYR'...
+    'Ratio_BC_on_PYR' 'Ratio_BiC_on_PYR' 'Ratio_AAC_BiC_BC_on_PYR' 'All_ipsc_onto_PYR'};
 
 %% Display the table as a figure
 
