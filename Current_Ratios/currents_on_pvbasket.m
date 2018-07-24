@@ -2,8 +2,8 @@
 clear all
 clc 
  
-f = fullfile('/home','melisagumus','Documents', ...
-    'MATLAB','CA1_SimTracker','pvbasket',{...
+f = fullfile('C:\','Users','Melisa', ...
+    'Desktop','Netclamp','BC','pvbasket',{...
     'pvbasket_332810_1000';...
     'pvbasket_333500_1000';...
     'pvbasket_333776_1000';...
@@ -100,6 +100,11 @@ M = [];
 current_BC = [];
 current_PYR = [];
 current_BiC = [];
+current_cck = [];
+current_ivy = [];
+current_ngf = [];
+current_olm = [];
+current_sca = [];
 for m = 1:14  % number of cells 
     for k = 2:12  % number of input 
         if k == 3
@@ -136,11 +141,27 @@ for m = 1:14  % number of cells
                 temp_BC(element,:) = 0;
             end 
             BC = temp_BC;
+        elseif k == 4
+            temp_current_cck = data{m}(:,k);
+        elseif k == 5
+            temp_current_ivy = data{m}(:,k);
+        elseif k == 6
+            temp_current_ngf = data{m}(:,k);
+        elseif k == 7
+            temp_current_olm = data{m}(:,k);
+        elseif k == 10
+            temp_current_sca = data{m}(:,k);
         end 
     end
     current_PYR = [current_PYR temp_current_PYR];
     current_BiC = [current_BiC temp_current_BiC];
     current_BC = [current_BC temp_current_BC];
+    current_cck = [current_cck temp_current_cck];
+    current_ivy = [current_ivy temp_current_ivy];
+    current_ngf = [current_ngf temp_current_ngf];
+    current_olm = [current_olm temp_current_olm];
+    current_sca = [current_sca temp_current_sca];
+
     M = [M BiC PYR BC];
 end 
 
@@ -206,7 +227,7 @@ EPSC = array2table(EPSC);
 EPSC.Properties.VariableNames = {'BC1'...
     'BC2' 'BC3' 'BC4' 'BC5' 'BC6'...
     'BC7' 'BC8' 'BC9' 'BC10' 'BC11'...
-    'BC12' 'BC13' 'BC14' 'BC15'};
+    'BC12' 'BC13' 'BC14'};
 
 subplot(3,1,1)
 EPSC_mean = table2array(EPSC(1,:));
@@ -237,7 +258,7 @@ IPSC_BiC = array2table(IPSC_BiC);
 IPSC_BiC.Properties.VariableNames = {'BC1'...
     'BC2' 'BC3' 'BC4' 'BC5' 'BC6'...
     'BC7' 'BC8' 'BC9' 'BC10' 'BC11'...
-    'BC12' 'BC13' 'BC14' 'BC15'};
+    'BC12' 'BC13' 'BC14'};
 
 
 subplot(3,1,2)
@@ -268,7 +289,7 @@ IPSC_BC = array2table(IPSC_BC);
 IPSC_BC.Properties.VariableNames = {'BC1'...
     'BC2' 'BC3' 'BC4' 'BC5' 'BC6'...
     'BC7' 'BC8' 'BC9' 'BC10' 'BC11'...
-    'BC12' 'BC13' 'BC14' 'BC15'};
+    'BC12' 'BC13' 'BC14'};
 
 
 subplot(3,1,3)
@@ -283,13 +304,23 @@ errorbar(x,IPSC_BC_mean,IPSC_BC_std,'b','LineStyle','none')
 title('Mean Peak IPSC from BC onto BC','FontSize',15,'FontWeight','bold')
 
 
-%% BC and BiC ipsc current onto BC gathered
+%% ipsc current onto BC gathered
 
 % Sum all ipsc currents
 all_ipsc = [];
+all_ipsc_together = [];
 for i = 1:1:14
     tot_cur_ipsc =  current_BiC(:,i) + current_BC(:,i);
+    tot_ipsc_together = current_BiC(:,i)...
+        +current_BC(:,i)...
+        +current_cck(:,i)...
+        +current_ivy(:,i)...
+        +current_ngf(:,i)...
+        +current_olm(:,i)...
+        +current_sca(:,i);
+        
     all_ipsc = [all_ipsc tot_cur_ipsc];
+    all_ipsc_together = [all_ipsc_together tot_ipsc_together];
 end
 
 % Find the peaks of the summed ipsc currents
@@ -305,6 +336,20 @@ for k = 1:1:14
     end
     peaks_all = temp_cur;
     peaks_all_PV = [peaks_all_PV peaks_all];
+end
+
+peaks_all_PV_together = [];
+for k = 1:1:14
+    [pks, locs] = findpeaks(all_ipsc_together(:,k),'MinPeakDistance',4000); % peak detection
+    temp_cur_together = all_ipsc_together(:,k);
+    allrows = (1:40000)';
+    notpeak = setdiff(allrows,locs);
+    for t = 1:1:numel(notpeak)
+        element = notpeak(t,:);
+        temp_cur(element,:) = 0;
+    end
+    peaks_all_together = temp_cur_together;
+    peaks_all_PV_together = [peaks_all_PV_together peaks_all_together];
 end
 
 %% BC and BiC ipsc currents together onto BC - graph and table
@@ -324,7 +369,7 @@ IPSC_all = array2table(IPSC_all);
 IPSC_all.Properties.VariableNames = {'BC1'...
     'BC2' 'BC3' 'BC4' 'BC5' 'BC6'...
     'BC7' 'BC8' 'BC9' 'BC10' 'BC11'...
-    'BC12' 'BC13' 'BC14' 'BC15'};
+    'BC12' 'BC13' 'BC14'};
 
 
  
@@ -339,25 +384,57 @@ hold on;
 errorbar(x,IPSC_all_mean,IPSC_all_std,'b','LineStyle','none')
 title('Mean Peak IPSC from BC and BiC onto BC','FontSize',15,'FontWeight','bold')
 
+%% All ipsc currents together onto BC - graph and table
+
+IPSC_all_together = [];
+ipsc_all_together = [];
+for i = 1:1:14 % number of PYR cells
+    pks_ipsc_all_together = peaks_all_PV_together(:,i);
+    pks_ipsc_all_together(pks_ipsc_all_together == 0) = [];
+    ipsc_all_mean_together = mean(pks_ipsc_all_together);
+    ipsc_all_std_together = std(pks_ipsc_all_together);
+    ipsc_all_together = [ipsc_all_mean_together;ipsc_all_std_together];
+    IPSC_all_together = [IPSC_all_together ipsc_all_together];
+end 
+
+IPSC_all_together = array2table(IPSC_all_together);
+IPSC_all_together.Properties.VariableNames = {'BC1'...
+    'BC2' 'BC3' 'BC4' 'BC5' 'BC6'...
+    'BC7' 'BC8' 'BC9' 'BC10' 'BC11'...
+    'BC12' 'BC13' 'BC14'};
+ 
+IPSC_all_mean_together = table2array(IPSC_all_together(1,:));
+IPSC_all_std_together = table2array(IPSC_all_together(2,:));
+x = linspace(0,14,length(IPSC_all_mean_together));
+figure
+scatter(x,IPSC_all_mean_together,'black','filled');
+xlabel('Individual Basket Cells','FontSize',13,'FontWeight','bold');
+ylabel('Mean Peak IPSC','FontSize',13,'FontWeight','bold');
+hold on;
+errorbar(x,IPSC_all_mean_together,IPSC_all_std_together,'b','LineStyle','none')
+title('Mean Peak IPSC from all inhibitory cells onto BC','FontSize',15,'FontWeight','bold')
+
 
 %% E/I Ratios on PYR Cells
 
 IPSC_BiC = table2array(IPSC_BiC);
 IPSC_BC = table2array(IPSC_BC);
 IPSC_all= table2array(IPSC_all);  % all refers to BC and BiC together
+IPSC_all_together= table2array(IPSC_all_together);
 EPSC = table2array(EPSC);
 
 Ratios_BC = [];
 E_I_BC = abs(EPSC(1,:)./IPSC_BC(1,:))';
 E_I_BiC = abs(EPSC(1,:)./IPSC_BiC(1,:))';
-E_I_all = abs(EPSC(1,:)./IPSC_all(1,:))'; 
- 
+E_I_all = abs(EPSC(1,:)./IPSC_all(1,:))';
+E_I_all_together = abs(EPSC(1,:)./IPSC_all_together(1,:))';
+
 bc = 1:14;
-Ratios_BC = [Ratios_BC bc' E_I_BC E_I_BiC E_I_all];
+Ratios_BC = [Ratios_BC bc' E_I_BC E_I_BiC E_I_all E_I_all_together];
 Ratios_BC = array2table(Ratios_BC);
  
-Ratios_BC.Properties.VariableNames = {'BC_no' 'Ratio_BC_BC'...
-    'Ratio_BiC_BC' 'Ratio_All_BC'};
+Ratios_BC.Properties.VariableNames = {'BC_no' 'Ratio_BC_on_BC'...
+    'Ratio_BiC_on_BC' 'Ratio_BC_BiC_on_BC' 'All_ipsc_onto_BC'};
 
 %% Display the table as a figure
 
