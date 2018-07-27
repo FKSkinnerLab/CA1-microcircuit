@@ -6,8 +6,8 @@ clc
 %
 % ls('/home/melisagumus/Documents/MATLAB/CA1_SimTracker/pyr/pyr*1000');
 
-f = fullfile('C:\','Users','Melisa', ...
-    'Desktop','Netclamp','PYR','pyr',{...
+f = fullfile('/Users','macklabadmin','Documents', ...
+    'other','pyr',{...
     'pyr_29097_1000';...
     'pyr_36884_1000';...
     'pyr_52458_1000';...
@@ -272,6 +272,11 @@ hold on;
 errorbar(x,EPSC_mean,EPSC_std,'b','LineStyle','none')
 title('Mean Peak EPSC onto PYR cells','FontSize',15,'FontWeight','bold')
 
+%% Display the table as a figure
+
+uitable('Data',EPSC{:,:},'ColumnName',EPSC.Properties.VariableNames,...
+    'Units', 'Normalized', 'Position',[0, 0, 1, 1]);
+
 %% IPSCs only from AAC
 
 IPSC_AAC = [];
@@ -301,6 +306,11 @@ ylabel('Mean Peak IPSC from AAC','FontSize',13,'FontWeight','bold');
 hold on;
 errorbar(x,IPSC_AAC_mean,IPSC_AAC_std,'b','LineStyle','none')
 title('Mean Peak IPSC from AAC onto PYR cells','FontSize',15,'FontWeight','bold')
+
+%% Display the table as a figure
+
+uitable('Data',IPSC_AAC{:,:},'ColumnName', IPSC_AAC.Properties.VariableNames,...
+    'Units', 'Normalized', 'Position',[0, 0, 1, 1]);
 
 %% IPSCs only from BiC
 
@@ -332,6 +342,11 @@ hold on;
 errorbar(x,IPSC_BiC_mean,IPSC_BiC_std,'b','LineStyle','none')
 title('Mean Peak IPSC from BiC onto PYR cells','FontSize',15,'FontWeight','bold')
 
+%% Display the table as a figure
+
+uitable('Data',IPSC_BiC{:,:},'ColumnName', IPSC_BiC.Properties.VariableNames,...
+    'Units', 'Normalized', 'Position',[0, 0, 1, 1]);
+
 %% IPSCs only from BC
 
 IPSC_BC = [];
@@ -362,6 +377,10 @@ hold on;
 errorbar(x,IPSC_BC_mean,IPSC_BC_std,'b','LineStyle','none')
 title('Mean Peak IPSC from BC onto PYR cells','FontSize',15,'FontWeight','bold')
 
+%% Display the table as a figure
+
+uitable('Data',IPSC_BC{:,:},'ColumnName', IPSC_BC.Properties.VariableNames,...
+    'Units', 'Normalized', 'Position',[0, 0, 1, 1]);
 
 %% all ipsc current onto PYR gathered
 
@@ -445,7 +464,12 @@ hold on;
 errorbar(x,IPSC_all_mean,IPSC_all_std,'b','LineStyle','none')
 title('Mean Peak IPSC from BC, BiC and AAC onto PYR cells','FontSize',15,'FontWeight','bold')
 
-%% All ipsc currents together onto BC - graph and table
+%% Display the table as a figure
+
+uitable('Data',IPSC_all{:,:},'ColumnName', IPSC_all.Properties.VariableNames,...
+    'Units', 'Normalized', 'Position',[0, 0, 1, 1]);
+
+%% All ipsc currents together onto PYR - graph and table
 
 IPSC_all_together = [];
 ipsc_all_together = [];
@@ -474,6 +498,12 @@ ylabel('Mean Peak IPSC','FontSize',13,'FontWeight','bold');
 hold on;
 errorbar(x,IPSC_all_mean_together,IPSC_all_std_together,'b','LineStyle','none')
 title('Mean Peak IPSC from all inhibitory cells onto PYR','FontSize',15,'FontWeight','bold')
+
+%% Display the table as a figure
+
+uitable('Data',IPSC_all_together{:,:},'ColumnName', IPSC_all_together.Properties.VariableNames,...
+    'Units', 'Normalized', 'Position',[0, 0, 1, 1]);
+
 
 %% AAC and BC ipsc current onto PYR gathered
 
@@ -529,6 +559,11 @@ ylabel('Mean Peak IPSC','FontSize',13,'FontWeight','bold');
 hold on;
 errorbar(x,IPSC_all_mean,IPSC_all_std,'b','LineStyle','none')
 title('Mean Peak IPSC from BC and AAC onto PYR cells','FontSize',15,'FontWeight','bold')
+
+%% Display the table as a figure
+
+uitable('Data',IPSC_AAC_BC{:,:},'ColumnName', IPSC_AAC_BC.Properties.VariableNames,...
+    'Units', 'Normalized', 'Position',[0, 0, 1, 1]);
 
 
 %% E/I Ratios on PYR Cells
