@@ -2,8 +2,8 @@
 clear all
 clc 
  
-f = fullfile('C:\','Users','Melisa', ...
-    'Desktop','Netclamp','AAC','AAC',{...
+f = fullfile('/Users','macklabadmin','Documents', ...
+    'other','AAC',{...
     'AAC_0_1000';...
     'AAC_36_1000';...
     'AAC_180_1000';...
@@ -240,6 +240,9 @@ ylabel('Mean Peak EPSC','FontSize',13,'FontWeight','bold');
 hold on;
 errorbar(x,EPSC_mean,EPSC_std,'b','LineStyle','none')
 title('Mean Peak EPSC onto AAC','FontSize',15,'FontWeight','bold')
+%%
+uitable('Data',EPSC{:,:},'ColumnName',EPSC.Properties.VariableNames,...
+    'Units', 'Normalized', 'Position',[0, 0, 1, 1]);
 
 
 %% IPSCs only from BiC
@@ -272,6 +275,11 @@ hold on;
 errorbar(x,IPSC_BiC_mean,IPSC_BiC_std,'b','LineStyle','none')
 title('Mean Peak IPSC from BiC onto AAC','FontSize',15,'FontWeight','bold')
 
+%%
+uitable('Data',IPSC_BiC{:,:},'ColumnName',IPSC_BiC.Properties.VariableNames,...
+    'Units', 'Normalized', 'Position',[0, 0, 1, 1]);
+
+
 %% IPSCs only from BC 
 
 IPSC_BC = [];
@@ -301,6 +309,10 @@ ylabel('Mean Peak IPSC from BC','FontSize',13,'FontWeight','bold');
 hold on;
 errorbar(x,IPSC_BC_mean,IPSC_BC_std,'b','LineStyle','none')
 title('Mean Peak IPSC from BC onto AAC','FontSize',15,'FontWeight','bold')
+
+%%
+uitable('Data',IPSC_BC{:,:},'ColumnName',IPSC_BC.Properties.VariableNames,...
+    'Units', 'Normalized', 'Position',[0, 0, 1, 1]);
 
 
 %% BC and BiC ipsc current onto AAC gathered
@@ -382,6 +394,10 @@ hold on;
 errorbar(x,IPSC_all_mean,IPSC_all_std,'b','LineStyle','none')
 title('Mean Peak IPSC from BC and BiC onto AAC','FontSize',15,'FontWeight','bold')
 
+%%
+uitable('Data',IPSC_all{:,:},'ColumnName',IPSC_all.Properties.VariableNames,...
+    'Units', 'Normalized', 'Position',[0, 0, 1, 1]);
+
 
 %% All ipsc currents together onto BC - graph and table
 
@@ -412,6 +428,9 @@ ylabel('Mean Peak IPSC','FontSize',13,'FontWeight','bold');
 hold on;
 errorbar(x,IPSC_all_mean_together,IPSC_all_std_together,'b','LineStyle','none')
 title('Mean Peak IPSC from all inhibitory cells onto AAC','FontSize',15,'FontWeight','bold')
+%%
+uitable('Data',IPSC_all_together{:,:},'ColumnName',IPSC_all_together.Properties.VariableNames,...
+    'Units', 'Normalized', 'Position',[0, 0, 1, 1]);
 
 
 %% E/I Ratios on AAC Cells
