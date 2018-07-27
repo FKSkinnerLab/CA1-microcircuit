@@ -2,8 +2,8 @@
 clear all
 clc 
  
-f = fullfile('C:\','Users','Melisa', ...
-    'Desktop','Netclamp','BiC','BiC',{...
+f = fullfile('/Users','macklabadmin','Documents', ...
+    'other','BiC',{...
     'BiC_1470_1000';...
     'BiC_1580_1000';...
     'BiC_1635_1000';...
@@ -241,6 +241,9 @@ hold on;
 errorbar(x,EPSC_mean,EPSC_std,'b','LineStyle','none')
 title('Mean Peak EPSC onto BiC','FontSize',15,'FontWeight','bold')
 
+%%
+uitable('Data',EPSC{:,:},'ColumnName',EPSC.Properties.VariableNames,...
+    'Units', 'Normalized', 'Position',[0, 0, 1, 1]);
 
 %% IPSCs only from BiC
 
@@ -272,6 +275,10 @@ hold on;
 errorbar(x,IPSC_BiC_mean,IPSC_BiC_std,'b','LineStyle','none')
 title('Mean Peak IPSC from BiC onto BiC','FontSize',15,'FontWeight','bold')
 
+%%
+uitable('Data',IPSC_BiC{:,:},'ColumnName',IPSC_BiC.Properties.VariableNames,...
+    'Units', 'Normalized', 'Position',[0, 0, 1, 1]);
+
 %% IPSCs only from BC 
 
 IPSC_BC = [];
@@ -301,7 +308,9 @@ ylabel('Mean Peak IPSC from BiC','FontSize',13,'FontWeight','bold');
 hold on;
 errorbar(x,IPSC_BC_mean,IPSC_BC_std,'b','LineStyle','none')
 title('Mean Peak IPSC from BC onto BiC','FontSize',15,'FontWeight','bold')
-
+%%
+uitable('Data',IPSC_BC{:,:},'ColumnName',IPSC_BC.Properties.VariableNames,...
+    'Units', 'Normalized', 'Position',[0, 0, 1, 1]);
 
 %% BC and BiC ipsc current onto BiC gathered
 
@@ -353,7 +362,6 @@ for k = 1:1:15
     peaks_all_PV_together = [peaks_all_PV_together peaks_all_together];
 end
 
-
 %% BC and BiC ipsc currents together onto BiC - graph and table
 
 IPSC_all = [];
@@ -384,6 +392,9 @@ hold on;
 errorbar(x,IPSC_all_mean,IPSC_all_std,'b','LineStyle','none')
 title('Mean Peak IPSC from BC and BiC onto BiC','FontSize',15,'FontWeight','bold')
 
+%%
+uitable('Data',IPSC_all{:,:},'ColumnName',IPSC_all.Properties.VariableNames,...
+    'Units', 'Normalized', 'Position',[0, 0, 1, 1]);
 
 %% All ipsc currents together onto BC - graph and table
 
@@ -414,6 +425,10 @@ ylabel('Mean Peak IPSC','FontSize',13,'FontWeight','bold');
 hold on;
 errorbar(x,IPSC_all_mean_together,IPSC_all_std_together,'b','LineStyle','none')
 title('Mean Peak IPSC from all inhibitory cells onto BiC','FontSize',15,'FontWeight','bold')
+
+%%
+uitable('Data',IPSC_all_together{:,:},'ColumnName',IPSC_all_together.Properties.VariableNames,...
+    'Units', 'Normalized', 'Position',[0, 0, 1, 1]);
 
 %% E/I Ratios on BiC Cells
 
