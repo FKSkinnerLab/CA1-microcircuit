@@ -1,10 +1,6 @@
-% Load Data
+% Load Data From Netclamp Results
 clear all
 clc
-
-% datafile = '/home/melisagumus/Documents/MATLAB/CA1_SimTracker/pyr/pyr_36884_1000/mytrace_36884_syns.dat';
-%
-% ls('/home/melisagumus/Documents/MATLAB/CA1_SimTracker/pyr/pyr*1000');
 
 f = fullfile('/home','melisagumus','Documents', ...
     'MATLAB','CA1_SimTracker','pyr',{...
@@ -16,11 +12,11 @@ f = fullfile('/home','melisagumus','Documents', ...
     'pyr_99180_1000';...
     'pyr_106967_1000';...
     'pyr_114754_1000';...
-    'pyr_153689_1000';...
-    'pyr_177050_1000';...
-    'pyr_200411_1000';...
-    'pyr_254920_1000';...
-    'pyr_286068_1000';...
+    'pyr_75819_1000';...
+    'pyr_44671_1000';...
+    'pyr_60245_1000';...
+    'pyr_21310_1000';...
+    'pyr_91393_1000';...
     'pyr_301642_1000';...
     'pyr_325003_1000'...
     },{...
@@ -32,63 +28,53 @@ f = fullfile('/home','melisagumus','Documents', ...
     'mytrace_99180_syns.dat';...
     'mytrace_106967_syns.dat';...
     'mytrace_114754_syns.dat';...
-    'mytrace_153689_syns.dat';...
-    'mytrace_177050_syns.dat';...
-    'mytrace_200411_syns.dat';...
-    'mytrace_254920_syns.dat';...
-    'mytrace_286068_syns.dat';...
+    'mytrace_75819_syns.dat';...
+    'mytrace_44671_syns.dat';...
+    'mytrace_60245_syns.dat';...
+    'mytrace_21310_syns.dat';...
+    'mytrace_91393_syns.dat';...
     'mytrace_301642_syns.dat';...
     'mytrace_325003_syns.dat'...
     });
-
-%% Alternative - does not work
+%%
 clear all
 clc
-
-start_path = fullfile(matlabroot, '/home','melisagumus','Documents', ...
-    'MATLAB','CA1_SimTracker','pyr');
-topLevelFolder = uigetdir(start_path);
-if topLevelFolder == 0
-    return;
-end
-
-% To get list of all subfolders
-allSubFolders = genpath(topLevelFolder);
-remain = allSubFolders;
-listOfFolderNames = {};
-while true
-    [singleSubFolder, remain] = strtok(remain, ';');
-    if isempty(singleSubFolder)
-        break;
-    end
-    listOfFolderNames = [listOfFolderNames singleSubFolder];
-end
-numberOfFolders = length(listOfFolderNames);
-
-% process text files in the folders
-for k = 1:numberOfFolders
-    thisFolder = listOfFolderNames{k};
-    fprintf('Processing folder %s\n', thisFolder);
-
-    filePattern = sprintf('mytrace %s/*.dat', thisFolder);
-    baseFileNames = dir(filePattern);
-    numberOfFiles = length(baseFileNames);
-
-    if numberOfFiles >= 1
-        for f = 1:numberOfFiles
-            fullFileName = fullfile(thisFolder, baseFileNames{f}.name);
-            fprint('Processing text files %s\n', fullFileName);
-        end
-    else
-        fprintf('Folder %s has no text files in it.\n', thisFolder);
-    end
-end
-
-
-%%
-%cd C:\Users\Melisa\Documents\MATLAB\CA1_SimTracker\pyr\
-%files = dir('pyr*1000\mytrace*syns.dat');
-%pyr_names = f.names;
+ 
+f = fullfile('/Users','macklabadmin','Documents', ...
+    'other','pyr',{...
+    'pyr_29097_1000';...
+    'pyr_36884_1000';...
+    'pyr_52458_1000';...
+    'pyr_68032_1000';...
+    'pyr_83606_1000';...
+    'pyr_99180_1000';...
+    'pyr_106967_1000';...
+    'pyr_114754_1000';...
+    'pyr_75819_1000';...
+    'pyr_44671_1000';...
+    'pyr_60245_1000';...
+    'pyr_21310_1000';...
+    'pyr_91393_1000';...
+    'pyr_301642_1000';...
+    'pyr_325003_1000'...
+    },{...
+    'mytrace_29097_syns.dat';...
+    'mytrace_36884_syns.dat';...
+    'mytrace_52458_syns.dat';...
+    'mytrace_68032_syns.dat';...
+    'mytrace_83606_syns.dat';...
+    'mytrace_99180_syns.dat';...
+    'mytrace_106967_syns.dat';...
+    'mytrace_114754_syns.dat';...
+    'mytrace_75819_syns.dat';...
+    'mytrace_44671_syns.dat';...
+    'mytrace_60245_syns.dat';...
+    'mytrace_21310_syns.dat';...
+    'mytrace_91393_syns.dat';...
+    'mytrace_301642_syns.dat';...
+    'mytrace_325003_syns.dat'...
+    });
+%% Write Data on Matrix
 
 alldata = [];
 for m = 1:1:15
@@ -100,7 +86,7 @@ end
 data = mat2cell(alldata, 40000, ...
     [12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12]);
 
-%% Creates a big table consists of inputs from AAC BiC PYR and BC in order
+%% Creates a big table consists of inputs from AAC, BiC, PYR, and BC ... in order
 
 M = [];
 current_AAC = [];
@@ -113,7 +99,7 @@ current_ngf = [];
 current_olm = [];
 current_sca = [];
 for m = 1:15  % number of cells
-    for k = 2:12  % number of input
+    for k = 2:12  % number of input - excluding first column (time)
         if k ==2
             temp_current_AAC = data{m}(:,k);
             [pks, locs] = findpeaks(data{m}(:,k),'MinPeakDistance',4000); % peak detection with interval based threshold
@@ -186,63 +172,76 @@ end
 allcells = mat2cell(M, 40000, ...
     [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4]);
 
-%% Graph EPSCs on PYR
+%% Graph of EPSCs onto PYR
 
 figure
-for i = 1:1:10
-    temp = allcells{i}(:,3);
+for i = 1:1:15 
+    temp = allcells{i}(:,3); 
     temp(temp == 0) = [];   %get rid of zeros
-    subplot(5,2,i)
-    histfit(temp)
+    subplot(5,3,i)
+    p = histfit(temp);
+    set(p(1),'facecolor',[0.1 0.3 0.6])
+    set(p(2),'color','k')
     hold on
-    title (['Pyr' num2str(i)]) % name each graph with the corresponding pyr #
+    title (['Pyramidal Cell #' num2str(i)]) % name each graph with the corresponding pyr #
+    xlabel('EPSC')
+    ylabel('Number of EPSCs')
 end
-suptitle('EPSC Distribution on PYR Cells')
+suptitle('Distribution of EPSCs on PYR Cells')
 
-%% Graph IPSCs from AAC onto PYR
+%% Graph of IPSCs from AAC onto PYR
 
 figure
-for i = 1:1:10
+for i = 1:1:15
     temp = allcells{i}(:,1);
     temp(temp == 0) = [];   %get rid of zeros
-    subplot(5,2,i)
-    histfit(temp,100)
-    xlim([-2 2])
+    subplot(5,3,i)
+    p = histfit(temp);
+    set(p(1),'facecolor',[0.1 0.3 0.6])
+    set(p(2),'color','k')
     hold on
-    title (['Pyr' num2str(i)]) % name each graph with the corresponding pyr #
+    title (['Pyramidal Cell #' num2str(i)]) % name each graph with the corresponding pyr #
+    xlabel('IPSCs from AAC')
+    ylabel('Number of IPSCs')
 end
-suptitle('IPSC Distribution from AAC onto PYR')
+suptitle('Distribution of IPSCs from AAC onto PYR Cells')
 
-%% Graph IPSCs from BiC onto PYR
+%% Graph of IPSCs from BiC onto PYR
 
 figure
-for i = 1:1:10
+for i = 1:1:15
     temp = allcells{i}(:,2);
     temp(temp == 0) = [];   %get rid of zeros
-    subplot(5,2,i)
-    histfit(temp,50)
-    xlim([-2 2])
+    subplot(5,3,i)
+    p = histfit(temp);
+    set(p(1),'facecolor',[0.1 0.3 0.6])
+    set(p(2),'color','k')
     hold on
-    title (['Pyr' num2str(i)]) % name each graph with the corresponding pyr #
+    title (['Pyramidal Cell #' num2str(i)]) % name each graph with the corresponding pyr #
+    xlabel('IPSCs from BiC')
+    ylabel('Number of IPSCs')
 end
-suptitle('IPSC Distribution from BiC onto PYR')
+suptitle('Distribution of IPSCs from BiC onto PYR Cells')
 
-%% Graph IPSCs from BC onto PYR
+%% Graph of IPSCs from BC onto PYR
 
 figure
-for i = 1:1:10
+for i = 1:1:15
     temp = allcells{i}(:,2);
     temp(temp == 0) = [];   %get rid of zeros
-    subplot(5,2,i)
-    histfit(temp,50)
-    xlim([-2 2])
+    subplot(5,3,i)
+    p = histfit(temp);
+    set(p(1),'facecolor',[0.1 0.3 0.6])
+    set(p(2),'color','k')
     hold on
-    title (['Pyr' num2str(i)]) % name each graph with the corresponding pyr #
+    title (['Pyramidal Cell #' num2str(i)]) % name each graph with the corresponding pyr #
+    xlabel('IPSCs from BC')
+    ylabel('Number of IPSCs')
 end
-suptitle('IPSC Distribution from BC onto PYR')
+suptitle('Distribution of IPSCs from BC onto PYR Cells')
 
 
-%% EPSCs from PYR
+%% Find Mean and SD of EPSCs from PYR
 
 EPSC = [];
 epsc = [];
@@ -256,15 +255,15 @@ for i = 1:1:15 % number of PYR cells
 end
 
 EPSC = array2table(EPSC);
-EPSC.Properties.VariableNames = {'pyr1'...
-    'pyr2' 'pyr3' 'pyr4' 'pyr5' 'pyr6'...
-    'pyr7' 'pyr8' 'pyr9' 'pyr10' 'pyr11'...
-    'pyr12' 'pyr13' 'pyr14' 'pyr15'};
+EPSC.Properties.VariableNames = {'pyramidal1'...
+    'pyramidal2' 'pyramidal3' 'pyramidal4' 'pyramidal5' 'pyramidal6'...
+    'pyramidal7' 'pyramidal8' 'pyramidal9' 'pyramidal10' 'pyramidal11'...
+    'pyramidal12' 'pyramidal13' 'pyramidal14' 'pyramidal15'};
 
 subplot(2,2,1)
 EPSC_mean = table2array(EPSC(1,:));
 EPSC_std = table2array(EPSC(2,:));
-x = linspace(0,15,length(EPSC_mean));
+x = linspace(1,15,length(EPSC_mean));
 scatter(x,EPSC_mean,'black','filled');
 xlabel('Individual PYR Cells','FontSize',13,'FontWeight','bold');
 ylabel('Mean Peak EPSC','FontSize',13,'FontWeight','bold');
