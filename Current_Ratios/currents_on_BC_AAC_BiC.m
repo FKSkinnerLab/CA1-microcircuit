@@ -1,7 +1,11 @@
-% Load Data 
+%% Melisa Gumus - 2018 May
+% Calculate Excitatory/Inhibitory Ratios onto Population of BC, AAC and BiC
+
+%% Load Data From Netclamp Results
 clear all
-clc 
- 
+close all
+clc
+
 g = fullfile('/home','melisagumus','Documents', ...
     'MATLAB','CA1_SimTracker','pvbasket',{...
     'pvbasket_332810_1000';...
@@ -17,7 +21,8 @@ g = fullfile('/home','melisagumus','Documents', ...
     'pvbasket_337088_1000';...
     'pvbasket_337364_1000';...
     'pvbasket_337640_1000';...
-    'pvbasket_338192_1000'...
+    'pvbasket_338192_1000';...
+    'pvbasket_338054_1000'...
     },{...
     'mytrace_332810_syns.dat';...
     'mytrace_333500_syns.dat';...
@@ -32,7 +37,8 @@ g = fullfile('/home','melisagumus','Documents', ...
     'mytrace_337088_syns.dat';...
     'mytrace_337364_syns.dat';...
     'mytrace_337640_syns.dat';...
-    'mytrace_338192_syns.dat'...
+    'mytrace_338192_syns.dat';...
+    'mytrace_338054_syns.dat'...
     });
 
 f = fullfile('/home','melisagumus','Documents', ...
@@ -104,12 +110,12 @@ h = fullfile('/home','melisagumus','Documents', ...
     'mytrace_3505_syns.dat';...
     'mytrace_3615_syns.dat'...
     });
-%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Load Data 
+%%
 clear all
-clc 
- 
+close all
+clc
+
 g = fullfile('/Users','macklabadmin','Documents', ...
     'other','pvbasket',{...
     'pvbasket_332810_1000';...
@@ -125,7 +131,8 @@ g = fullfile('/Users','macklabadmin','Documents', ...
     'pvbasket_337088_1000';...
     'pvbasket_337364_1000';...
     'pvbasket_337640_1000';...
-    'pvbasket_338192_1000'...
+    'pvbasket_338192_1000';...
+    'pvbasket_338054_1000'...
     },{...
     'mytrace_332810_syns.dat';...
     'mytrace_333500_syns.dat';...
@@ -140,7 +147,8 @@ g = fullfile('/Users','macklabadmin','Documents', ...
     'mytrace_337088_syns.dat';...
     'mytrace_337364_syns.dat';...
     'mytrace_337640_syns.dat';...
-    'mytrace_338192_syns.dat'...
+    'mytrace_338192_syns.dat';...
+    'mytrace_338054_syns.dat'...
     });
 
 f = fullfile('/Users','macklabadmin','Documents', ...
@@ -212,21 +220,17 @@ h = fullfile('/Users','macklabadmin','Documents', ...
     'mytrace_3505_syns.dat';...
     'mytrace_3615_syns.dat'...
     });
-%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%cd C:\Users\Melisa\Documents\MATLAB\CA1_SimTracker\pyr\
-%files = dir('pyr*1000\mytrace*syns.dat');
-%pyr_names = f.names;
 
+%% Write Data on Matrix
 alldataBC = [];
-for m = 1:1:14
+for m = 1:1:15
     temp_data = readtable(g{m},'Delimiter','\t');
     temp_data = table2array(temp_data);
     alldataBC = [alldataBC temp_data];
 end
 
 dataBC = mat2cell(alldataBC, 40000, ...
-    [12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12]);
-
+    [12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12]);
 
 alldataAAC = [];
 for m = 1:1:15
@@ -248,8 +252,7 @@ end
 dataBiC = mat2cell(alldataBiC, 40000, ...
     [12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12]);
 
-%% Creates a big table consists of inputs from BiC PYR and BC in order %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+%% Creates a big table consists of inputs from BiC, PYR, and BC... onto BC
 
 M_on_BC = [];
 current_BC_on_BC = [];
@@ -261,7 +264,7 @@ current_ngf = [];
 current_olm = [];
 current_sca = [];
 
-for m = 1:14  % number of cells 
+for m = 1:15  % number of cells 
     for k = 2:12  % number of input 
         if k == 3
             temp_current_BiC = dataBC{m}(:,k);
@@ -325,9 +328,9 @@ for m = 1:14  % number of cells
 end 
 
 allcellsBC = mat2cell(M_on_BC, 40000, ...
-    [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]); 
+    [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]); 
 
-%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Creates a big table consists of inputs from BiC, PYR, and BC... onto AAC
 
 M = [];
 current_BC_on_AAC = [];
@@ -395,7 +398,7 @@ end
 allcellsAAC = mat2cell(M, 40000, ...
     [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]); 
 
-%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Creates a big table consists of inputs from BiC, PYR, and BC... onto BiC
 
 M_BiC = [];
 current_BC_on_BiC = [];
@@ -463,11 +466,11 @@ end
 allcellsBiC = mat2cell(M_BiC, 40000, ...
     [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]); 
 
-%% EPSCs from PYR on BC
+%% Find Mean EPSCs and SD from PYR onto BC
 
 EPSC_BC = [];
 epsc_BC = [];
-for i = 1:1:14 % number of PYR cells
+for i = 1:1:15 
     pks_epsc = allcellsBC{i}(:,2);
     pks_epsc(pks_epsc==0)=[];
     epsc_mean = mean(pks_epsc);
@@ -476,29 +479,35 @@ for i = 1:1:14 % number of PYR cells
     EPSC_BC = [EPSC_BC epsc_BC];
 end 
 
-EPSC_BC = array2table(EPSC_BC);
-EPSC_BC.Properties.VariableNames = {'BC1'...
-    'BC2' 'BC3' 'BC4' 'BC5' 'BC6'...
-    'BC7' 'BC8' 'BC9' 'BC10' 'BC11'...
-    'BC12' 'BC13' 'BC14'};
+EPSC_BC_table = EPSC_BC;
+num = (1:15)';
+EPSC_BC_table = array2table(EPSC_BC_table');
+EPSC_BC_table.num = num;
+EPSC_BC_table = [EPSC_BC_table(:,end) EPSC_BC_table(:,1) EPSC_BC_table(:,2)];
+
+EPSC_BC_table.Properties.VariableNames = {'BC_Number', 'Mean_Peak', 'Standard_Deviation'};
 
 subplot(3,1,1)
-EPSC_mean = table2array(EPSC_BC(1,:));
-EPSC_std = table2array(EPSC_BC(2,:));
-x = linspace(0,14,length(EPSC_mean));
-scatter(x,EPSC_mean,'black','filled');
-xlabel('Individual Basket Cells','FontSize',13,'FontWeight','bold');
-ylabel('Mean Peak EPSC','FontSize',13,'FontWeight','bold');
+EPSC_BC_mean = EPSC_BC(1,:);
+EPSC_BC_std = EPSC_BC(2,:);
+x = linspace(0,14,length(EPSC_BC_mean));
+scatter(x,EPSC_BC_mean,'black','filled');
+set(gca, 'XTickLabel',[]);
+a = [1:15]'; b =num2str(a); c=cellstr(b);
+dx=0.1; dEPSC_BC_mean=0.1;
+text(x+dx, EPSC_BC_mean+dEPSC_BC_mean, c);
+xlabel('Individual BCs','FontSize',13,'FontWeight','bold');
+ylabel('Mean Peak EPSCs','FontSize',13,'FontWeight','bold');
 hold on;
-errorbar(x,EPSC_mean,EPSC_std,'b','LineStyle','none')
-title('Mean Peak EPSC onto BC','FontSize',15,'FontWeight','bold')
+errorbar(x,EPSC_BC_mean,EPSC_BC_std,'b','LineStyle','none')
+title('Mean Peak EPSCs onto BCs','FontSize',15,'FontWeight','bold')
 
 
-%% EPSCs from PYR on AAC
+%% Find Mean EPSCs and SD onto AAC
 
 EPSC_on_AAC = [];
 epsc_on_AAC = [];
-for i = 1:1:14 % number of PYR cells
+for i = 1:1:15
     pks_epsc = allcellsAAC{i}(:,2);
     pks_epsc(pks_epsc==0)=[];
     epsc_on_AAC_mean = mean(pks_epsc);
@@ -507,28 +516,34 @@ for i = 1:1:14 % number of PYR cells
     EPSC_on_AAC = [EPSC_on_AAC epsc_on_AAC];
 end 
 
-EPSC_on_AAC = array2table(EPSC_on_AAC);
-EPSC_on_AAC.Properties.VariableNames = {'AAC1'...
-    'AAC2' 'AAC3' 'AAC4' 'AAC5' 'AAC6'...
-    'AAC7' 'AAC8' 'AAC9' 'AAC10' 'AAC11'...
-    'AAC12' 'AAC13' 'AAC14'};
+EPSC_on_AAC_table = EPSC_on_AAC;
+num = (1:15)';
+EPSC_on_AAC_table = array2table(EPSC_on_AAC_table');
+EPSC_on_AAC_table.num = num;
+EPSC_on_AAC_table = [EPSC_on_AAC_table(:,end) EPSC_on_AAC_table(:,1) EPSC_on_AAC_table(:,2)];
+
+EPSC_on_AAC_table.Properties.VariableNames = {'AAC_Number', 'Mean_Peak', 'Standard_Deviation'};
 
 subplot(3,1,2)
-EPSC_mean = table2array(EPSC_on_AAC(1,:));
-EPSC_std = table2array(EPSC_on_AAC(2,:));
-x = linspace(0,14,length(EPSC_mean));
-scatter(x,EPSC_mean,'black','filled');
+EPSC_on_AAC_mean = EPSC_on_AAC(1,:);
+EPSC_on_AAC_std = EPSC_on_AAC(2,:);
+x = linspace(0,14,length(EPSC_on_AAC_mean));
+scatter(x,EPSC_on_AAC_mean,'black','filled');
+set(gca, 'XTickLabel',[]);
+a = [1:15]'; b =num2str(a); c=cellstr(b);
+dx=0.1; dEPSC_on_AAC_mean=0.1;
+text(x+dx, EPSC_on_AAC_mean+dEPSC_on_AAC_mean, c);
 xlabel('Individual AACs','FontSize',13,'FontWeight','bold');
 ylabel('Mean Peak EPSC','FontSize',13,'FontWeight','bold');
 hold on;
-errorbar(x,EPSC_mean,EPSC_std,'b','LineStyle','none')
-title('Mean Peak EPSC onto AAC','FontSize',15,'FontWeight','bold')
+errorbar(x,EPSC_on_AAC_mean,EPSC_on_AAC_std,'b','LineStyle','none')
+title('Mean Peak EPSC onto AACs','FontSize',15,'FontWeight','bold')
 
-%% EPSCs from PYR on BiC
+%% Find Mean EPSCs and SD onto BiC
 
 EPSC_on_BiC = [];
 epsc_on_BiC = [];
-for i = 1:1:14 % number of PYR cells
+for i = 1:1:15
     pks_epsc = allcellsBiC{i}(:,2);
     pks_epsc(pks_epsc==0)=[];
     epsc_on_BiC_mean = mean(pks_epsc);
@@ -537,29 +552,35 @@ for i = 1:1:14 % number of PYR cells
     EPSC_on_BiC = [EPSC_on_BiC epsc_on_BiC];
 end 
 
-EPSC_on_BiC = array2table(EPSC_on_BiC);
-EPSC_on_BiC.Properties.VariableNames = {'BiC1'...
-    'BiC2' 'BiC3' 'BiC4' 'BiC5' 'BiC6'...
-    'BiC7' 'BiC8' 'BiC9' 'BiC10' 'BiC11'...
-    'BiC12' 'BiC13' 'BiC14'};
+EPSC_on_BiC_table = EPSC_on_BiC;
+num = (1:15)';
+EPSC_on_BiC_table = array2table(EPSC_on_BiC_table');
+EPSC_on_BiC_table.num = num;
+EPSC_on_BiC_table = [EPSC_on_BiC_table(:,end) EPSC_on_BiC_table(:,1) EPSC_on_BiC_table(:,2)];
+
+EPSC_on_BiC_table.Properties.VariableNames = {'BiC_Number', 'Mean_Peak', 'Standard_Deviation'};
 
 subplot(3,1,3)
-EPSC_on_BiC_mean = table2array(EPSC_on_BiC(1,:));
-EPSC_on_BiC_std = table2array(EPSC_on_BiC(2,:));
+EPSC_on_BiC_mean = EPSC_on_BiC(1,:);
+EPSC_on_BiC_std = EPSC_on_BiC(2,:);
 x = linspace(0,14,length(EPSC_on_BiC_mean));
 scatter(x,EPSC_on_BiC_mean,'black','filled');
+set(gca, 'XTickLabel',[]);
+a = [1:15]'; b =num2str(a); c=cellstr(b);
+dx=0.1; dEPSC_on_BiC_mean=0.1;
+text(x+dx, EPSC_on_BiC_mean+dEPSC_on_BiC_mean, c);
 xlabel('Individual BiCs','FontSize',13,'FontWeight','bold');
 ylabel('Mean Peak EPSC','FontSize',13,'FontWeight','bold');
 hold on;
 errorbar(x,EPSC_on_BiC_mean,EPSC_on_BiC_std,'b','LineStyle','none')
-title('Mean Peak EPSC onto BiC','FontSize',15,'FontWeight','bold')
+title('Mean Peak EPSC onto BiCs','FontSize',15,'FontWeight','bold')
 
 
-%% IPSCs only from BiC on BC
+%% IPSCs Only from BiC onto BC
 
 IPSC_BiC_on_BC = [];
 ipsc_BiC_on_BC = [];
-for i = 1:1:14 % number of PYR cells
+for i = 1:1:15
     pks_ipsc_BiC = allcellsBC{i}(:,1);
     pks_ipsc_BiC(pks_ipsc_BiC==0)=[];
     ipsc_BiC_mean = mean(pks_ipsc_BiC);
@@ -568,29 +589,35 @@ for i = 1:1:14 % number of PYR cells
     IPSC_BiC_on_BC = [IPSC_BiC_on_BC ipsc_BiC_on_BC];
 end 
 
-IPSC_BiC_on_BC = array2table(IPSC_BiC_on_BC);
-IPSC_BiC_on_BC.Properties.VariableNames = {'BC1'...
-    'BC2' 'BC3' 'BC4' 'BC5' 'BC6'...
-    'BC7' 'BC8' 'BC9' 'BC10' 'BC11'...
-    'BC12' 'BC13' 'BC14'};
+IPSC_BiC_on_BC_table = IPSC_BiC_on_BC;
+num = (1:15)';
+IPSC_BiC_on_BC_table = array2table(IPSC_BiC_on_BC_table');
+IPSC_BiC_on_BC_table.num = num;
+IPSC_BiC_on_BC_table = [IPSC_BiC_on_BC_table(:,end) IPSC_BiC_on_BC_table(:,1) IPSC_BiC_on_BC_table(:,2)];
+
+IPSC_BiC_on_BC_table.Properties.VariableNames = {'BC_Number', 'Mean_Peak', 'Standard_Deviation'};
 
 
 subplot(3,1,1)
-IPSC_BiC_on_BC_mean = table2array(IPSC_BiC_on_BC(1,:));
-IPSC_BiC_on_BC_std = table2array(IPSC_BiC_on_BC(2,:));
+IPSC_BiC_on_BC_mean = IPSC_BiC_on_BC(1,:);
+IPSC_BiC_on_BC_std = IPSC_BiC_on_BC(2,:);
 x = linspace(0,14,length(IPSC_BiC_on_BC_mean));
 scatter(x,IPSC_BiC_on_BC_mean,'black','filled');
-xlabel('Individual Basket Cells','FontSize',13,'FontWeight','bold');
-ylabel('Mean Peak IPSC from BiC','FontSize',13,'FontWeight','bold');
+set(gca, 'XTickLabel',[]);
+a = [1:15]'; b =num2str(a); c=cellstr(b);
+dx=0.1; dIPSC_BiC_on_BC_mean=0.1;
+text(x+dx, IPSC_BiC_on_BC_mean+dIPSC_BiC_on_BC_mean, c);
+xlabel('Individual BCs','FontSize',13,'FontWeight','bold');
+ylabel('Mean Peak IPSC','FontSize',13,'FontWeight','bold');
 hold on;
 errorbar(x,IPSC_BiC_on_BC_mean,IPSC_BiC_on_BC_std,'b','LineStyle','none')
-title('Mean Peak IPSC from BiC onto BC','FontSize',15,'FontWeight','bold')
+title('Mean Peak IPSC from BiCs onto BCs','FontSize',15,'FontWeight','bold')
 
 %% IPSCs only from BiC on AAC
 
 IPSC_BiC_on_AAC = [];
 ipsc_BiC_on_AAC = [];
-for i = 1:1:14 % number of PYR cells
+for i = 1:1:15
     pks_ipsc_BiC = allcellsAAC{i}(:,1);
     pks_ipsc_BiC(pks_ipsc_BiC==0)=[];
     ipsc_BiC_on_AAC_mean = mean(pks_ipsc_BiC);
@@ -599,27 +626,34 @@ for i = 1:1:14 % number of PYR cells
     IPSC_BiC_on_AAC = [IPSC_BiC_on_AAC ipsc_BiC_on_AAC];
 end 
 
-IPSC_BiC_on_AAC = array2table(IPSC_BiC_on_AAC);
-IPSC_BiC_on_AAC.Properties.VariableNames = {'AAC1'...
-    'AAC2' 'AAC3' 'AAC4' 'AAC5' 'AAC6'...
-    'AAC7' 'AAC8' 'AAC9' 'AAC10' 'AAC11'...
-    'AAC12' 'AAC13' 'AAC14'};
+IPSC_BiC_on_AAC_table = IPSC_BiC_on_AAC;
+num = (1:15)';
+IPSC_BiC_on_AAC_table = array2table(IPSC_BiC_on_AAC_table');
+IPSC_BiC_on_AAC_table.num = num;
+IPSC_BiC_on_AAC_table = [IPSC_BiC_on_AAC_table(:,end) IPSC_BiC_on_AAC_table(:,1) IPSC_BiC_on_AAC_table(:,2)];
+
+IPSC_BiC_on_AAC_table.Properties.VariableNames = {'AAC_Number', 'Mean_Peak', 'Standard_Deviation'};
 
 subplot(3,1,2)
-IPSC_BiC_on_AAC_mean = table2array(IPSC_BiC_on_AAC(1,:));
-IPSC_BiC_on_AAC_std = table2array(IPSC_BiC_on_AAC(2,:));
+IPSC_BiC_on_AAC_mean = IPSC_BiC_on_AAC(1,:);
+IPSC_BiC_on_AAC_std = IPSC_BiC_on_AAC(2,:);
 x = linspace(0,14,length(IPSC_BiC_on_AAC_mean));
 scatter(x,IPSC_BiC_on_AAC_mean,'black','filled');
+set(gca, 'XTickLabel',[]);
+a = [1:15]'; b =num2str(a); c=cellstr(b);
+dx=0.1; dIPSC_BiC_on_AAC_mean=0.1;
+text(x+dx, IPSC_BiC_on_AAC_mean+dIPSC_BiC_on_AAC_mean, c);
 xlabel('Individual AACs','FontSize',13,'FontWeight','bold');
 ylabel('Mean Peak IPSC from BiC','FontSize',13,'FontWeight','bold');
 hold on;
 errorbar(x,IPSC_BiC_on_AAC_mean,IPSC_BiC_on_AAC_std,'b','LineStyle','none')
-title('Mean Peak IPSC from BiC onto AAC','FontSize',15,'FontWeight','bold')
+title('Mean Peak IPSC from BiCs onto AACs','FontSize',15,'FontWeight','bold')
+
 %% IPSCs only from BiC on BiC
 
 IPSC_BiC_on_BiC = [];
 ipsc_BiC_on_BiC = [];
-for i = 1:1:14 % number of PYR cells
+for i = 1:1:15
     pks_ipsc_BiC = allcellsBiC{i}(:,1);
     pks_ipsc_BiC(pks_ipsc_BiC==0)=[];
     ipsc_BiC_on_BiC_mean = mean(pks_ipsc_BiC);
@@ -628,28 +662,34 @@ for i = 1:1:14 % number of PYR cells
     IPSC_BiC_on_BiC = [IPSC_BiC_on_BiC ipsc_BiC_on_BiC];
 end 
 
-IPSC_BiC_on_BiC = array2table(IPSC_BiC_on_BiC);
-IPSC_BiC_on_BiC.Properties.VariableNames = {'BiC1'...
-    'BiC2' 'BiC3' 'BiC4' 'BiC5' 'BiC6'...
-    'BiC7' 'BiC8' 'BiC9' 'BiC10' 'BiC11'...
-    'BiC12' 'BiC13' 'BiC14'};
+IPSC_BiC_on_BiC_table = IPSC_BiC_on_BiC;
+num = (1:15)';
+IPSC_BiC_on_BiC_table = array2table(IPSC_BiC_on_BiC_table');
+IPSC_BiC_on_BiC_table.num = num;
+IPSC_BiC_on_BiC_table = [IPSC_BiC_on_BiC_table(:,end) IPSC_BiC_on_BiC_table(:,1) IPSC_BiC_on_BiC_table(:,2)];
+
+IPSC_BiC_on_BiC_table.Properties.VariableNames = {'BiC_Number', 'Mean_Peak', 'Standard_Deviation'};
 
 subplot(3,1,3)
-IPSC_BiC_on_BiC_mean = table2array(IPSC_BiC_on_BiC(1,:));
-IPSC_BiC_on_BiC_std = table2array(IPSC_BiC_on_BiC(2,:));
+IPSC_BiC_on_BiC_mean = IPSC_BiC_on_BiC(1,:);
+IPSC_BiC_on_BiC_std = IPSC_BiC_on_BiC(2,:);
 x = linspace(0,14,length(IPSC_BiC_on_BiC_mean));
 scatter(x,IPSC_BiC_on_BiC_mean,'black','filled');
+set(gca, 'XTickLabel',[]);
+a = [1:15]'; b =num2str(a); c=cellstr(b);
+dx=0.1; dIPSC_BiC_on_BiC_mean=0.1;
+text(x+dx, IPSC_BiC_on_BiC_mean+dIPSC_BiC_on_BiC_mean, c);
 xlabel('Individual BiCs','FontSize',13,'FontWeight','bold');
-ylabel('Mean Peak IPSC from BiC','FontSize',13,'FontWeight','bold');
+ylabel('Mean Peak IPSC from BiCs','FontSize',13,'FontWeight','bold');
 hold on;
 errorbar(x,IPSC_BiC_on_BiC_mean,IPSC_BiC_on_BiC_std,'b','LineStyle','none')
-title('Mean Peak IPSC from BiC onto BiC','FontSize',15,'FontWeight','bold')
+title('Mean Peak IPSC from BiCs onto BiCs','FontSize',15,'FontWeight','bold')
 
 %% IPSCs only from BC on BC
 
 IPSC_BC_on_BC = [];
 ipsc_BC_on_BC = [];
-for i = 1:1:14 % number of PYR cells
+for i = 1:1:15
     pks_ipsc_BC = allcellsBC{i}(:,3);
     pks_ipsc_BC(pks_ipsc_BC==0)=[];
     ipsc_BC_on_BC_mean = mean(pks_ipsc_BC);
@@ -658,29 +698,34 @@ for i = 1:1:14 % number of PYR cells
     IPSC_BC_on_BC = [IPSC_BC_on_BC ipsc_BC_on_BC];
 end 
 
-IPSC_BC_on_BC = array2table(IPSC_BC_on_BC);
-IPSC_BC_on_BC.Properties.VariableNames = {'BC1'...
-    'BC2' 'BC3' 'BC4' 'BC5' 'BC6'...
-    'BC7' 'BC8' 'BC9' 'BC10' 'BC11'...
-    'BC12' 'BC13' 'BC14'};
+IPSC_BC_on_BC_table = IPSC_BC_on_BC;
+num = (1:15)';
+IPSC_BC_on_BC_table = array2table(IPSC_BC_on_BC_table');
+IPSC_BC_on_BC_table.num = num;
+IPSC_BC_on_BC_table = [IPSC_BC_on_BC_table(:,end) IPSC_BC_on_BC_table(:,1) IPSC_BC_on_BC_table(:,2)];
 
+IPSC_BC_on_BC_table.Properties.VariableNames = {'BC_Number', 'Mean_Peak', 'Standard_Deviation'};
 
 subplot(3,1,1)
-IPSC_BC_mean = table2array(IPSC_BC_on_BC(1,:));
-IPSC_BC_std = table2array(IPSC_BC_on_BC(2,:));
+IPSC_BC_on_BC_mean = IPSC_BC_on_BC(1,:);
+IPSC_BC_on_BC_std = IPSC_BC_on_BC(2,:);
 x = linspace(0,14,length(IPSC_BC_mean));
-scatter(x,IPSC_BC_mean,'black','filled');
-xlabel('Individual Basket Cells','FontSize',13,'FontWeight','bold');
-ylabel('Mean Peak IPSC from BC','FontSize',13,'FontWeight','bold');
+scatter(x,IPSC_BC_on_BC_mean,'black','filled');
+set(gca, 'XTickLabel',[]);
+a = [1:15]'; b =num2str(a); c=cellstr(b);
+dx=0.1; dIPSC_BC_on_BC_mean=0.1;
+text(x+dx, IPSC_BC_on_BC_mean+dIPSC_BC_on_BC_mean, c);
+xlabel('Individual BCs','FontSize',13,'FontWeight','bold');
+ylabel('Mean Peak IPSC','FontSize',13,'FontWeight','bold');
 hold on;
-errorbar(x,IPSC_BC_mean,IPSC_BC_std,'b','LineStyle','none')
-title('Mean Peak IPSC from BC onto BC','FontSize',15,'FontWeight','bold')
+errorbar(x,IPSC_BC_on_BC_mean,IPSC_BC_on_BC_std,'b','LineStyle','none')
+title('Mean Peak IPSC from BCs onto BCs','FontSize',15,'FontWeight','bold')
 
 %% IPSCs only from BC on AAC
 
 IPSC_BC_on_AAC = [];
 ipsc_BC_on_AAC = [];
-for i = 1:1:14 % number of PYR cells
+for i = 1:1:15
     pks_ipsc_BC = allcellsAAC{i}(:,3);
     pks_ipsc_BC(pks_ipsc_BC==0)=[];
     ipsc_BC_on_AAC_mean = mean(pks_ipsc_BC);
@@ -689,28 +734,34 @@ for i = 1:1:14 % number of PYR cells
     IPSC_BC_on_AAC = [IPSC_BC_on_AAC ipsc_BC_on_AAC];
 end 
 
-IPSC_BC_on_AAC = array2table(IPSC_BC_on_AAC);
-IPSC_BC_on_AAC.Properties.VariableNames = {'AAC1'...
-    'AAC2' 'AAC3' 'AAC4' 'AAC5' 'AAC6'...
-    'AAC7' 'AAC8' 'AAC9' 'AAC10' 'AAC11'...
-    'AAC12' 'AAC13' 'AAC14'};
+IPSC_BC_on_AAC_table = IPSC_BC_on_AAC;
+num = (1:15)';
+IPSC_BC_on_AAC_table = array2table(IPSC_BC_on_AAC_table');
+IPSC_BC_on_AAC_table.num = num;
+IPSC_BC_on_AAC_table = [IPSC_BC_on_AAC_table(:,end) IPSC_BC_on_AAC_table(:,1) IPSC_BC_on_AAC_table(:,2)];
+
+IPSC_BC_on_AAC_table.Properties.VariableNames = {'AAC_Number', 'Mean_Peak', 'Standard_Deviation'};
 
 subplot(3,1,2)
-IPSC_BC_on_AAC_mean = table2array(IPSC_BC_on_AAC(1,:));
-IPSC_BC_on_AAC_std = table2array(IPSC_BC_on_AAC(2,:));
+IPSC_BC_on_AAC_mean = IPSC_BC_on_AAC(1,:);
+IPSC_BC_on_AAC_std = IPSC_BC_on_AAC(2,:);
 x = linspace(0,15,length(IPSC_BC_on_AAC_mean));
 scatter(x,IPSC_BC_on_AAC_mean,'black','filled');
+set(gca, 'XTickLabel',[]);
+a = [1:15]'; b =num2str(a); c=cellstr(b);
+dx=0.1; dIPSC_BC_on_AAC_mean=0.1;
+text(x+dx, IPSC_BC_on_AAC_mean+dIPSC_BC_on_AAC_mean, c);
 xlabel('Individual AACs','FontSize',13,'FontWeight','bold');
-ylabel('Mean Peak IPSC from BC','FontSize',13,'FontWeight','bold');
+ylabel('Mean Peak IPSC','FontSize',13,'FontWeight','bold');
 hold on;
 errorbar(x,IPSC_BC_on_AAC_mean,IPSC_BC_on_AAC_std,'b','LineStyle','none')
-title('Mean Peak IPSC from BC onto AAC','FontSize',15,'FontWeight','bold')
+title('Mean Peak IPSC from BCs onto AACs','FontSize',15,'FontWeight','bold')
 
 %% IPSCs only from BC on BiC
 
 IPSC_BC_on_BiC = [];
 ipsc_BC_on_BiC = [];
-for i = 1:1:14 % number of PYR cells
+for i = 1:1:15
     pks_ipsc_BC = allcellsBiC{i}(:,3);
     pks_ipsc_BC(pks_ipsc_BC==0)=[];
     ipsc_BC_on_BiC_mean = mean(pks_ipsc_BC);
@@ -719,27 +770,27 @@ for i = 1:1:14 % number of PYR cells
     IPSC_BC_on_BiC = [IPSC_BC_on_BiC ipsc_BC_on_BiC];
 end 
 
-IPSC_BC_on_BiC = array2table(IPSC_BC_on_BiC);
-IPSC_BC_on_BiC.Properties.VariableNames = {'BiC1'...
-    'BiC2' 'BiC3' 'BiC4' 'BiC5' 'BiC6'...
-    'BiC7' 'BiC8' 'BiC9' 'BiC10' 'BiC11'...
-    'BiC12' 'BiC13' 'BiC14'};
+IPSC_BC_on_BiC_table = IPSC_BC_on_BiC;
+num = (1:15)';
+IPSC_BC_on_BiC_table = array2table(IPSC_BC_on_BiC_table');
+IPSC_BC_on_BiC_table.num = num;
+IPSC_BC_on_BiC_table = [IPSC_BC_on_BiC_table(:,end) IPSC_BC_on_BiC_table(:,1) IPSC_BC_on_BiC_table(:,2)];
+
+IPSC_BC_on_BiC_table.Properties.VariableNames = {'BiC_Number', 'Mean_Peak', 'Standard_Deviation'};
 
 subplot(3,1,3)
-IPSC_BC_on_BiC_mean = table2array(IPSC_BC_on_BiC(1,:));
-IPSC_BC_on_BiC_std = table2array(IPSC_BC_on_BiC(2,:));
+IPSC_BC_on_BiC_mean = IPSC_BC_on_BiC(1,:);
+IPSC_BC_on_BiC_std = IPSC_BC_on_BiC(2,:);
 x = linspace(0,14,length(IPSC_BC_on_BiC_mean));
 scatter(x,IPSC_BC_on_BiC_mean,'black','filled');
 xlabel('Individual BiCs','FontSize',13,'FontWeight','bold');
-ylabel('Mean Peak IPSC from BiC','FontSize',13,'FontWeight','bold');
+ylabel('Mean Peak IPSC','FontSize',13,'FontWeight','bold');
 hold on;
 errorbar(x,IPSC_BC_on_BiC_mean,IPSC_BC_on_BiC_std,'b','LineStyle','none')
-title('Mean Peak IPSC from BC onto BiC','FontSize',15,'FontWeight','bold')
+title('Mean Peak IPSC from BCs onto BiCs','FontSize',15,'FontWeight','bold')
 
-%% BC and BiC ipsc current onto BC, BiC and AAC gathered %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+%% IPSCs Only From BC and BiC onto BC, BiC and AAC gathered 
 % Sum all ipsc currents
-
 all_ipsc_on_BC_BiC = [];
 all_epsc_on_BC_BiC = [];
 all_ipsc_on_BC_BiC_AAC = [];
@@ -747,7 +798,7 @@ all_ipsc_on_BC_AAC = [];
 all_epsc_on_BC_BiC_AAC = [];
 all_epsc_on_BC_AAC = [];
 
-for i = 1:1:14
+for i = 1:1:15
     tot_cur_ipsc_on_BC =  current_BiC_on_BC(:,i) + current_BC_on_BC(:,i);
     tot_cur_ipsc_on_BiC =  current_BiC_on_BiC(:,i) + current_BC_on_BiC(:,i);
     tot_cur_ipsc_on_AAC =  current_BiC_on_AAC(:,i) + current_BC_on_AAC(:,i);
@@ -768,10 +819,10 @@ for i = 1:1:14
     all_epsc_on_BC_AAC = [all_epsc_on_BC_AAC tot_cur_epsc_on_BC_AAC];
 end
 
-%% Find the peaks of the summed ipsc currents %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Find the peaks of the summed IPSCs from BC and BiC onto BC, BiC and AAC 
 
 peaks_all_PV_on_BC_BiC = [];
-for k = 1:1:14
+for k = 1:1:15
     [pks, locs] = findpeaks(all_ipsc_on_BC_BiC(:,k),'MinPeakDistance',4000); % peak detection
     temp_cur = all_ipsc_on_BC_BiC(:,k);
     allrows = (1:40000)';
@@ -786,7 +837,7 @@ end
 
 
 peaks_all_PV_on_BC_AAC = [];
-for k = 1:1:14
+for k = 1:1:15
     [pks, locs] = findpeaks(all_ipsc_on_BC_AAC(:,k),'MinPeakDistance',4000); % peak detection
     temp_cur = all_ipsc_on_BC_BiC(:,k);
     allrows = (1:40000)';
@@ -801,7 +852,7 @@ end
 
 % Find the peaks of the summed ipsc currents
 peaks_all_PV_on_BC_BiC_AAC = [];
-for k = 1:1:14
+for k = 1:1:15
     [pks, locs] = findpeaks(all_ipsc_on_BC_BiC_AAC(:,k),'MinPeakDistance',4000); % peak detection
     temp_cur = all_ipsc_on_BC_BiC_AAC(:,k);
     allrows = (1:40000)';
@@ -815,7 +866,7 @@ for k = 1:1:14
 end
 
 peaks_PYR_on_BC_BiC_AAC = [];
-for k = 1:1:14
+for k = 1:1:15
     [pks, locs] = findpeaks(all_epsc_on_BC_BiC_AAC(:,k),'MinPeakDistance',4000); % peak detection
     temp_cur = all_epsc_on_BC_BiC_AAC(:,k);
     allrows = (1:40000)';
@@ -829,7 +880,7 @@ for k = 1:1:14
 end
 
 peaks_PYR_on_BC_AAC = [];
-for k = 1:1:14
+for k = 1:1:15
     [pks, locs] = findpeaks(all_epsc_on_BC_AAC(:,k),'MinPeakDistance',4000); % peak detection
     temp_cur = all_epsc_on_BC_AAC(:,k);
     allrows = (1:40000)';
@@ -842,11 +893,11 @@ for k = 1:1:14
     peaks_PYR_on_BC_AAC = [peaks_PYR_on_BC_AAC peaks_all];
 end
 
-%% BC and BiC ipsc currents together onto BC, BiC - graph and table %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% IPSCs from BC and BiC onto BC and BiC 
 
 IPSC_all_on_BC_BiC = [];
 ipsc_all_on_BC_BiC = [];
-for i = 1:1:14 % number of PYR cells
+for i = 1:1:15
     pks_ipsc_all = peaks_all_PV_on_BC_BiC(:,i);
     pks_ipsc_all(pks_ipsc_all == 0) = [];
     ipsc_all_mean = mean(pks_ipsc_all);
@@ -855,30 +906,37 @@ for i = 1:1:14 % number of PYR cells
     IPSC_all_on_BC_BiC = [IPSC_all_on_BC_BiC ipsc_all_on_BC_BiC];
 end 
 
-IPSC_all_on_BC_BiC = array2table(IPSC_all_on_BC_BiC);
-IPSC_all_on_BC_BiC.Properties.VariableNames = {'BC_BiC1'...
-    'BC_BiC2' 'BC_BiC3' 'BC_BiC4' 'BC_BiC5' 'BC_BiC6'...
-    'BC_BiC7' 'BC_BiC8' 'BC_BiC9' 'BC_BiC10' 'BC_BiC11'...
-    'BC_BiC12' 'BC_BiC13' 'BC_BiC14'};
+IPSC_all_on_BC_BiC_table = IPSC_all_on_BC_BiC;
+num = (1:15)';
+IPSC_all_on_BC_BiC_table = array2table(IPSC_all_on_BC_BiC_table');
+IPSC_all_on_BC_BiC_table.num = num;
+IPSC_all_on_BC_BiC_table = [IPSC_all_on_BC_BiC_table(:,end) IPSC_all_on_BC_BiC_table(:,1) IPSC_all_on_BC_BiC_table(:,2)];
 
-IPSC_all_on_BC_BiC_mean = table2array(IPSC_all_on_BC_BiC(1,:));
-IPSC_all_on_BC_BiC_std = table2array(IPSC_all_on_BC_BiC(2,:));
-x = linspace(0,14,length(IPSC_all_on_BC_BiC_mean));
+IPSC_all_on_BC_BiC_table.Properties.VariableNames = {'BC_and_BiC_Number', 'Mean_Peak', 'Standard_Deviation'};
+
+IPSC_all_on_BC_BiC_mean = IPSC_all_on_BC_BiC(1,:);
+IPSC_all_on_BC_BiC_std = IPSC_all_on_BC_BiC(2,:);
+x = linspace(0,15,length(IPSC_all_on_BC_BiC_mean));
 figure
 scatter(x,IPSC_all_on_BC_BiC_mean,'black','filled');
-xlabel('Each Point Includes BC, BiC ','FontSize',13,'FontWeight','bold');
+set(gca, 'XTickLabel',[]);
+a = [1:15]'; b =num2str(a); c=cellstr(b);
+dx=0.1; dIPSC_all_on_BC_BiC_mean=0.1;
+text(x+dx, IPSC_all_on_BC_BiC_mean+dIPSC_all_on_BC_BiC_mean, c);
+xlabel('Each Point Includes 1 BC and 1 BiC ','FontSize',13,'FontWeight','bold');
 ylabel('Mean Peak IPSC','FontSize',13,'FontWeight','bold');
 hold on;
 errorbar(x,IPSC_all_on_BC_BiC_mean,IPSC_all_on_BC_BiC_std,'b','LineStyle','none')
 title('Mean Peak IPSC from BC, BiC onto BC, BiC','FontSize',15,'FontWeight','bold')
 
-%% Display the table as a figure
-
-uitable('Data',IPSC_all_on_BC_BiC{:,:},'ColumnName', IPSC_all_on_BC_BiC.Properties.VariableNames,...
-    'Units', 'Normalized', 'Position',[0, 0, 1, 1]);
+%% Mean Peak and Standard Deviation of IPSC from BC, BiC onto BC, BiC
+fig = uitable('Data',IPSC_all_on_BC_BiC_table{:,:},...
+    'RowName',[],...
+    'ColumnName',{'1 BC, 1 BiC Number #','Mean Peak','Standard Deviation'},...
+    'Units','Normalized',...
+    'Position',[0, 0, 1, 1]);%% Display the table as a figure
 
 %% BC and BiC ipsc currents together onto BC, BiC and AAC - graph and table %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 
 IPSC_all_on_BC_BiC_AAC = [];
 ipsc_all_on_BC_BiC_AAC = [];
