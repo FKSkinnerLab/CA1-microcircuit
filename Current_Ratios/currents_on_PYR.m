@@ -1,5 +1,9 @@
-% Load Data From Netclamp Results
+%% Melisa Gumus - 2018 May
+% Calculate Excitatory/Inhibitory Ratios onto PYRs
+
+%% Load Data From Netclamp Results
 clear all
+close all
 clc
 
 f = fullfile('/home','melisagumus','Documents', ...
@@ -75,7 +79,6 @@ f = fullfile('/Users','macklabadmin','Documents', ...
     'mytrace_325003_syns.dat'...
     });
 %% Write Data on Matrix
-
 alldata = [];
 for m = 1:1:15
     temp_data = readtable(f{m},'Delimiter','\t');
@@ -86,7 +89,7 @@ end
 data = mat2cell(alldata, 40000, ...
     [12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12]);
 
-%% Creates a big table consists of inputs from AAC, BiC, PYR, and BC ... in order
+%% Creates a big table consists of inputs from AAC, BiC, PYR, and BC... onto PYR
 
 M = [];
 current_AAC = [];
@@ -173,48 +176,51 @@ allcells = mat2cell(M, 40000, ...
     [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4]);
 
 %% Graph of EPSCs onto PYR
-
 figure
 for i = 1:1:15 
     temp = allcells{i}(:,3); 
     temp(temp == 0) = [];   %get rid of zeros
     subplot(5,3,i)
     p = histfit(temp);
-    set(p(1),'facecolor',[0.1 0.3 0.6])
+    set(p(1),'facecolor',[0.1 0.6 0.6]);
     set(p(2),'color','k')
     hold on
     title (['Pyramidal Cell #' num2str(i)]) % name each graph with the corresponding pyr #
     xlabel('EPSC')
     ylabel('Number of EPSCs')
 end
-suptitle('Distribution of EPSCs on PYR Cells')
+suptitle('Distribution of EPSCs on PYR Cells');
 
 %% Graph of IPSCs from AAC onto PYR
-
 figure
 for i = 1:1:15
     temp = allcells{i}(:,1);
     temp(temp == 0) = [];   %get rid of zeros
     subplot(5,3,i)
     p = histfit(temp);
-    set(p(1),'facecolor',[0.1 0.3 0.6])
+    set(p(1),'facecolor',[0.1 0.6 0.6])
     set(p(2),'color','k')
     hold on
     title (['Pyramidal Cell #' num2str(i)]) % name each graph with the corresponding pyr #
     xlabel('IPSCs from AAC')
     ylabel('Number of IPSCs')
 end
+
+% axes( 'Position', [0, 0.95, 1, 0.05] ) ;
+% set( gca, 'Color', 'None', 'XColor', 'White', 'YColor', 'White' ) ;
+% text( 0.5, 0, 'Distribution of IPSCs from AAC onto PYR Cells', 'FontSize', 16', 'FontWeight', 'Bold', ...
+%     'HorizontalAlignment', 'Center', 'VerticalAlignment', 'Bottom' ) 
+
 suptitle('Distribution of IPSCs from AAC onto PYR Cells')
 
 %% Graph of IPSCs from BiC onto PYR
-
 figure
 for i = 1:1:15
     temp = allcells{i}(:,2);
     temp(temp == 0) = [];   %get rid of zeros
     subplot(5,3,i)
     p = histfit(temp);
-    set(p(1),'facecolor',[0.1 0.3 0.6])
+    set(p(1),'facecolor',[0.1 0.6 0.6])
     set(p(2),'color','k')
     hold on
     title (['Pyramidal Cell #' num2str(i)]) % name each graph with the corresponding pyr #
@@ -224,14 +230,13 @@ end
 suptitle('Distribution of IPSCs from BiC onto PYR Cells')
 
 %% Graph of IPSCs from BC onto PYR
-
 figure
 for i = 1:1:15
     temp = allcells{i}(:,2);
     temp(temp == 0) = [];   %get rid of zeros
     subplot(5,3,i)
     p = histfit(temp);
-    set(p(1),'facecolor',[0.1 0.3 0.6])
+    set(p(1),'facecolor',[0.1 0.6 0.6])
     set(p(2),'color','k')
     hold on
     title (['Pyramidal Cell #' num2str(i)]) % name each graph with the corresponding pyr #
@@ -240,9 +245,7 @@ for i = 1:1:15
 end
 suptitle('Distribution of IPSCs from BC onto PYR Cells')
 
-
-%% Find Mean and SD of EPSCs from PYR
-
+%% Find Mean EPSCs and SD onto PYR
 EPSC = [];
 epsc = [];
 for i = 1:1:15 % number of PYR cells
@@ -254,30 +257,43 @@ for i = 1:1:15 % number of PYR cells
     EPSC = [EPSC epsc];
 end
 
-EPSC = array2table(EPSC);
-EPSC.Properties.VariableNames = {'pyramidal1'...
-    'pyramidal2' 'pyramidal3' 'pyramidal4' 'pyramidal5' 'pyramidal6'...
-    'pyramidal7' 'pyramidal8' 'pyramidal9' 'pyramidal10' 'pyramidal11'...
-    'pyramidal12' 'pyramidal13' 'pyramidal14' 'pyramidal15'};
+EPSC_table = EPSC;
+num = (1:15)';
+EPSC_table = array2table(EPSC_table');
+EPSC_table.num = num;
+EPSC_table = [EPSC_table(:,end) EPSC_table(:,1) EPSC_table(:,2)];
+
+EPSC_table.Properties.VariableNames = {'Pyramidal_Cell_Number', 'Mean_Peak', 'Standard_Deviation'};
 
 subplot(2,2,1)
-EPSC_mean = table2array(EPSC(1,:));
-EPSC_std = table2array(EPSC(2,:));
+EPSC_mean = EPSC(1,:);
+EPSC_std = EPSC(2,:);
 x = linspace(1,15,length(EPSC_mean));
 scatter(x,EPSC_mean,'black','filled');
+set(gca, 'XTickLabel',[]);
+a = [1:15]'; b =num2str(a); c=cellstr(b);
+dx=0.1; dEPSC_mean=0.1;
+text(x+dx, EPSC_mean+dEPSC_mean, c);
 xlabel('Individual PYR Cells','FontSize',13,'FontWeight','bold');
-ylabel('Mean Peak EPSC','FontSize',13,'FontWeight','bold');
+ylabel('Mean Peak EPSCs','FontSize',13,'FontWeight','bold');
 hold on;
 errorbar(x,EPSC_mean,EPSC_std,'b','LineStyle','none')
-title('Mean Peak EPSC onto PYR cells','FontSize',15,'FontWeight','bold')
+title('Mean Peak EPSCs onto PYR Cells','FontSize',15,'FontWeight','bold')
 
-%% Display the table as a figure
+%% Mean Peak and Standard Deviation of EPSC on PYR Cells
+fig = uitable('Data',EPSC_table{:,:},...
+    'RowName',[],...
+    'ColumnName',{'Pyramidal Cell Number','Mean Peak','Standard Deviation'},...
+    'Units','Normalized',...
+    'Position',[0, 0, 1, 1]);
 
-uitable('Data',EPSC{:,:},'ColumnName',EPSC.Properties.VariableNames,...
-    'Units', 'Normalized', 'Position',[0, 0, 1, 1]);
+% txt_title = uicontrol('Style','text',...
+%     'Units','Normalized',...
+%     'String','pyr',...
+%     'Position',[0.1, 0.9, 0.47, 1]);
+    
 
-%% IPSCs only from AAC
-
+%% IPSCs only from AAC onto PYR
 IPSC_AAC = [];
 ipsc_AAC = [];
 for i = 1:1:15 % number of PYR cells
@@ -289,30 +305,37 @@ for i = 1:1:15 % number of PYR cells
     IPSC_AAC = [IPSC_AAC ipsc_AAC];
 end
 
-IPSC_AAC = array2table(IPSC_AAC);
-IPSC_AAC.Properties.VariableNames = {'pyr1'...
-    'pyr2' 'pyr3' 'pyr4' 'pyr5' 'pyr6'...
-    'pyr7' 'pyr8' 'pyr9' 'pyr10' 'pyr11'...
-    'pyr12' 'pyr13' 'pyr14' 'pyr15'};
+IPSC_AAC_table = IPSC_AAC;
+num = (1:15)';
+IPSC_AAC_table = array2table(IPSC_AAC_table');
+IPSC_AAC_table.num = num;
+IPSC_AAC_table = [IPSC_AAC_table(:,end) IPSC_AAC_table(:,1) IPSC_AAC_table(:,2)];
+
+IPSC_AAC_table.Properties.VariableNames = {'Pyramidal_Cell_Number', 'Mean_Peak', 'Standard_Deviation'};
 
 subplot(2,2,2)
-IPSC_AAC_mean = table2array(IPSC_AAC(1,:));
-IPSC_AAC_std = table2array(IPSC_AAC(2,:));
+IPSC_AAC_mean = IPSC_AAC(1,:);
+IPSC_AAC_std = IPSC_AAC(2,:);
 x = linspace(0,15,length(IPSC_AAC_mean));
 scatter(x,IPSC_AAC_mean,'black','filled');
+set(gca, 'XTickLabel',[]);
+a = [1:15]'; b =num2str(a); c=cellstr(b);
+dx=0.1; dIPSC_AAC_mean=0.1;
+text(x+dx, IPSC_AAC_mean+dIPSC_AAC_mean, c);
 xlabel('Individual PYR Cells','FontSize',13,'FontWeight','bold');
 ylabel('Mean Peak IPSC from AAC','FontSize',13,'FontWeight','bold');
 hold on;
 errorbar(x,IPSC_AAC_mean,IPSC_AAC_std,'b','LineStyle','none')
-title('Mean Peak IPSC from AAC onto PYR cells','FontSize',15,'FontWeight','bold')
+title('Mean Peak IPSC from AAC onto PYR Cells','FontSize',15,'FontWeight','bold')
 
-%% Display the table as a figure
+%% Mean Peak and Standard Deviation of IPSC from AAC onto PYR Cells
+fig = uitable('Data',IPSC_AAC_table{:,:},...
+    'RowName',[],...
+    'ColumnName',{'Pyramidal Cell Number','Mean Peak','Standard Deviation'},...
+    'Units','Normalized',...
+    'Position',[0, 0, 1, 1]);
 
-uitable('Data',IPSC_AAC{:,:},'ColumnName', IPSC_AAC.Properties.VariableNames,...
-    'Units', 'Normalized', 'Position',[0, 0, 1, 1]);
-
-%% IPSCs only from BiC
-
+%% IPSCs only from BiC onto PYR
 IPSC_BiC = [];
 ipsc_BiC = [];
 for i = 1:1:15 % number of PYR cells
@@ -324,30 +347,37 @@ for i = 1:1:15 % number of PYR cells
     IPSC_BiC = [IPSC_BiC ipsc_BiC];
 end
 
-IPSC_BiC = array2table(IPSC_BiC);
-IPSC_BiC.Properties.VariableNames = {'pyr1'...
-    'pyr2' 'pyr3' 'pyr4' 'pyr5' 'pyr6'...
-    'pyr7' 'pyr8' 'pyr9' 'pyr10' 'pyr11'...
-    'pyr12' 'pyr13' 'pyr14' 'pyr15'};
+IPSC_BiC_table = IPSC_BiC;
+num = (1:15)';
+IPSC_BiC_table = array2table(IPSC_BiC_table');
+IPSC_BiC_table.num = num;
+IPSC_BiC_table = [IPSC_BiC_table(:,end) IPSC_BiC_table(:,1) IPSC_BiC_table(:,2)];
+
+IPSC_BiC_table.Properties.VariableNames = {'Pyramidal_Cell_Number', 'Mean_Peak', 'Standard_Deviation'};
 
 subplot(2,2,3)
-IPSC_BiC_mean = table2array(IPSC_BiC(1,:));
-IPSC_BiC_std = table2array(IPSC_BiC(2,:));
+IPSC_BiC_mean = IPSC_BiC(1,:);
+IPSC_BiC_std = IPSC_BiC(2,:);
 x = linspace(0,15,length(IPSC_BiC_mean));
 scatter(x,IPSC_BiC_mean,'black','filled');
+set(gca, 'XTickLabel',[]);
+a = [1:15]'; b =num2str(a); c=cellstr(b);
+dx=0.1; dIPSC_BiC_mean=0.1;
+text(x+dx, IPSC_BiC_mean+dIPSC_BiC_mean, c);
 xlabel('Individual PYR Cells','FontSize',13,'FontWeight','bold');
 ylabel('Mean Peak IPSC from BiC','FontSize',13,'FontWeight','bold');
 hold on;
 errorbar(x,IPSC_BiC_mean,IPSC_BiC_std,'b','LineStyle','none')
-title('Mean Peak IPSC from BiC onto PYR cells','FontSize',15,'FontWeight','bold')
+title('Mean Peak IPSC from BiC onto PYR Cells','FontSize',15,'FontWeight','bold')
 
-%% Display the table as a figure
+%% Mean Peak and Standard Deviation of IPSC from BiC onto PYR Cells
+fig = uitable('Data',IPSC_BiC_table{:,:},...
+    'RowName',[],...
+    'ColumnName',{'Pyramidal Cell Number','Mean Peak','Standard Deviation'},...
+    'Units','Normalized',...
+    'Position',[0, 0, 1, 1]);
 
-uitable('Data',IPSC_BiC{:,:},'ColumnName', IPSC_BiC.Properties.VariableNames,...
-    'Units', 'Normalized', 'Position',[0, 0, 1, 1]);
-
-%% IPSCs only from BC
-
+%% IPSCs only from BC onto PYR
 IPSC_BC = [];
 ipsc_BC = [];
 for i = 1:1:15 % number of PYR cells
@@ -359,31 +389,39 @@ for i = 1:1:15 % number of PYR cells
     IPSC_BC = [IPSC_BC ipsc_BC];
 end
 
-IPSC_BC = array2table(IPSC_BC);
-IPSC_BC.Properties.VariableNames = {'pyr1'...
-    'pyr2' 'pyr3' 'pyr4' 'pyr5' 'pyr6'...
-    'pyr7' 'pyr8' 'pyr9' 'pyr10' 'pyr11'...
-    'pyr12' 'pyr13' 'pyr14' 'pyr15'};
+IPSC_BC_table = IPSC_BC;
+num = (1:15)';
+IPSC_BC_table = array2table(IPSC_BC_table');
+IPSC_BC_table.num = num;
+IPSC_BC_table = [IPSC_BC_table(:,end) IPSC_BC_table(:,1) IPSC_BC_table(:,2)];
+
+IPSC_BC_table.Properties.VariableNames = {'Pyramidal_Cell_Number', 'Mean_Peak', 'Standard_Deviation'};
 
 subplot(2,2,4)
-IPSC_BC_mean = table2array(IPSC_BC(1,:));
-IPSC_BC_std = table2array(IPSC_BC(2,:));
+IPSC_BC_mean = IPSC_BC(1,:);
+IPSC_BC_std = IPSC_BC(2,:);
 x = linspace(0,15,length(IPSC_BC_mean));
 scatter(x,IPSC_BC_mean,'black','filled');
+set(gca, 'XTickLabel',[]);
+a = [1:15]'; b =num2str(a); c=cellstr(b);
+dx=0.1; dIPSC_BC_mean=0.1;
+text(x+dx, IPSC_BC_mean+dIPSC_BC_mean, c);
 xlabel('Individual PYR Cells','FontSize',13,'FontWeight','bold');
 ylabel('Mean Peak IPSC from BC','FontSize',13,'FontWeight','bold');
 hold on;
 errorbar(x,IPSC_BC_mean,IPSC_BC_std,'b','LineStyle','none')
-title('Mean Peak IPSC from BC onto PYR cells','FontSize',15,'FontWeight','bold')
+title('Mean Peak IPSC from BC onto PYR Cells','FontSize',15,'FontWeight','bold')
 
-%% Display the table as a figure
+%% Mean Peak and Standard Deviation of IPSC from BC onto PYR Cells
+fig = uitable('Data',IPSC_BC_table{:,:},...
+    'RowName',[],...
+    'ColumnName',{'Pyramidal Cell Number','Mean Peak','Standard Deviation'},...
+    'Units','Normalized',...
+    'Position',[0, 0, 1, 1]);
 
-uitable('Data',IPSC_BC{:,:},'ColumnName', IPSC_BC.Properties.VariableNames,...
-    'Units', 'Normalized', 'Position',[0, 0, 1, 1]);
+%% Calculate Mean IPSCs Gathered from AAC, BiC and BC onto PYR
 
-%% all ipsc current onto PYR gathered
-
-% Sum all ipsc currents
+% Sum all IPSC currents
 all_ipsc = [];
 all_ipsc_together = [];
 
@@ -400,7 +438,6 @@ for i = 1:1:15
     
     all_ipsc = [all_ipsc tot_cur_ipsc];
     all_ipsc_together = [all_ipsc_together tot_ipsc_together];
-
 end
 
 % Find the peaks of the summed ipsc currents
@@ -432,7 +469,7 @@ for k = 1:1:15
     peaks_all_PV_together = [peaks_all_PV_together peaks_all_together];
 end
 
-%% All PV ipsc currents together onto PYR - graph and table
+%% Mean IPSCs Gathered from AAC, BiC and BC onto PYR - Table and Graph
 
 IPSC_all = [];
 ipsc_all = [];
@@ -445,30 +482,37 @@ for i = 1:1:15 % number of PYR cells
     IPSC_all = [IPSC_all ipsc_all];
 end
 
-IPSC_all = array2table(IPSC_all);
-IPSC_all.Properties.VariableNames = {'pyr1'...
-    'pyr2' 'pyr3' 'pyr4' 'pyr5' 'pyr6'...
-    'pyr7' 'pyr8' 'pyr9' 'pyr10' 'pyr11'...
-    'pyr12' 'pyr13' 'pyr14' 'pyr15'};
+IPSC_all_table = IPSC_all;
+num = (1:15)';
+IPSC_all_table = array2table(IPSC_all_table');
+IPSC_all_table.num = num;
+IPSC_all_table = [IPSC_all_table(:,end) IPSC_all_table(:,1) IPSC_all_table(:,2)];
 
+IPSC_all_table.Properties.VariableNames = {'Pyramidal_Cell_Number', 'Mean_Peak', 'Standard_Deviation'};
 
-IPSC_all_mean = table2array(IPSC_all(1,:));
-IPSC_all_std = table2array(IPSC_all(2,:));
+IPSC_all_mean = IPSC_all(1,:);
+IPSC_all_std = IPSC_all(2,:);
 x = linspace(0,15,length(IPSC_all_mean));
 figure
 scatter(x,IPSC_all_mean,'black','filled');
+set(gca, 'XTickLabel',[]);
+a = [1:15]'; b =num2str(a); c=cellstr(b);
+dx=0.1; dIPSC_all_mean=0.1;
+text(x+dx, IPSC_all_mean+dIPSC_all_mean, c);
 xlabel('Individual PYR Cells','FontSize',13,'FontWeight','bold');
 ylabel('Mean Peak IPSC','FontSize',13,'FontWeight','bold');
 hold on;
 errorbar(x,IPSC_all_mean,IPSC_all_std,'b','LineStyle','none')
-title('Mean Peak IPSC from BC, BiC and AAC onto PYR cells','FontSize',15,'FontWeight','bold')
+title('Mean Peak IPSC from BC, BiC and AAC onto PYR Cells','FontSize',15,'FontWeight','bold')
 
-%% Display the table as a figure
+%% Mean Peak and Standard Deviation of IPSCs from AAC, BiC, and BC onto PYR Cells
+fig = uitable('Data',IPSC_all_table{:,:},...
+    'RowName',[],...
+    'ColumnName',{'Pyramidal Cell Number','Mean Peak','Standard Deviation'},...
+    'Units','Normalized',...
+    'Position',[0, 0, 1, 1]);
 
-uitable('Data',IPSC_all{:,:},'ColumnName', IPSC_all.Properties.VariableNames,...
-    'Units', 'Normalized', 'Position',[0, 0, 1, 1]);
-
-%% All ipsc currents together onto PYR - graph and table
+%% All IPSCs from All Inhibitory Neurons onto PYR - graph and table
 
 IPSC_all_together = [];
 ipsc_all_together = [];
@@ -481,31 +525,38 @@ for i = 1:1:15% number of PYR cells
     IPSC_all_together = [IPSC_all_together ipsc_all_together];
 end 
 
-IPSC_all_together = array2table(IPSC_all_together);
-IPSC_all_together.Properties.VariableNames = {'pyr1'...
-    'pyr2' 'pyr3' 'pyr4' 'pyr5' 'pyr6'...
-    'pyr7' 'pyr8' 'pyr9' 'pyr10' 'pyr11'...
-    'pyr12' 'pyr13' 'pyr14' 'pyr15'};
- 
-IPSC_all_mean_together = table2array(IPSC_all_together(1,:));
-IPSC_all_std_together = table2array(IPSC_all_together(2,:));
-x = linspace(0,14,length(IPSC_all_mean_together));
+IPSC_all_together_table = IPSC_all_together;
+num = (1:15)';
+IPSC_all_together_table = array2table(IPSC_all_together_table');
+IPSC_all_together_table.num = num;
+IPSC_all_together_table = [IPSC_all_together_table(:,end) IPSC_all_together_table(:,1) IPSC_all_together_table(:,2)];
+
+IPSC_all_together_table.Properties.VariableNames = {'Pyramidal_Cell_Number', 'Mean_Peak', 'Standard_Deviation'};
+
+
+IPSC_all_together_mean = IPSC_all_together(1,:);
+IPSC_all_std_together = IPSC_all_together(2,:);
+x = linspace(0,14,length(IPSC_all_together_mean));
 figure
-scatter(x,IPSC_all_mean_together,'black','filled');
+scatter(x,IPSC_all_together_mean,'black','filled');
+set(gca, 'XTickLabel',[]);
+a = [1:15]'; b =num2str(a); c=cellstr(b);
+dx=0.1; dIPSC_all_together_mean=0.1;
+text(x+dx, IPSC_all_together_mean+dIPSC_all_together_mean, c);
 xlabel('Individual PYR Cells','FontSize',13,'FontWeight','bold');
 ylabel('Mean Peak IPSC','FontSize',13,'FontWeight','bold');
 hold on;
-errorbar(x,IPSC_all_mean_together,IPSC_all_std_together,'b','LineStyle','none')
-title('Mean Peak IPSC from all inhibitory cells onto PYR','FontSize',15,'FontWeight','bold')
+errorbar(x,IPSC_all_together_mean,IPSC_all_std_together,'b','LineStyle','none')
+title('Mean Peak IPSC from All Inhibitory Cells onto PYRs','FontSize',15,'FontWeight','bold')
 
-%% Display the table as a figure
+%% Mean Peak and Standard Deviation of IPSCs from All Inhibitory Neurons onto PYR Cells
+fig = uitable('Data',IPSC_all_together_table{:,:},...
+    'RowName',[],...
+    'ColumnName',{'Pyramidal Cell Number','Mean Peak','Standard Deviation'},...
+    'Units','Normalized',...
+    'Position',[0, 0, 1, 1]);
 
-uitable('Data',IPSC_all_together{:,:},'ColumnName', IPSC_all_together.Properties.VariableNames,...
-    'Units', 'Normalized', 'Position',[0, 0, 1, 1]);
-
-
-%% AAC and BC ipsc current onto PYR gathered
-
+%% IPSCs Only from AAC and BC onto PYR gathered
 % Sum all ipsc currents
 AAC_BC_ipsc = [];
 for i = 1:1:15
@@ -528,8 +579,7 @@ for k = 1:1:15
     peaks_AAC_BC = [peaks_AAC_BC pk_AAC_BC];
 end
 
-%% AAC and BC ipsc currents together onto PYR - graph and table
-
+%% IPSC from AAC and BC onto PYR - graph and table
 IPSC_AAC_BC = [];
 ipsc_AAC_BC = [];
 for i = 1:1:15 % number of PYR cells
@@ -541,121 +591,83 @@ for i = 1:1:15 % number of PYR cells
     IPSC_AAC_BC = [IPSC_AAC_BC ipsc_AAC_BC];
 end
 
-IPSC_AAC_BC = array2table(IPSC_AAC_BC);
-IPSC_AAC_BC.Properties.VariableNames = {'pyr1'...
-    'pyr2' 'pyr3' 'pyr4' 'pyr5' 'pyr6'...
-    'pyr7' 'pyr8' 'pyr9' 'pyr10' 'pyr11'...
-    'pyr12' 'pyr13' 'pyr14' 'pyr15'};
+IPSC_AAC_BC_table = IPSC_AAC_BC;
+num = (1:15)';
+IPSC_AAC_BC_table = array2table(IPSC_AAC_BC_table');
+IPSC_AAC_BC_table.num = num;
+IPSC_AAC_BC_table = [IPSC_AAC_BC_table(:,end) IPSC_AAC_BC_table(:,1) IPSC_AAC_BC_table(:,2)];
 
+IPSC_AAC_BC_table.Properties.VariableNames = {'Pyramidal_Cell_Number', 'Mean_Peak', 'Standard_Deviation'};
 
-IPSC_AAC_BC_mean = table2array(IPSC_AAC_BC(1,:));
-IPSC_AAC_BC_std = table2array(IPSC_AAC_BC(2,:));
+IPSC_AAC_BC_mean = IPSC_AAC_BC(1,:);
+IPSC_AAC_BC_std = IPSC_AAC_BC(2,:);
 x = linspace(1,15,length(IPSC_AAC_BC_mean));
 figure
 scatter(x(1,:),IPSC_AAC_BC_mean,'black','filled');
+set(gca, 'XTickLabel',[]);
+a = [1:15]'; b =num2str(a); c=cellstr(b);
+dx=0.1; dIPSC_AAC_BC_mean=0.1;
+text(x+dx, IPSC_AAC_BC_mean+dIPSC_AAC_BC_mean, c);
 xlabel('Individual PYR Cells','FontSize',13,'FontWeight','bold');
 ylabel('Mean Peak IPSC','FontSize',13,'FontWeight','bold');
 hold on;
 errorbar(x,IPSC_all_mean,IPSC_all_std,'b','LineStyle','none')
-title('Mean Peak IPSC from BC and AAC onto PYR cells','FontSize',15,'FontWeight','bold')
+title('Mean Peak IPSC from BC and AAC onto PYR Cells','FontSize',15,'FontWeight','bold')
 
-%% Display the table as a figure
+%% Mean Peak and Standard Deviation of IPSCs Only from AAC and BC onto PYR Cells
+fig = uitable('Data',IPSC_AAC_BC_table{:,:},...
+    'RowName',[],...
+    'ColumnName',{'Pyramidal Cell Number','Mean Peak','Standard Deviation'},...
+    'Units','Normalized',...
+    'Position',[0, 0, 1, 1]);
 
-uitable('Data',IPSC_AAC_BC{:,:},'ColumnName', IPSC_AAC_BC.Properties.VariableNames,...
-    'Units', 'Normalized', 'Position',[0, 0, 1, 1]);
-
-
-%% E/I Ratios on PYR Cells
-
+%% Excitatory/Inhibitory Ratios on PYR Cells - Prep
 IPSC_AAC = table2array(IPSC_AAC);
 IPSC_BiC = table2array(IPSC_BiC);
 IPSC_BC = table2array(IPSC_BC);
 IPSC_all= table2array(IPSC_all);
-%IPSC_AAC_BC = table2array(IPSC_AAC_BC);
+IPSC_AAC_BC = table2array(IPSC_AAC_BC);
 IPSC_all_together= table2array(IPSC_all_together);
 EPSC = table2array(EPSC);
-%%
+
+%% Excitatory/Inhibitory Ratios on PYR Cells
 Ratios_PYR = [];
 E_I_AAC = abs(EPSC(1,:)./IPSC_AAC(1,:))';
 E_I_BC = abs(EPSC(1,:)./IPSC_BC(1,:))';
 E_I_BiC = abs(EPSC(1,:)./IPSC_BiC(1,:))';
-%E_I_AAC_BC = abs(EPSC(1,:)./IPSC_AAC_BC(1,:))';
+E_I_AAC_BC = abs(EPSC(1,:)./IPSC_AAC_BC(1,:))';
 E_I_all = abs(EPSC(1,:)./IPSC_all(1,:))';
 E_I_all_together = abs(EPSC(1,:)./IPSC_all_together(1,:))';
-%%
-
+%% E/I Ratio - Table 
 pyr = 1:15;
-Ratios_PYR = [pyr' E_I_AAC E_I_BC E_I_BiC E_I_all E_I_all_together];
+Ratios_PYR = [pyr' E_I_AAC E_I_BC E_I_BiC E_I_AAC_BC E_I_all E_I_all_together];
 Ratios_PYR = array2table(Ratios_PYR);
 
 Ratios_PYR.Properties.VariableNames = {'pyr_no' 'Ratio_AAC_on_PYR'...
     'Ratio_BC_on_PYR' 'Ratio_BiC_on_PYR' 'Ratio_AAC_BiC_BC_on_PYR' 'All_ipsc_onto_PYR'};
 
-%% Display the table as a figure
+%% Display the E/I table as a figure
 
-uitable('Data',Ratios_PYR{:,:},'ColumnName',Ratios_PYR.Properties.VariableNames,...
-    'Units', 'Normalized', 'Position',[0, 0, 1, 1]);
-
-
-%% Raster Plot for one neuron - NOT FIXED
-
-rasterfile = fullfile('/home','melisagumus','Documents', ...
-                        'MATLAB','CA1_SimTracker','pyr',{...
-                        'pyr_36884_1000';...
-                        'pyr_68032_1000';...
-                        'pyr_83606_1000';...
-                        'pyr_99180_1000';...
-                        'pyr_106967_1000';...
-                        'pyr_114754_1000';...
-                        'pyr_200411_1000';...
-                        'pyr_254920_1000';...
-                        'pyr_286068_1000';...
-                        'pyr_301642_1000'...
-                        },{...
-                        'spikeraster.dat';...
-                        'spikeraster.dat';...
-                        'spikeraster.dat';...
-                        'spikeraster.dat';...
-                        'spikeraster.dat';...
-                        'spikeraster.dat';...
-                        'spikeraster.dat';...
-                        'spikeraster.dat';...
-                        'spikeraster.dat';...
-                        'spikeraster.dat'...
-                        });
-
-%rasterfile = ('/home/melisagumus/Documents/MATLAB/CA1_SimTracker/pyr/pyr_36884_1000/spikeraster.dat');
-
-raster = readtable(rasterfile{1},'Delimiter','\t');
-num_spikes = length(raster.Var2);
-var2 = (raster.Var2)';
-
-plot([var2; var2], [ones(1,num_spikes); ones(1, num_spikes) + 1], 'b')
-%%
-num_spikes = raster.Var1';
-plot([var2; var2], [num_spikes; num_spikes], 'b')
-
-
-%%
-t = raster(:,1);
-nspikes = numel(t);
-
-for ii = 1:nspikes
-    line([t(ii) t(ii)]);%[8474 8475], 'Color', 'k');
-end
+uitable('Data',Ratios_PYR{:,:},...
+    'RowName', [],...
+    'ColumnName',{'Pyramidal Cell Number',...
+    'AAC to PYR',...
+    'BC to PYR',...
+    'BiC to PYR',...
+    'AAC, BC onto PYR',...
+    'AAC, BiC and BC to PYR',...
+    'All Inhibitory Neurons to PYR'},...
+    'Units', 'Normalized',...
+    'Position',[0, 0, 1, 1]);
 
 %%
 
 
-%%
-pd = fitdist(AAC, 'Normal');
-mean_cell = mean(pd);
-x = 0:10:10000;
-y = pdf(pd,x);
 
-histogram(AAC,'Normalization','pdf')
-ylim([0 4])
-xlim([-5 5])
-xlabel('EPSC')
 
-%%
+
+
+
+
+
+
