@@ -1,5 +1,6 @@
-%% Melisa Gumus - 2018 May
-% Calculate Excitatory/Inhibitory Ratios onto Pyramidal Cells
+%% Calculate Excitatory/Inhibitory Ratios onto BiCs
+%  Melisa Gumus
+%  May 2018 
 
 %% Load Data From Netclamp Results
 clear all
@@ -475,13 +476,6 @@ fig = uitable('Data',IPSC_all_together_table{:,:},...
     'ColumnName',{'BiC Number','Mean Peak','Standard Deviation'},...
     'Units','Normalized',...
     'Position',[0, 0, 1, 1]);
-
-%% Excitatory/Inhibitory Ratios on BiC - Prep
-IPSC_BiC = table2array(IPSC_BiC);
-IPSC_BC = table2array(IPSC_BC);
-IPSC_all= table2array(IPSC_all);  % all refers to BC and BiC together
-IPSC_all_together= table2array(IPSC_all_together);
-EPSC = table2array(EPSC);
 
 %% Excitatory/Inhibitory Ratios on BiC
 Ratios_BiC = [];

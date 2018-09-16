@@ -1,5 +1,6 @@
-%% Melisa Gumus - 2018 May
-% Calculate Excitatory/Inhibitory Ratios onto Basket Cells
+%% Calculate Excitatory/Inhibitory Ratios onto BCs
+%  Melisa Gumus
+%  May 2018 
 
 %% Load Data From Netclamp Results
 clear all
@@ -423,7 +424,7 @@ hold on;
 errorbar(x,IPSC_all_mean,IPSC_all_std,'b','LineStyle','none')
 title('Mean Peak IPSCs from BCs and BiCs onto BCs','FontSize',15,'FontWeight','bold')
 
-%% Mean Peak and Standard Deviation of IPSCs from BiC, and BC onto PYR Cells
+%% Mean Peak and Standard Deviation of IPSCs from BiC, and BC onto BCs
 fig = uitable('Data',IPSC_all_table{:,:},...
     'RowName',[],...
     'ColumnName',{'BC Number','Mean Peak','Standard Deviation'},...
@@ -472,13 +473,6 @@ fig = uitable('Data',IPSC_all_together_table{:,:},...
     'ColumnName',{'BC Number','Mean Peak','Standard Deviation'},...
     'Units','Normalized',...
     'Position',[0, 0, 1, 1]);
-
-%% Excitatory/Inhibitory Ratios on BCs - Prep
-IPSC_BiC = table2array(IPSC_BiC);
-IPSC_BC = table2array(IPSC_BC);
-IPSC_all= table2array(IPSC_all);  % all refers to BC and BiC together
-IPSC_all_together= table2array(IPSC_all_together);
-EPSC = table2array(EPSC);
 
 %% Excitatory/Inhibitory Ratios on BCs
 Ratios_BC = [];

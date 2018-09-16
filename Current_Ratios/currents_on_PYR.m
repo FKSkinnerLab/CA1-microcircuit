@@ -1,5 +1,7 @@
-%% Melisa Gumus - 2018 May
-% Calculate Excitatory/Inhibitory Ratios onto PYRs
+%% Calculate Excitatory/Inhibitory Ratios onto PYRs
+%  Melisa Gumus
+%  May 2018
+
 
 %% Load Data From Netclamp Results
 clear all
@@ -621,15 +623,6 @@ fig = uitable('Data',IPSC_AAC_BC_table{:,:},...
     'Units','Normalized',...
     'Position',[0, 0, 1, 1]);
 
-%% Excitatory/Inhibitory Ratios on PYR Cells - Prep
-IPSC_AAC = table2array(IPSC_AAC);
-IPSC_BiC = table2array(IPSC_BiC);
-IPSC_BC = table2array(IPSC_BC);
-IPSC_all= table2array(IPSC_all);
-IPSC_AAC_BC = table2array(IPSC_AAC_BC);
-IPSC_all_together= table2array(IPSC_all_together);
-EPSC = table2array(EPSC);
-
 %% Excitatory/Inhibitory Ratios on PYR Cells
 Ratios_PYR = [];
 E_I_AAC = abs(EPSC(1,:)./IPSC_AAC(1,:))';
@@ -638,13 +631,15 @@ E_I_BiC = abs(EPSC(1,:)./IPSC_BiC(1,:))';
 E_I_AAC_BC = abs(EPSC(1,:)./IPSC_AAC_BC(1,:))';
 E_I_all = abs(EPSC(1,:)./IPSC_all(1,:))';
 E_I_all_together = abs(EPSC(1,:)./IPSC_all_together(1,:))';
+
 %% E/I Ratio - Table 
 pyr = 1:15;
 Ratios_PYR = [pyr' E_I_AAC E_I_BC E_I_BiC E_I_AAC_BC E_I_all E_I_all_together];
 Ratios_PYR = array2table(Ratios_PYR);
 
 Ratios_PYR.Properties.VariableNames = {'pyr_no' 'Ratio_AAC_on_PYR'...
-    'Ratio_BC_on_PYR' 'Ratio_BiC_on_PYR' 'Ratio_AAC_BiC_BC_on_PYR' 'All_ipsc_onto_PYR'};
+    'Ratio_BC_on_PYR' 'Ratio_BiC_on_PYR' ...
+    'Ratio_AAC_BC_on_PYR' 'Ratio_AAC_BiC_BC_on_PYR' 'All_ipsc_onto_PYR'};
 
 %% Display the E/I table as a figure
 

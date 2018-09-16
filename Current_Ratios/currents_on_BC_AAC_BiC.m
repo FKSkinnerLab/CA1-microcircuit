@@ -1,5 +1,6 @@
-%% Melisa Gumus - 2018 May
-% Calculate Excitatory/Inhibitory Ratios onto Population of BC, AAC and BiC
+%% Calculate Excitatory/Inhibitory Ratios onto BCs, BiCs and AACs
+%  Melisa Gumus
+%  May 2018 
 
 %% Load Data From Netclamp Results
 clear all
@@ -709,7 +710,7 @@ IPSC_BC_on_BC_table.Properties.VariableNames = {'BC_Number', 'Mean_Peak', 'Stand
 subplot(3,1,1)
 IPSC_BC_on_BC_mean = IPSC_BC_on_BC(1,:);
 IPSC_BC_on_BC_std = IPSC_BC_on_BC(2,:);
-x = linspace(0,14,length(IPSC_BC_mean));
+x = linspace(0,14,length(IPSC_BC_on_BC_mean));
 scatter(x,IPSC_BC_on_BC_mean,'black','filled');
 set(gca, 'XTickLabel',[]);
 a = [1:15]'; b =num2str(a); c=cellstr(b);
@@ -783,6 +784,10 @@ IPSC_BC_on_BiC_mean = IPSC_BC_on_BiC(1,:);
 IPSC_BC_on_BiC_std = IPSC_BC_on_BiC(2,:);
 x = linspace(0,14,length(IPSC_BC_on_BiC_mean));
 scatter(x,IPSC_BC_on_BiC_mean,'black','filled');
+set(gca, 'XTickLabel',[]);
+a = [1:15]'; b =num2str(a); c=cellstr(b);
+dx=0.1; dIPSC_BC_on_BiC_mean=0.1;
+text(x+dx, IPSC_BC_on_BiC_mean+dIPSC_BC_on_BiC_mean, c);
 xlabel('Individual BiCs','FontSize',13,'FontWeight','bold');
 ylabel('Mean Peak IPSC','FontSize',13,'FontWeight','bold');
 hold on;
@@ -804,8 +809,8 @@ for i = 1:1:15
     tot_cur_ipsc_on_AAC =  current_BiC_on_AAC(:,i) + current_BC_on_AAC(:,i);
     
     tot_cur_ipsc_on_BC_BiC = tot_cur_ipsc_on_BC + tot_cur_ipsc_on_BiC;
-    tot_cur_ipsc_on_BC_BiC_AAC = tot_cur_ipsc_on_AAC + tot_cur_ipsc_on_AAC;
-    tot_cur_ipsc_on_BC_AAC = tot_cur_ipsc_on_AAC + tot_cur_ipsc_on_AAC;
+    tot_cur_ipsc_on_BC_BiC_AAC = tot_cur_ipsc_on_BC + tot_cur_ipsc_on_AAC + tot_cur_ipsc_on_BiC;
+    tot_cur_ipsc_on_BC_AAC = tot_cur_ipsc_on_BC + tot_cur_ipsc_on_AAC;
     
     all_ipsc_on_BC_BiC = [all_ipsc_on_BC_BiC tot_cur_ipsc_on_BC_BiC];
     all_ipsc_on_BC_BiC_AAC = [all_ipsc_on_BC_BiC_AAC tot_cur_ipsc_on_BC_BiC_AAC];
@@ -819,7 +824,7 @@ for i = 1:1:15
     all_epsc_on_BC_AAC = [all_epsc_on_BC_AAC tot_cur_epsc_on_BC_AAC];
 end
 
-%% Find the peaks of the summed IPSCs from BC and BiC onto BC, BiC and AAC 
+%% Find the peaks of the summed IPSCs from BC and BiC onto BC, BiC and AAC - and EPSCs too
 
 peaks_all_PV_on_BC_BiC = [];
 for k = 1:1:15
@@ -839,7 +844,7 @@ end
 peaks_all_PV_on_BC_AAC = [];
 for k = 1:1:15
     [pks, locs] = findpeaks(all_ipsc_on_BC_AAC(:,k),'MinPeakDistance',4000); % peak detection
-    temp_cur = all_ipsc_on_BC_BiC(:,k);
+    temp_cur = all_ipsc_on_BC_AAC(:,k);
     allrows = (1:40000)';
     notpeak = setdiff(allrows,locs);
     for t = 1:1:numel(notpeak)
@@ -936,11 +941,11 @@ fig = uitable('Data',IPSC_all_on_BC_BiC_table{:,:},...
     'Units','Normalized',...
     'Position',[0, 0, 1, 1]);%% Display the table as a figure
 
-%% BC and BiC ipsc currents together onto BC, BiC and AAC - graph and table %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% IPSCs from BC and BiC onto BC, BiC and AAC - graph and table 
 
 IPSC_all_on_BC_BiC_AAC = [];
 ipsc_all_on_BC_BiC_AAC = [];
-for i = 1:1:14 % number of PYR cells
+for i = 1:1:15
     pks_ipsc_all = peaks_all_PV_on_BC_BiC_AAC(:,i);
     pks_ipsc_all(pks_ipsc_all == 0) = [];
     ipsc_all_mean = mean(pks_ipsc_all);
@@ -949,33 +954,43 @@ for i = 1:1:14 % number of PYR cells
     IPSC_all_on_BC_BiC_AAC = [IPSC_all_on_BC_BiC_AAC ipsc_all_on_BC_BiC_AAC];
 end 
 
-IPSC_all_on_BC_BiC_AAC = array2table(IPSC_all_on_BC_BiC_AAC);
-IPSC_all_on_BC_BiC_AAC.Properties.VariableNames = {'BC_BiC_AAC1'...
-    'BC_BiC_AAC2' 'BC_BiC_AAC3' 'BC_BiC_AAC4' 'BC_BiC_AAC5' 'BC_BiC_AAC6'...
-    'BC_BiC_AAC7' 'BC_BiC_AAC8' 'BC_BiC_AAC9' 'BC_BiC_AAC10' 'BC_BiC_AAC11'...
-    'BC_BiC_AAC12' 'BC_BiC_AAC13' 'BC_BiC_AAC14'};
+IPSC_all_on_BC_BiC_AAC_table = IPSC_all_on_BC_BiC_AAC;
+num = (1:15)';
+IPSC_all_on_BC_BiC_AAC_table = array2table(IPSC_all_on_BC_BiC_AAC_table');
+IPSC_all_on_BC_BiC_AAC_table.num = num;
+IPSC_all_on_BC_BiC_AAC_table = [IPSC_all_on_BC_BiC_AAC_table(:,end) IPSC_all_on_BC_BiC_AAC_table(:,1) IPSC_all_on_BC_BiC_AAC_table(:,2)];
 
-IPSC_all_on_BC_BiC_AAC_mean = table2array(IPSC_all_on_BC_BiC_AAC(1,:));
-IPSC_all_on_BC_BiC_AAC_std = table2array(IPSC_all_on_BC_BiC_AAC(2,:));
+IPSC_all_on_BC_BiC_AAC_table.Properties.VariableNames = {'BC_BiC_AAC_Number', 'Mean_Peak', 'Standard_Deviation'};
+
+IPSC_all_on_BC_BiC_AAC_mean = IPSC_all_on_BC_BiC_AAC(1,:);
+IPSC_all_on_BC_BiC_AAC_std = IPSC_all_on_BC_BiC_AAC(2,:);
 x = linspace(0,14,length(IPSC_all_on_BC_BiC_AAC_mean));
 figure
 scatter(x,IPSC_all_on_BC_BiC_AAC_mean,'black','filled');
-xlabel('Each Point Includes BC, BiC, AAC','FontSize',13,'FontWeight','bold');
+set(gca, 'XTickLabel',[]);
+a = [1:15]'; b =num2str(a); c=cellstr(b);
+dx=0.1; dIPSC_all_on_BC_BiC_AAC_mean=0.1;
+text(x+dx, IPSC_all_on_BC_BiC_AAC_mean+dIPSC_all_on_BC_BiC_AAC_mean, c);
+xlabel('Each Point Includes 1 BC, 1 BiC, 1 AAC','FontSize',13,'FontWeight','bold');
 ylabel('Mean Peak IPSC','FontSize',13,'FontWeight','bold');
 hold on;
 errorbar(x,IPSC_all_on_BC_BiC_AAC_mean,IPSC_all_on_BC_BiC_AAC_std,'b','LineStyle','none')
-title('Mean Peak IPSC from BC, BiC, AAC and BC, BiC, AAC','FontSize',15,'FontWeight','bold')
+title('Mean Peak IPSC from BC, BiC and BC, BiC, AAC','FontSize',15,'FontWeight','bold')
 
-%% Display the table as a figure
+%% Mean Peak and Standard Deviation of IPSC from BC, BiC onto BC, BiC, AAC
 
-uitable('Data',IPSC_all_on_BC_BiC_AAC{:,:},'ColumnName', IPSC_all_on_BC_BiC_AAC.Properties.VariableNames,...
-    'Units', 'Normalized', 'Position',[0, 0, 1, 1]);
+fig = uitable('Data',IPSC_all_on_BC_BiC_AAC_table{:,:},...
+    'RowName',[],...
+    'ColumnName',{'1 BC, 1 BiC, 1 AAC Number #','Mean Peak','Standard Deviation'},...
+    'Units','Normalized',...
+    'Position',[0, 0, 1, 1]);%% Display the table as a figure
 
-%% BC and BiC ipsc currents together onto BC, AAC - graph and table %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% IPSCs from BC and AAC onto BC, AAC - graph and table 
 
 IPSC_all_on_BC_AAC = [];
 ipsc_all_on_BC_AAC = [];
-for i = 1:1:14 % number of PYR cells
+for i = 1:1:15
     pks_ipsc_all = peaks_all_PV_on_BC_AAC(:,i);
     pks_ipsc_all(pks_ipsc_all == 0) = [];
     ipsc_all_mean = mean(pks_ipsc_all);
@@ -984,33 +999,43 @@ for i = 1:1:14 % number of PYR cells
     IPSC_all_on_BC_AAC = [IPSC_all_on_BC_AAC ipsc_all_on_BC_AAC];
 end 
 
-IPSC_all_on_BC_AAC = array2table(IPSC_all_on_BC_AAC);
-IPSC_all_on_BC_AAC.Properties.VariableNames = {'BC_AAC1'...
-    'BC_AAC2' 'BC_AAC3' 'BC_AAC4' 'BC_AAC5' 'BC_AAC6'...
-    'BC_AAC7' 'BC_AAC8' 'BC_AAC9' 'BC_AAC10' 'BC_AAC11'...
-    'BC_AAC12' 'BC_AAC13' 'BC_AAC14'};
+IPSC_all_on_BC_AAC_table = IPSC_all_on_BC_AAC;
+num = (1:15)';
+IPSC_all_on_BC_AAC_table = array2table(IPSC_all_on_BC_AAC_table');
+IPSC_all_on_BC_AAC_table.num = num;
+IPSC_all_on_BC_AAC_table = [IPSC_all_on_BC_AAC_table(:,end) IPSC_all_on_BC_AAC_table(:,1) IPSC_all_on_BC_AAC_table(:,2)];
 
-IPSC_all_on_BC_AAC_mean = table2array(IPSC_all_on_BC_AAC(1,:));
-IPSC_all_on_BC_AAC_std = table2array(IPSC_all_on_BC_AAC(2,:));
+IPSC_all_on_BC_AAC_table.Properties.VariableNames = {'BC_AAC_Number', 'Mean_Peak', 'Standard_Deviation'};
+
+
+IPSC_all_on_BC_AAC_mean = IPSC_all_on_BC_AAC(1,:);
+IPSC_all_on_BC_AAC_std = IPSC_all_on_BC_AAC(2,:);
 x = linspace(0,14,length(IPSC_all_on_BC_AAC_mean));
 figure
 scatter(x,IPSC_all_on_BC_AAC_mean,'black','filled');
-xlabel('Each Point Includes BC, AAC','FontSize',13,'FontWeight','bold');
+set(gca, 'XTickLabel',[]);
+a = [1:15]'; b =num2str(a); c=cellstr(b);
+dx=0.1; dIPSC_all_on_BC_AAC_mean=0.1;
+text(x+dx, IPSC_all_on_BC_AAC_mean+dIPSC_all_on_BC_AAC_mean, c);
+xlabel('Each Point Includes 1 BC, 1 AAC','FontSize',13,'FontWeight','bold');
 ylabel('Mean Peak IPSC','FontSize',13,'FontWeight','bold');
 hold on;
 errorbar(x,IPSC_all_on_BC_AAC_mean,IPSC_all_on_BC_AAC_std,'b','LineStyle','none')
 title('Mean Peak IPSC from BC, AAC onto BC, AAC','FontSize',15,'FontWeight','bold')
 
-%% Display the table as a figure
+%% Mean Peak and Standard Deviation of IPSC from BC, AAC onto BC, AAC
 
-uitable('Data',IPSC_all_on_BC_AAC{:,:},'ColumnName', IPSC_all_on_BC_AAC.Properties.VariableNames,...
-    'Units', 'Normalized', 'Position',[0, 0, 1, 1]);
+fig = uitable('Data',IPSC_all_on_BC_AAC_table{:,:},...
+    'RowName',[],...
+    'ColumnName',{'1 BC, 1 AAC Number #','Mean Peak','Standard Deviation'},...
+    'Units','Normalized',...
+    'Position',[0, 0, 1, 1]);%% Display the table as a figure
 
-%% EPSC currents together onto BC, AAC - graph and table %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Find Mean EPSC and SD onto BC, AAC - graph and table 
 
 EPSC_on_BC_AAC = [];
 epsc_on_BC_AAC = [];
-for i = 1:1:14 % number of PYR cells
+for i = 1:1:15
     pks_epsc_all = peaks_PYR_on_BC_AAC(:,i);
     pks_epsc_all(pks_epsc_all == 0) = [];
     epsc_all_mean = mean(pks_epsc_all);
@@ -1019,33 +1044,41 @@ for i = 1:1:14 % number of PYR cells
     EPSC_on_BC_AAC = [EPSC_on_BC_AAC epsc_on_BC_AAC];
 end 
 
-EPSC_on_BC_AAC = array2table(EPSC_on_BC_AAC);
-EPSC_on_BC_AAC.Properties.VariableNames = {'BC_AAC1'...
-    'BC_AAC2' 'BC_AAC3' 'BC_AAC4' 'BC_AAC5' 'BC_AAC6'...
-    'BC_AAC7' 'BC_AAC8' 'BC_AAC9' 'BC_AAC10' 'BC_AAC11'...
-    'BC_AAC12' 'BC_AAC13' 'BC_AAC14'};
+EPSC_on_BC_AAC_table = EPSC_on_BC_AAC;
+num = (1:15)';
+EPSC_on_BC_AAC_table = array2table(EPSC_on_BC_AAC_table');
+EPSC_on_BC_AAC_table.num = num;
+EPSC_on_BC_AAC_table = [EPSC_on_BC_AAC_table(:,end) EPSC_on_BC_AAC_table(:,1) EPSC_on_BC_AAC_table(:,2)];
 
-EPSC_on_BC_AAC_mean = table2array(EPSC_on_BC_AAC(1,:));
-EPSC_on_BC_AAC_std = table2array(EPSC_on_BC_AAC(2,:));
+EPSC_on_BC_AAC_table.Properties.VariableNames = {'BC_AAC_Number', 'Mean_Peak', 'Standard_Deviation'};
+
+EPSC_on_BC_AAC_mean = EPSC_on_BC_AAC(1,:);
+EPSC_on_BC_AAC_std = EPSC_on_BC_AAC(2,:);
 x = linspace(0,14,length(EPSC_on_BC_AAC_mean));
 figure
 scatter(x,EPSC_on_BC_AAC_mean,'black','filled');
-xlabel('Each Point Includes BC, AAC','FontSize',13,'FontWeight','bold');
+set(gca, 'XTickLabel',[]);
+a = [1:15]'; b =num2str(a); c=cellstr(b);
+dx=0.1; dEPSC_on_BC_AAC_mean=0.1;
+text(x+dx, EPSC_on_BC_AAC_mean+dEPSC_on_BC_AAC_mean, c);
+xlabel('Each Point Includes 1 BC, 1 AAC','FontSize',13,'FontWeight','bold');
 ylabel('Mean Peak EPSC','FontSize',13,'FontWeight','bold');
 hold on;
 errorbar(x,EPSC_on_BC_AAC_mean,EPSC_on_BC_AAC_std,'b','LineStyle','none')
-title('Mean Peak EPSC onto BC, BiC','FontSize',15,'FontWeight','bold')
+title('Mean Peak EPSC onto BC, AAC','FontSize',15,'FontWeight','bold')
 
-%% Display the table as a figure
+%% Mean Peak and Standard Deviation of EPSC on BC, AAC
+fig = uitable('Data',EPSC_on_BC_AAC_table{:,:},...
+    'RowName',[],...
+    'ColumnName',{'1 BC, 1 AAC Number','Mean Peak','Standard Deviation'},...
+    'Units','Normalized',...
+    'Position',[0, 0, 1, 1]);
 
-uitable('Data',EPSC_on_BC_AAC{:,:},'ColumnName', EPSC_on_BC_AAC.Properties.VariableNames,...
-    'Units', 'Normalized', 'Position',[0, 0, 1, 1]);
-
-%% EPSC currents together onto BC, BiC, AAC - graph and table %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Find Mean EPSC and SD onto BC, BiC, AAC - graph and table 
 
 EPSC_on_BC_BiC_AAC = [];
 epsc_on_BC_BiC_AAC = [];
-for i = 1:1:14 % number of PYR cells
+for i = 1:1:15
     pks_epsc_all = peaks_PYR_on_BC_BiC_AAC(:,i);
     pks_epsc_all(pks_epsc_all == 0) = [];
     epsc_all_mean = mean(pks_epsc_all);
@@ -1054,82 +1087,69 @@ for i = 1:1:14 % number of PYR cells
     EPSC_on_BC_BiC_AAC = [EPSC_on_BC_BiC_AAC epsc_on_BC_BiC_AAC];
 end 
 
-EPSC_on_BC_BiC_AAC = array2table(EPSC_on_BC_BiC_AAC);
-EPSC_on_BC_BiC_AAC.Properties.VariableNames = {'BC_BiC_AAC1'...
-    'BC_BiC_AAC2' 'BC_BiC_AAC3' 'BC_BiC_AAC4' 'BC_BiC_AAC5' 'BC_BiC_AAC6'...
-    'BC_BiC_AAC7' 'BC_BiC_AAC8' 'BC_BiC_AAC9' 'BC_BiC_AAC10' 'BC_BiC_AAC11'...
-    'BC_BiC_AAC12' 'BC_BiC_AAC13' 'BC_BiC_AAC14'};
+EPSC_on_BC_BiC_AAC_table = EPSC_on_BC_BiC_AAC;
+num = (1:15)';
+EPSC_on_BC_BiC_AAC_table = array2table(EPSC_on_BC_BiC_AAC_table');
+EPSC_on_BC_BiC_AAC_table.num = num;
+EPSC_on_BC_BiC_AAC_table = [EPSC_on_BC_BiC_AAC_table(:,end) EPSC_on_BC_BiC_AAC_table(:,1) EPSC_on_BC_BiC_AAC_table(:,2)];
 
-EPSC_on_BC_BiC_AAC_mean = table2array(EPSC_on_BC_BiC_AAC(1,:));
-EPSC_on_BC_BiC_AAC_std = table2array(EPSC_on_BC_BiC_AAC(2,:));
+EPSC_on_BC_BiC_AAC_table.Properties.VariableNames = {'BC_BiC_AAC_Number', 'Mean_Peak', 'Standard_Deviation'};
+
+EPSC_on_BC_BiC_AAC_mean = EPSC_on_BC_BiC_AAC(1,:);
+EPSC_on_BC_BiC_AAC_std = EPSC_on_BC_BiC_AAC(2,:);
 x = linspace(0,14,length(EPSC_on_BC_AAC_mean));
 figure
 scatter(x,EPSC_on_BC_BiC_AAC_mean,'black','filled');
-xlabel('Each Point Includes BC, BiC, AAC','FontSize',13,'FontWeight','bold');
+set(gca, 'XTickLabel',[]);
+a = [1:15]'; b =num2str(a); c=cellstr(b);
+dx=0.1; dEPSC_on_BC_BiC_AAC_mean=0.1;
+text(x+dx, EPSC_on_BC_BiC_AAC_mean+dEPSC_on_BC_BiC_AAC_mean, c);
+xlabel('Each Point Includes 1 BC, 1 BiC, 1 AAC','FontSize',13,'FontWeight','bold');
 ylabel('Mean Peak EPSC','FontSize',13,'FontWeight','bold');
 hold on;
 errorbar(x,EPSC_on_BC_BiC_AAC_mean,EPSC_on_BC_BiC_AAC_std,'b','LineStyle','none')
 title('Mean Peak EPSC onto BC, BiC, AAC','FontSize',15,'FontWeight','bold')
 
-%% Display the table as a figure
+%% Mean Peak and Standard Deviation of EPSC on BC, BiC, AAC
+fig = uitable('Data',EPSC_on_BC_BiC_AAC_table{:,:},...
+    'RowName',[],...
+    'ColumnName',{'1 BC, 1 BiC, 1 AAC Number','Mean Peak','Standard Deviation'},...
+    'Units','Normalized',...
+    'Position',[0, 0, 1, 1]);
 
-uitable('Data',EPSC_on_BC_BiC_AAC{:,:},'ColumnName', EPSC_on_BC_BiC_AAC.Properties.VariableNames,...
-    'Units', 'Normalized', 'Position',[0, 0, 1, 1]);
+%% Excitatory/Inhibitory Ratios on BC, AAC population and BC, BiC, AAC population - Prep
 
+IPSC_BC_BiC_AAC_on_BC_BiC_AAC = IPSC_all_on_BC_BiC_AAC;
+IPSC_BC_AAC_on_BC_AAC = IPSC_all_on_BC_AAC;
 
-%% E/I Ratios on BC, BiC Cells %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-IPSC_BC_BiC_AAC_on_BC_BiC_AAC = table2array(IPSC_all_on_BC_BiC_AAC);
-IPSC_BC_AAC_on_BC_AAC = table2array(IPSC_all_on_BC_AAC);
-
-EPSC_on_BC_AAC = table2array(EPSC_on_BC_AAC);
-EPSC_on_BC_BiC_AAC = table2array(EPSC_on_BC_BiC_AAC);
-
-%IPSC_BC_on_BC = table2array(IPSC_BC_on_BC);
-%IPSC_all_on_BC= table2array(IPSC_all_on_BC);  % all refers to BC and BiC together
-%EPSC_BC = table2array(EPSC_BC);
-%%
+%% Excitatory/Inhibitory Ratios on BC, AAC population and BC, BiC, AAC population 
 Ratios_BC_AAC = [];
 Ratios_BC_BiC_AAC = [];
 E_I_BC_AAC = abs(EPSC_on_BC_AAC(1,:)./IPSC_BC_AAC_on_BC_AAC(1,:))';
 E_I_BC_BiC_AAC = abs(EPSC_on_BC_BiC_AAC(1,:)./IPSC_BC_BiC_AAC_on_BC_BiC_AAC(1,:))';
 
-cells = 1:14;
+cells = 1:15;
 Ratios_BC_AAC = [Ratios_BC_AAC cells' E_I_BC_AAC];
 Ratios_BC_AAC = array2table(Ratios_BC_AAC);
-Ratios_BC_AAC.Properties.VariableNames = {'cell_number' 'Ratio_BC_AAC'};
+Ratios_BC_AAC.Properties.VariableNames = {'BC_AAC_number' 'Ratio_BC_AAC'};
 
 Ratios_BC_BiC_AAC = [Ratios_BC_BiC_AAC cells' E_I_BC_BiC_AAC];
 Ratios_BC_BiC_AAC = array2table(Ratios_BC_BiC_AAC);
-Ratios_BC_BiC_AAC.Properties.VariableNames = {'cell_number' 'Ratio_BC_BiC_AAC'};
+Ratios_BC_BiC_AAC.Properties.VariableNames = {'BC_BiC_AAC_number' 'Ratio_BC_BiC_AAC'};
 
-%%
-uitable('Data',Ratios_BC_AAC{:,:},'ColumnName',Ratios_BC_AAC.Properties.VariableNames,...
-    'Units', 'Normalized', 'Position',[0, 0, 1, 1]);
+%% Mean Peak and Standard Deviation of IPSC from BC, AAC to BC, AAC
+fig = uitable('Data',Ratios_BC_AAC{:,:},...
+    'RowName',[],...
+    'ColumnName',{'1 BC, 1 AAC Number','BC, AAC to BC, AAC'},...
+    'Units','Normalized',...
+    'Position',[0, 0, 1, 1]);%%
 
-%%
-uitable('Data',Ratios_BC_BiC_AAC{:,:},'ColumnName',Ratios_BC_BiC_AAC.Properties.VariableNames,...
-    'Units', 'Normalized', 'Position',[0, 0, 1, 1]);
-
-
-%% E/I Ratios on PYR Cells
-
-IPSC_BiC_on_BC = table2array(IPSC_BiC_on_BC);
-IPSC_BC_on_BC = table2array(IPSC_BC_on_BC);
-IPSC_all_on_BC= table2array(IPSC_all_on_BC);  % all refers to BC and BiC together
-EPSC_BC = table2array(EPSC_BC);
-
-Ratios_BC = [];
-E_I_BC = abs(EPSC_BC(1,:)./IPSC_BC_on_BC(1,:))';
-E_I_BiC = abs(EPSC_BC(1,:)./IPSC_BiC_on_BC(1,:))';
-E_I_all = abs(EPSC_BC(1,:)./IPSC_all_on_BC(1,:))'; 
- 
-bc = 1:14;
-Ratios_BC = [Ratios_BC bc' E_I_BC E_I_BiC E_I_all];
-Ratios_BC = array2table(Ratios_BC);
- 
-Ratios_BC.Properties.VariableNames = {'BC_no' 'Ratio_BC_BC'...
-    'Ratio_BiC_BC' 'Ratio_All_BC'};
+%% Mean Peak and Standard Deviation of IPSC from BC,BiC, AAC to BC, BiC, AAC
+fig = uitable('Data',Ratios_BC_BiC_AAC{:,:},...
+    'RowName',[],...
+    'ColumnName',{'1 BC, 1 BiC, 1 AAC Number','BC, BiC, AAC to BC, BiC, AAC'},...
+    'Units','Normalized',...
+    'Position',[0, 0, 1, 1]);%%
 
 %% Voltage
 g = fullfile('/home','melisagumus','Documents', ...
