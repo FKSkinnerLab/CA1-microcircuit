@@ -33,11 +33,11 @@ f = fullfile('/home','melisagumus','Documents', ...
     'mytrace_335432_syns.dat';...
     'mytrace_335846_syns.dat';...
     'mytrace_336260_syns.dat';...
-    'mytrace_336536_syns.dat';...
-    'mytrace_336674_syns.dat';...
-    'mytrace_337088_syns.dat';...
-    'mytrace_337364_syns.dat';...
-    'mytrace_337640_syns.dat';...
+    'mytrace_332948_syns.dat';...
+    'mytrace_333086_syns.dat';...
+    'mytrace_333224_syns.dat';...
+    'mytrace_333638_syns.dat';...
+    'mytrace_333914_syns.dat';...
     'mytrace_338192_syns.dat';...
     'mytrace_338054_syns.dat'...
     });
@@ -103,11 +103,26 @@ current_ivy = [];
 current_ngf = [];
 current_olm = [];
 current_sca = [];
+figure1 = figure;
+figure2 = figure;
+figure3 = figure;
 for m = 1:15  % number of cells 
     for k = 2:12  % number of input 
         if k == 3
             temp_current_BiC = data{m}(:,k);
-            [pks, locs] = findpeaks(data{m}(:,k),'MinPeakDistance',4000); % peak detection
+            figure(figure1);
+            t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character. 
+            t.Position = [0 0 1 1]; % (0,0) is the point of the bottom-left corner of the textbox,
+            t.HorizontalAlignment = 'center'; % This places the title in the center of the textbox horizontally
+            t.VerticalAlignment = 'top'; % This places the title in the top of the textbox vertically
+            t.String = ['Peak Detection on IPSCs from BiCs onto BCs'];
+            subplot(5,3,m);
+            [pks, locs] = findpeaks(data{m}(:,k),'MinPeakDistance',3000); % peak detection
+            findpeaks(data{m}(:,k),'MinPeakDistance',3000);
+            hold on; 
+            title (['BC Number #' num2str(m)])
+            xlabel('Time')
+            ylabel('IPSC')
             temp_BiC = data{m}(:,k);
             allrows = (1:40000)';
             notpeak = setdiff(allrows,locs);
@@ -118,7 +133,19 @@ for m = 1:15  % number of cells
             BiC = temp_BiC;
         elseif k == 8
             temp_current_PYR = data{m}(:,k);
-            [pks, locs] = findpeaks(-data{m}(:,k),'MinPeakDistance',4000); % peak detection
+            figure(figure2);
+            t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character. 
+            t.Position = [0 0 1 1]; % (0,0) is the point of the bottom-left corner of the textbox,
+            t.HorizontalAlignment = 'center'; % This places the title in the center of the textbox horizontally
+            t.VerticalAlignment = 'top'; % This places the title in the top of the textbox vertically
+            t.String = ['Peak Detection on EPSCs onto BCs'];
+            subplot(5,3,m);
+            [pks, locs] = findpeaks(-data{m}(:,k),'MinPeakDistance',3000); % peak detection
+            findpeaks(-data{m}(:,k),'MinPeakDistance',3000);
+            hold on; 
+            title (['BC Number #' num2str(m)])
+            xlabel('Time')
+            ylabel('EPSC')
             temp_PYR = data{m}(:,k);
             allrows = (1:40000)';
             notpeak = setdiff(allrows,locs);
@@ -129,8 +156,19 @@ for m = 1:15  % number of cells
             PYR = temp_PYR;
         elseif k == 9
             temp_current_BC = data{m}(:,k);
-            [pks, locs] = findpeaks(data{m}(:,k),'MinPeakDistance',4000); % peak detection
-            %findpeaks(data{m}(:,k),M
+            figure(figure3);
+            t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character. 
+            t.Position = [0 0 1 1]; % (0,0) is the point of the bottom-left corner of the textbox,
+            t.HorizontalAlignment = 'center'; % This places the title in the center of the textbox horizontally
+            t.VerticalAlignment = 'top'; % This places the title in the top of the textbox vertically
+            t.String = ['Peak Detection on IPSCs from BCs onto BCs'];
+            subplot(5,3,m);
+            [pks, locs] = findpeaks(data{m}(:,k),'MinPeakDistance',3000); % peak detection
+            findpeaks(data{m}(:,k),'MinPeakDistance',3000);
+            hold on;
+            title (['BC Number #' num2str(m)])
+            xlabel('Time')
+            ylabel('IPSC')
             temp_BC = data{m}(:,k);
             allrows = (1:40000)';
             notpeak = setdiff(allrows,locs);
@@ -169,6 +207,11 @@ allcells = mat2cell(M, 40000, ...
 %% Graph of EPSCs on BC
 figure 
 for i = 1:1:15
+    t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character. 
+    t.Position = [0 0 1 1]; % (0,0) is the point of the bottom-left corner of the textbox,
+    t.HorizontalAlignment = 'center'; % This places the title in the center of the textbox horizontally
+    t.VerticalAlignment = 'top'; % This places the title in the top of the textbox vertically
+    t.String = ['Distribution of EPSCs on BCs'];
     temp = allcells{i}(:,2);
     temp(temp == 0) = [];   %get rid of zeros
     subplot(5,3,i)
@@ -185,6 +228,11 @@ suptitle('Distribution of EPSCs on BCs')
 %% Graph IPSCs from BiC onto BC
 figure 
 for i = 1:1:15
+    t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character. 
+    t.Position = [0 0 1 1]; % (0,0) is the point of the bottom-left corner of the textbox,
+    t.HorizontalAlignment = 'center'; % This places the title in the center of the textbox horizontally
+    t.VerticalAlignment = 'top'; % This places the title in the top of the textbox vertically
+    t.String = ['Distribution of IPSCs from BiCs on BCs'];
     temp = allcells{i}(:,1);
     temp(temp == 0) = [];   %get rid of zeros
     subplot(5,3,i)
@@ -201,6 +249,11 @@ suptitle('Distribution of IPSCs from BiCs onto BCs')
 %% Graph of IPSCs from BC onto BC
 figure 
 for i = 1:1:15
+    t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character. 
+    t.Position = [0 0 1 1]; % (0,0) is the point of the bottom-left corner of the textbox,
+    t.HorizontalAlignment = 'center'; % This places the title in the center of the textbox horizontally
+    t.VerticalAlignment = 'top'; % This places the title in the top of the textbox vertically
+    t.String = ['Distribution of IPSCs from BCs on BCs'];
     temp = allcells{i}(:,3);
     temp(temp == 0) = [];   %get rid of zeros
     subplot(5,3,i)
@@ -358,10 +411,23 @@ for i = 1:1:15
     all_ipsc_together = [all_ipsc_together tot_ipsc_together];
 end
 
-% Find the peaks of the summed ipsc currents
+% Find the peaks of the summed ipsc currents - only from BC and BiC
 peaks_all_PV = [];
+f1 = figure;
 for k = 1:1:15
-    [pks, locs] = findpeaks(all_ipsc(:,k),'MinPeakDistance',4000); % peak detection
+    figure(f1);
+    t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character. 
+    t.Position = [0 0 1 1]; % (0,0) is the point of the bottom-left corner of the textbox,
+    t.HorizontalAlignment = 'center'; % This places the title in the center of the textbox horizontally
+    t.VerticalAlignment = 'top'; % This places the title in the top of the textbox vertically
+    t.String = ['Peak Detection on IPSCs from BCs, BiCs on BCs'];
+    subplot(5,3,k);
+    [pks, locs] = findpeaks(all_ipsc(:,k),'MinPeakDistance',3000); % peak detection
+    findpeaks(all_ipsc(:,k),'MinPeakDistance',3000);
+    hold on; 
+    title (['BC Number #' num2str(k)])
+    xlabel('Time (1/40 ms)')
+    ylabel('IPSC')
     temp_cur = all_ipsc(:,k);
     allrows = (1:40000)';
     notpeak = setdiff(allrows,locs);
@@ -373,15 +439,28 @@ for k = 1:1:15
     peaks_all_PV = [peaks_all_PV peaks_all];
 end
 
+f2 = figure;
 peaks_all_PV_together = [];
 for k = 1:1:15
-    [pks, locs] = findpeaks(all_ipsc_together(:,k),'MinPeakDistance',4000); % peak detection
+    figure(f2);
+    t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character. 
+    t.Position = [0 0 1 1]; % (0,0) is the point of the bottom-left corner of the textbox,
+    t.HorizontalAlignment = 'center'; % This places the title in the center of the textbox horizontally
+    t.VerticalAlignment = 'top'; % This places the title in the top of the textbox vertically
+    t.String = ['Peak Detection on IPSCs from All Inhibitory Cells onto BCs'];
+    subplot(5,3,k);
+    [pks, locs] = findpeaks(all_ipsc_together(:,k),'MinPeakDistance',3000); % peak detection
+    findpeaks(all_ipsc_together(:,k),'MinPeakDistance',3000);
+    hold on; 
+    title (['BC Number #' num2str(k)])
+    xlabel('Time (1/40 ms)')
+    ylabel('IPSC')
     temp_cur_together = all_ipsc_together(:,k);
     allrows = (1:40000)';
     notpeak = setdiff(allrows,locs);
     for t = 1:1:numel(notpeak)
         element = notpeak(t,:);
-        temp_cur(element,:) = 0;
+        temp_cur_together(element,:) = 0;
     end
     peaks_all_together = temp_cur_together;
     peaks_all_PV_together = [peaks_all_PV_together peaks_all_together];

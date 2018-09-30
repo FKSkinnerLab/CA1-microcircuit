@@ -266,7 +266,7 @@ for m = 1:15  % number of cells
     for k = 2:12  % number of input 
         if k == 3
             temp_current_BiC = dataBC{m}(:,k);
-            [pks, locs] = findpeaks(dataBC{m}(:,k),'MinPeakDistance',4000); % peak detection
+            [pks, locs] = findpeaks(dataBC{m}(:,k),'MinPeakDistance',3000); % peak detection
             temp_BiC = dataBC{m}(:,k);
             allrows = (1:40000)';
             notpeak = setdiff(allrows,locs);
@@ -277,7 +277,7 @@ for m = 1:15  % number of cells
             BiC_on_BC = temp_BiC;
         elseif k == 8
             temp_current_PYR = dataBC{m}(:,k);
-            [pks, locs] = findpeaks(-dataBC{m}(:,k),'MinPeakDistance',4000); % peak detection
+            [pks, locs] = findpeaks(-dataBC{m}(:,k),'MinPeakDistance',3000); % peak detection
             temp_PYR = dataBC{m}(:,k);
             allrows = (1:40000)';
             notpeak = setdiff(allrows,locs);
@@ -288,7 +288,7 @@ for m = 1:15  % number of cells
             PYR_on_BC = temp_PYR;
         elseif k == 9
             temp_current_BC = dataBC{m}(:,k);
-            [pks, locs] = findpeaks(dataBC{m}(:,k),'MinPeakDistance',4000); % peak detection
+            [pks, locs] = findpeaks(dataBC{m}(:,k),'MinPeakDistance',3000); % peak detection
             %findpeaks(data{m}(:,k),M
             temp_BC = dataBC{m}(:,k);
             allrows = (1:40000)';
@@ -338,7 +338,7 @@ for m = 1:15  % number of cells
     for k = 2:12  % number of input 
         if k == 3
             temp_current_BiC = dataAAC{m}(:,k);
-            [pks, locs] = findpeaks(dataAAC{m}(:,k),'MinPeakDistance',4000); % peak detection
+            [pks, locs] = findpeaks(dataAAC{m}(:,k),'MinPeakDistance',3000); % peak detection
             temp_BiC = dataAAC{m}(:,k);
             allrows = (1:40000)';
             notpeak = setdiff(allrows,locs);
@@ -349,7 +349,7 @@ for m = 1:15  % number of cells
             BiC_on_AAC = temp_BiC;
         elseif k == 8
             temp_current_PYR = dataAAC{m}(:,k);
-            [pks, locs] = findpeaks(-dataAAC{m}(:,k),'MinPeakDistance',4000); % peak detection
+            [pks, locs] = findpeaks(-dataAAC{m}(:,k),'MinPeakDistance',3000); % peak detection
             temp_PYR = dataAAC{m}(:,k);
             allrows = (1:40000)';
             notpeak = setdiff(allrows,locs);
@@ -360,7 +360,7 @@ for m = 1:15  % number of cells
             PYR_on_AAC = temp_PYR;
         elseif k == 9
             temp_current_BC = dataAAC{m}(:,k);
-            [pks, locs] = findpeaks(dataAAC{m}(:,k),'MinPeakDistance',4000); % peak detection
+            [pks, locs] = findpeaks(dataAAC{m}(:,k),'MinPeakDistance',3000); % peak detection
             %findpeaks(data{m}(:,k),M
             temp_BC = dataAAC{m}(:,k);
             allrows = (1:40000)';
@@ -406,7 +406,7 @@ for m = 1:15  % number of cells
     for k = 2:12  % number of input 
         if k == 3
             temp_current_BiC = dataBiC{m}(:,k);
-            [pks, locs] = findpeaks(dataBiC{m}(:,k),'MinPeakDistance',4000); % peak detection
+            [pks, locs] = findpeaks(dataBiC{m}(:,k),'MinPeakDistance',3000); % peak detection
             temp_BiC = dataBiC{m}(:,k);
             allrows = (1:40000)';
             notpeak = setdiff(allrows,locs);
@@ -417,7 +417,7 @@ for m = 1:15  % number of cells
             BiC_on_BiC = temp_BiC;
         elseif k == 8
             temp_current_PYR = dataBiC{m}(:,k);
-            [pks, locs] = findpeaks(-dataBiC{m}(:,k),'MinPeakDistance',4000); % peak detection
+            [pks, locs] = findpeaks(-dataBiC{m}(:,k),'MinPeakDistance',3000); % peak detection
             temp_PYR = dataBiC{m}(:,k);
             allrows = (1:40000)';
             notpeak = setdiff(allrows,locs);
@@ -428,7 +428,7 @@ for m = 1:15  % number of cells
             PYR_on_BiC = temp_PYR;
         elseif k == 9
             temp_current_BC = dataBiC{m}(:,k);
-            [pks, locs] = findpeaks(dataBiC{m}(:,k),'MinPeakDistance',4000); % peak detection
+            [pks, locs] = findpeaks(dataBiC{m}(:,k),'MinPeakDistance',3000); % peak detection
             %findpeaks(data{m}(:,k),M
             temp_BC = dataBiC{m}(:,k);
             allrows = (1:40000)';
@@ -819,13 +819,29 @@ for i = 1:1:15
     
     tot_cur_epsc_on_BC_AAC =  current_PYR_on_BC(:,i) + current_PYR_on_AAC(:,i);
     all_epsc_on_BC_AAC = [all_epsc_on_BC_AAC tot_cur_epsc_on_BC_AAC];
+    
+    tot_cur_epsc_on_BC_BiC =  current_PYR_on_BC(:,i) + current_PYR_on_BiC(:,i);
+    all_epsc_on_BC_BiC = [all_epsc_on_BC_BiC tot_cur_epsc_on_BC_BiC];
 end
 
 %% Find the peaks of the summed IPSCs from BC and BiC onto BC, BiC and AAC - and EPSCs too
 
 peaks_all_PV_on_BC_BiC = [];
+f1 = figure;
 for k = 1:1:15
-    [pks, locs] = findpeaks(all_ipsc_on_BC_BiC(:,k),'MinPeakDistance',4000); % peak detection
+    figure(f1);
+    t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character. 
+    t.Position = [0 0 1 1]; % (0,0) is the point of the bottom-left corner of the textbox,
+    t.HorizontalAlignment = 'center'; % This places the title in the center of the textbox horizontally
+    t.VerticalAlignment = 'top'; % This places the title in the top of the textbox vertically
+    t.String = ['Peak Detection on IPSCs from BCs, BiCs on BCs, BiC'];
+    subplot(5,3,k);
+    [pks, locs] = findpeaks(all_ipsc_on_BC_BiC(:,k),'MinPeakDistance',3000); % peak detection
+    findpeaks(all_ipsc_on_BC_BiC(:,k),'MinPeakDistance',3000);
+    hold on; 
+    title (['BC, BiC Number #' num2str(k)])
+    xlabel('Time (1/40 ms)')
+    ylabel('IPSCs')    
     temp_cur = all_ipsc_on_BC_BiC(:,k);
     allrows = (1:40000)';
     notpeak = setdiff(allrows,locs);
@@ -839,8 +855,21 @@ end
 
 
 peaks_all_PV_on_BC_AAC = [];
+f2 = figure;
 for k = 1:1:15
-    [pks, locs] = findpeaks(all_ipsc_on_BC_AAC(:,k),'MinPeakDistance',4000); % peak detection
+    figure(f2);
+    t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character. 
+    t.Position = [0 0 1 1]; % (0,0) is the point of the bottom-left corner of the textbox,
+    t.HorizontalAlignment = 'center'; % This places the title in the center of the textbox horizontally
+    t.VerticalAlignment = 'top'; % This places the title in the top of the textbox vertically
+    t.String = ['Peak Detection on IPSCs from BCs, AACs on BCs, AACs'];
+    subplot(5,3,k);
+    [pks, locs] = findpeaks(all_ipsc_on_BC_AAC(:,k),'MinPeakDistance',3000); % peak detection
+    findpeaks(all_ipsc_on_BC_AAC(:,k),'MinPeakDistance',3000);
+    hold on; 
+    title (['BC, AAC Number #' num2str(k)])
+    xlabel('Time (1/40 ms)')
+    ylabel('IPSCs')     
     temp_cur = all_ipsc_on_BC_AAC(:,k);
     allrows = (1:40000)';
     notpeak = setdiff(allrows,locs);
@@ -854,8 +883,21 @@ end
 
 % Find the peaks of the summed ipsc currents
 peaks_all_PV_on_BC_BiC_AAC = [];
+f3 = figure;
 for k = 1:1:15
-    [pks, locs] = findpeaks(all_ipsc_on_BC_BiC_AAC(:,k),'MinPeakDistance',4000); % peak detection
+    figure(f3);
+    t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character. 
+    t.Position = [0 0 1 1]; % (0,0) is the point of the bottom-left corner of the textbox,
+    t.HorizontalAlignment = 'center'; % This places the title in the center of the textbox horizontally
+    t.VerticalAlignment = 'top'; % This places the title in the top of the textbox vertically
+    t.String = ['Peak Detection on IPSCs from BCs, BiCs, AACs onto BCs, BiC, AACs'];
+    subplot(5,3,k);   
+    [pks, locs] = findpeaks(all_ipsc_on_BC_BiC_AAC(:,k),'MinPeakDistance',3000); % peak detection
+    findpeaks(all_ipsc_on_BC_BiC_AAC(:,k),'MinPeakDistance',3000);
+    hold on; 
+    title (['BC, BiC, AAC Number #' num2str(k)])
+    xlabel('Time (1/40 ms)')
+    ylabel('IPSCs from All Inhibitory Cells')   
     temp_cur = all_ipsc_on_BC_BiC_AAC(:,k);
     allrows = (1:40000)';
     notpeak = setdiff(allrows,locs);
@@ -868,8 +910,21 @@ for k = 1:1:15
 end
 
 peaks_PYR_on_BC_BiC_AAC = [];
+f4 = figure;
 for k = 1:1:15
-    [pks, locs] = findpeaks(all_epsc_on_BC_BiC_AAC(:,k),'MinPeakDistance',4000); % peak detection
+    figure(f4);
+    t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character. 
+    t.Position = [0 0 1 1]; % (0,0) is the point of the bottom-left corner of the textbox,
+    t.HorizontalAlignment = 'center'; % This places the title in the center of the textbox horizontally
+    t.VerticalAlignment = 'top'; % This places the title in the top of the textbox vertically
+    t.String = ['Peak Detection on EPSCs onto BCs, BiC, AACs'];
+    subplot(5,3,k);    
+    [pks, locs] = findpeaks(-all_epsc_on_BC_BiC_AAC(:,k),'MinPeakDistance',3000); % peak detection
+    findpeaks(-all_epsc_on_BC_BiC_AAC(:,k),'MinPeakDistance',3000);
+    hold on; 
+    title (['BC, BiC, AAC Number #' num2str(k)])
+    xlabel('Time (1/40 ms)')
+    ylabel('EPSCs')
     temp_cur = all_epsc_on_BC_BiC_AAC(:,k);
     allrows = (1:40000)';
     notpeak = setdiff(allrows,locs);
@@ -882,8 +937,21 @@ for k = 1:1:15
 end
 
 peaks_PYR_on_BC_AAC = [];
+f5 = figure;
 for k = 1:1:15
-    [pks, locs] = findpeaks(all_epsc_on_BC_AAC(:,k),'MinPeakDistance',4000); % peak detection
+    figure(f5);
+    t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character. 
+    t.Position = [0 0 1 1]; % (0,0) is the point of the bottom-left corner of the textbox,
+    t.HorizontalAlignment = 'center'; % This places the title in the center of the textbox horizontally
+    t.VerticalAlignment = 'top'; % This places the title in the top of the textbox vertically
+    t.String = ['Peak Detection on EPSCs onto BCs, AACs'];
+    subplot(5,3,k);    
+    [pks, locs] = findpeaks(-all_epsc_on_BC_AAC(:,k),'MinPeakDistance',3000); % peak detection
+    findpeaks(-all_epsc_on_BC_AAC(:,k),'MinPeakDistance',3000);
+    hold on; 
+    title (['BC, AAC Number #' num2str(k)])
+    xlabel('Time (1/40 ms)')
+    ylabel('EPSCs')
     temp_cur = all_epsc_on_BC_AAC(:,k);
     allrows = (1:40000)';
     notpeak = setdiff(allrows,locs);
@@ -895,6 +963,32 @@ for k = 1:1:15
     peaks_PYR_on_BC_AAC = [peaks_PYR_on_BC_AAC peaks_all];
 end
 
+peaks_PYR_on_BC_BiC = [];
+f6 = figure;
+for k = 1:1:15
+    figure(f6);
+    t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character. 
+    t.Position = [0 0 1 1]; % (0,0) is the point of the bottom-left corner of the textbox,
+    t.HorizontalAlignment = 'center'; % This places the title in the center of the textbox horizontally
+    t.VerticalAlignment = 'top'; % This places the title in the top of the textbox vertically
+    t.String = ['Peak Detection on EPSCs onto BCs, BiCs'];
+    subplot(5,3,k);
+    [pks, locs] = findpeaks(-all_epsc_on_BC_BiC(:,k),'MinPeakDistance',3000); % peak detection
+    findpeaks(-all_epsc_on_BC_BiC(:,k),'MinPeakDistance',3000);
+    hold on; 
+    title (['BC, BiC Number #' num2str(k)])
+    xlabel('Time (1/40 ms)')
+    ylabel('EPSCs ')
+    temp_cur = all_epsc_on_BC_BiC(:,k);
+    allrows = (1:40000)';
+    notpeak = setdiff(allrows,locs);
+    for t = 1:1:numel(notpeak)
+        element = notpeak(t,:);
+        temp_cur(element,:) = 0;
+    end
+    peaks_all = temp_cur;
+    peaks_PYR_on_BC_BiC = [peaks_PYR_on_BC_BiC peaks_all];
+end
 %% IPSCs from BC and BiC onto BC and BiC 
 
 IPSC_all_on_BC_BiC = [];
@@ -1114,16 +1208,64 @@ fig = uitable('Data',EPSC_on_BC_BiC_AAC_table{:,:},...
     'Units','Normalized',...
     'Position',[0, 0, 1, 1]);
 
-%% Excitatory/Inhibitory Ratios on BC, AAC population and BC, BiC, AAC population - Prep
+%% Find Mean EPSC and SD onto BC, BiC - graph and table 
+
+EPSC_on_BC_BiC = [];
+epsc_on_BC_BiC = [];
+for i = 1:1:15
+    pks_epsc_all = peaks_PYR_on_BC_BiC(:,i);
+    pks_epsc_all(pks_epsc_all == 0) = [];
+    epsc_all_mean = mean(pks_epsc_all);
+    epsc_all_std = std(pks_epsc_all);
+    epsc_on_BC_BiC = [epsc_all_mean;ipsc_all_std];
+    EPSC_on_BC_BiC = [EPSC_on_BC_BiC epsc_on_BC_BiC];
+end 
+
+EPSC_on_BC_BiC_table = EPSC_on_BC_BiC;
+num = (1:15)';
+EPSC_on_BC_BiC_table = array2table(EPSC_on_BC_BiC_table');
+EPSC_on_BC_BiC_table.num = num;
+EPSC_on_BC_BiC_table = [EPSC_on_BC_BiC_table(:,end) EPSC_on_BC_BiC_table(:,1) EPSC_on_BC_BiC_table(:,2)];
+
+EPSC_on_BC_BiC_table.Properties.VariableNames = {'BC_BiC_Number', 'Mean_Peak', 'Standard_Deviation'};
+
+EPSC_on_BC_BiC_mean = EPSC_on_BC_BiC(1,:);
+EPSC_on_BC_BiC_std = EPSC_on_BC_BiC(2,:);
+x = linspace(0,14,length(EPSC_on_BC_BiC_mean));
+figure
+scatter(x,EPSC_on_BC_BiC_mean,'black','filled');
+set(gca, 'XTickLabel',[]);
+a = [1:15]'; b =num2str(a); c=cellstr(b);
+dx=0.1; dEPSC_on_BC_BiC_mean=0.1;
+text(x+dx, EPSC_on_BC_BiC_mean+dEPSC_on_BC_BiC_mean, c);
+xlabel('Each Point Includes 1 BC, 1 BiC','FontSize',13,'FontWeight','bold');
+ylabel('Mean Peak EPSC','FontSize',13,'FontWeight','bold');
+hold on;
+errorbar(x,EPSC_on_BC_BiC_mean,EPSC_on_BC_BiC_std,'b','LineStyle','none')
+title('Mean Peak EPSC onto BC, BiC','FontSize',15,'FontWeight','bold')
+
+%% Mean Peak and Standard Deviation of EPSC on BC, BiC
+fig = uitable('Data',EPSC_on_BC_BiC_table{:,:},...
+    'RowName',[],...
+    'ColumnName',{'1 BC, 1 BiC Number','Mean Peak','Standard Deviation'},...
+    'Units','Normalized',...
+    'Position',[0, 0, 1, 1]);
+
+%% Excitatory/Inhibitory Ratios on BC, AAC population and BC, BiC, AAC population, and BC, BiC - Prep
 
 IPSC_BC_BiC_AAC_on_BC_BiC_AAC = IPSC_all_on_BC_BiC_AAC;
 IPSC_BC_AAC_on_BC_AAC = IPSC_all_on_BC_AAC;
+IPSC_BC_BiC_on_BC_BiC = IPSC_all_on_BC_BiC;
+
 
 %% Excitatory/Inhibitory Ratios on BC, AAC population and BC, BiC, AAC population 
 Ratios_BC_AAC = [];
 Ratios_BC_BiC_AAC = [];
+Ratios_BC_BiC=[];
+
 E_I_BC_AAC = abs(EPSC_on_BC_AAC(1,:)./IPSC_BC_AAC_on_BC_AAC(1,:))';
 E_I_BC_BiC_AAC = abs(EPSC_on_BC_BiC_AAC(1,:)./IPSC_BC_BiC_AAC_on_BC_BiC_AAC(1,:))';
+E_I_BC_BiC = abs(EPSC_on_BC_BiC(1,:)./IPSC_BC_BiC_on_BC_BiC(1,:))';
 
 cells = 1:15;
 Ratios_BC_AAC = [Ratios_BC_AAC cells' E_I_BC_AAC];
@@ -1134,19 +1276,30 @@ Ratios_BC_BiC_AAC = [Ratios_BC_BiC_AAC cells' E_I_BC_BiC_AAC];
 Ratios_BC_BiC_AAC = array2table(Ratios_BC_BiC_AAC);
 Ratios_BC_BiC_AAC.Properties.VariableNames = {'BC_BiC_AAC_number' 'Ratio_BC_BiC_AAC'};
 
-%% Mean Peak and Standard Deviation of IPSC from BC, AAC to BC, AAC
+Ratios_BC_BiC = [Ratios_BC_BiC cells' E_I_BC_BiC];
+Ratios_BC_BiC = array2table(Ratios_BC_BiC);
+Ratios_BC_BiC.Properties.VariableNames = {'BC_BiC_number' 'Ratio_BC_BiC'};
+
+%% E/I Ratio - BC, AAC to BC, AAC
 fig = uitable('Data',Ratios_BC_AAC{:,:},...
     'RowName',[],...
     'ColumnName',{'1 BC, 1 AAC Number','BC, AAC to BC, AAC'},...
     'Units','Normalized',...
     'Position',[0, 0, 1, 1]);%%
 
-%% Mean Peak and Standard Deviation of IPSC from BC,BiC, AAC to BC, BiC, AAC
+%% E/I Ratio -  BC,BiC, AAC to BC, BiC, AAC
 fig = uitable('Data',Ratios_BC_BiC_AAC{:,:},...
     'RowName',[],...
     'ColumnName',{'1 BC, 1 BiC, 1 AAC Number','BC, BiC, AAC to BC, BiC, AAC'},...
     'Units','Normalized',...
     'Position',[0, 0, 1, 1]);
+
+%% E/I Ratio - BC, BiC to BC, BiC
+fig = uitable('Data',Ratios_BC_BiC{:,:},...
+    'RowName',[],...
+    'ColumnName',{'1 BC, 1 BiC Number','BC, BiC to BC, BiC'},...
+    'Units','Normalized',...
+    'Position',[0, 0, 1, 1]);%%
 
 %% Raster Plot for one neuron - NOT FIXED
 
