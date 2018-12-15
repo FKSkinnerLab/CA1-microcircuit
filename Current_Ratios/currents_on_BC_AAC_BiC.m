@@ -1131,7 +1131,7 @@ for i = 1:1:15
     pks_epsc_all(pks_epsc_all == 0) = [];
     epsc_all_mean = mean(pks_epsc_all);
     epsc_all_std = std(pks_epsc_all);
-    epsc_on_BC_AAC = [epsc_all_mean;ipsc_all_std];
+    epsc_on_BC_AAC = [epsc_all_mean;epsc_all_std];
     EPSC_on_BC_AAC = [EPSC_on_BC_AAC epsc_on_BC_AAC];
 end 
 
