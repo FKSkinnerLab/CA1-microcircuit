@@ -734,23 +734,105 @@ fig = uitable('Data',IPSC_AAC_BC_table{:,:},...
     'Units','Normalized',...
     'Position',[0, 0, 1, 1]);
 
+%% IPSCs Only from BiC and BC onto PYR gathered
+% Sum all ipsc currents
+BiC_BC_ipsc = [];
+for i = 1:1:15
+    BiC_BC_cur_ipsc = current_BiC(:,i) + current_BC(:,i);
+    BiC_BC_ipsc = [BiC_BC_ipsc BiC_BC_cur_ipsc];
+end
+
+% Find the peaks of the summed ipsc currents
+peaks_BiC_BC = [];
+f1 = figure;
+for k = 1:1:15
+    figure(f1);
+    t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character. 
+    t.Position = [0 0 1 1]; % (0,0) is the point of the bottom-left corner of the textbox,
+    t.HorizontalAlignment = 'center'; % This places the title in the center of the textbox horizontally
+    t.VerticalAlignment = 'top'; % This places the title in the top of the textbox vertically
+    t.String = ['Peak Detection on IPSCs from BiCs, BCs onto PYRs'];
+    subplot(5,3,k);
+    [pks, locs] = findpeaks(BiC_BC_ipsc(:,k),'MinPeakDistance',3000); % peak detection
+    findpeaks(BiC_BC_ipsc(:,k),'MinPeakDistance',3000);
+    hold on; 
+    title (['PYR Number #' num2str(k)])
+    xlabel('Time (1/40 ms)')
+    ylabel('IPSC')
+    temp_cur = BiC_BC_ipsc(:,k);
+    allrows = (1:40000)';
+    notpeak = setdiff(allrows,locs);
+    for t = 1:1:numel(notpeak)
+        element = notpeak(t,:);
+        temp_cur(element,:) = 0;
+    end
+    pk_BiC_BC = temp_cur;
+    peaks_BiC_BC = [peaks_BiC_BC pk_BiC_BC];
+end
+
+%% IPSC from BiC and BC onto PYR - graph and table
+IPSC_BiC_BC = [];
+ipsc_BiC_BC = [];
+for i = 1:1:15 % number of PYR cells
+    pks_ipsc_BiC_BC = peaks_BiC_BC(:,i);
+    pks_ipsc_BiC_BC(pks_ipsc_BiC_BC == 0) = [];
+    ipsc_BiC_BC_mean = mean(pks_ipsc_BiC_BC);
+    ipsc_BiC_BC_std = std(pks_ipsc_BiC_BC);
+    ipsc_BiC_BC = [ipsc_BiC_BC_mean;ipsc_BiC_BC_std];
+    IPSC_BiC_BC = [IPSC_BiC_BC ipsc_BiC_BC];
+end
+
+IPSC_BiC_BC_table = IPSC_BiC_BC;
+num = (1:15)';
+IPSC_BiC_BC_table = array2table(IPSC_BiC_BC_table');
+IPSC_BiC_BC_table.num = num;
+IPSC_BiC_BC_table = [IPSC_BiC_BC_table(:,end) IPSC_BiC_BC_table(:,1) IPSC_BiC_BC_table(:,2)];
+
+IPSC_BiC_BC_table.Properties.VariableNames = {'Pyramidal_Cell_Number', 'Mean_Peak', 'Standard_Deviation'};
+
+IPSC_BiC_BC_mean = IPSC_BiC_BC(1,:);
+IPSC_BiC_BC_std = IPSC_BiC_BC(2,:);
+x = linspace(1,15,length(IPSC_BiC_BC_mean));
+figure
+scatter(x(1,:),IPSC_BiC_BC_mean,'black','filled');
+set(gca, 'XTickLabel',[]);
+a = [1:15]'; b =num2str(a); c=cellstr(b);
+dx=0.1; dIPSC_BiC_BC_mean=0.1;
+text(x+dx, IPSC_BiC_BC_mean+dIPSC_BiC_BC_mean, c);
+xlabel('Individual PYR Cells','FontSize',13,'FontWeight','bold');
+ylabel('Mean Peak IPSC','FontSize',13,'FontWeight','bold');
+hold on;
+errorbar(x,IPSC_all_mean,IPSC_all_std,'b','LineStyle','none')
+title('Mean Peak IPSC from BC and BiC onto PYR Cells','FontSize',15,'FontWeight','bold')
+
+%% Mean Peak and Standard Deviation of IPSCs Only from BiC and BC onto PYR Cells
+fig = uitable('Data',IPSC_BiC_BC_table{:,:},...
+    'RowName',[],...
+    'ColumnName',{'Pyramidal Cell Number','Mean Peak','Standard Deviation'},...
+    'Units','Normalized',...
+    'Position',[0, 0, 1, 1]);
+
 %% Excitatory/Inhibitory Ratios on PYR Cells
 Ratios_PYR = [];
 E_I_AAC = abs(EPSC(1,:)./IPSC_AAC(1,:))';
 E_I_BC = abs(EPSC(1,:)./IPSC_BC(1,:))';
 E_I_BiC = abs(EPSC(1,:)./IPSC_BiC(1,:))';
 E_I_AAC_BC = abs(EPSC(1,:)./IPSC_AAC_BC(1,:))';
+E_I_BiC_BC = abs(EPSC(1,:)./IPSC_BiC_BC(1,:))';
+
 E_I_all = abs(EPSC(1,:)./IPSC_all(1,:))';
 E_I_all_together = abs(EPSC(1,:)./IPSC_all_together(1,:))';
 
 %% E/I Ratio - Table 
 pyr = 1:15;
-Ratios_PYR = [pyr' E_I_AAC E_I_BC E_I_BiC E_I_AAC_BC E_I_all E_I_all_together];
+Ratios_PYR = [pyr' E_I_AAC E_I_BC E_I_BiC E_I_AAC_BC E_I_BiC_BC E_I_all E_I_all_together];
 Ratios_PYR = array2table(Ratios_PYR);
 
 Ratios_PYR.Properties.VariableNames = {'pyr_no' 'Ratio_AAC_on_PYR'...
     'Ratio_BC_on_PYR' 'Ratio_BiC_on_PYR' ...
-    'Ratio_AAC_BC_on_PYR' 'Ratio_AAC_BiC_BC_on_PYR' 'All_ipsc_onto_PYR'};
+    'Ratio_AAC_BC_on_PYR'...
+    'Ratio_BiC_BC_on_PYR'...
+    'Ratio_AAC_BiC_BC_on_PYR' 'All_ipsc_onto_PYR'};
 
 %% Display the E/I table as a figure
 
@@ -761,6 +843,7 @@ uitable('Data',Ratios_PYR{:,:},...
     'BC to PYR',...
     'BiC to PYR',...
     'AAC, BC onto PYR',...
+    'BiC, BC onto PYR',...
     'AAC, BiC and BC to PYR',...
     'All Inhibitory Neurons to PYR'},...
     'Units', 'Normalized',...
