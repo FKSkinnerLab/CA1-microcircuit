@@ -824,7 +824,7 @@ for i = 1:1:15
     
         tot_cur_epsc_on_BC_AAC_combo1 =  current_PYR_on_BC(:,i) + current_PYR_on_AAC(:,t);
         all_epsc_on_BC_AAC_combo1 = [all_epsc_on_BC_AAC_combo1 tot_cur_epsc_on_BC_AAC_combo1];
-    
+   
         tot_cur_epsc_on_BC_BiC_combo1 =  current_PYR_on_BC(:,i) + current_PYR_on_BiC(:,t);
         all_epsc_on_BC_BiC_combo1 = [all_epsc_on_BC_BiC_combo1 tot_cur_epsc_on_BC_BiC_combo1];
 end 
