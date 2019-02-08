@@ -368,17 +368,18 @@ all_epsc_on_BC_BiC_AAC_combo1 = [];
 all_epsc_on_BC_AAC_combo1 = [];
 
 for i = 1:1:15
-    for a = 1:1:15
-        t = mod(i + a, 15);
-        if t == 0
-            t = 15;
-        end
-        for b = 1:1:15
-            s = mod(t + b, 15);
-            if s == 0
-                s = 15;
-            end 
-                
+    for t = 1:1:15
+        for s = 1:1:15
+%     for a = 1:1:15
+%         t = mod(i + a, 15);
+%         if t == 0
+%             t = 15;
+%         end
+%         for b = 1:1:15
+%             s = mod(t + b, 15);
+%             if s == 0
+%                 s = 15;
+%             end            
         tot_cur_ipsc_on_BC_combo1 =  current_BiC_on_BC(:,i) + current_BC_on_BC(:,i);
         tot_cur_ipsc_on_BiC_combo1 =  current_BiC_on_BiC(:,t) + current_BC_on_BiC(:,t);
         tot_cur_ipsc_on_AAC_combo1 =  current_BiC_on_AAC(:,s) + current_BC_on_AAC(:,s);
@@ -423,7 +424,7 @@ for k = 1:1:3375
 end
 
 %% EPSC peaks onto BC, BiC
-peaks_PYR_on_BC_BiC_combo1 = [];
+peaks_PYR_on_BC_BiC_combo1 = [];b
 for k = 1:1:3375
     [pks, locs] = findpeaks(-all_epsc_on_BC_BiC_combo1(:,k),'MinPeakDistance',3000); % peak detection
     findpeaks(-all_epsc_on_BC_BiC_combo1(:,k),'MinPeakDistance',3000);
@@ -553,7 +554,7 @@ temp_ratio_BC_BiC_AAC = [];
 E_I_BC_BiC_AAC = abs(EPSC_on_BC_BiC_AAC_combo1(1,:)./IPSC_BC_BiC_AAC_on_BC_BiC_AAC_combo1(1,:))';
 
 temp_ratio_BC_BiC_AAC = [temp_ratio_BC_BiC_AAC E_I_BC_BiC_AAC];
-Ratios_BC_BiC_AAC = array2table(reshape(temp_ratio_BC_BiC_AAC,[15,15]));
+Ratios_BC_BiC_AAC = array2table(reshape(temp_ratio_BC_BiC_AAC,[15,225]));
 
 %% E/I Ratio - BC, BiC, AAC to BC, BiC, AAC
 fig = uitable('Data',Ratios_BC_BiC_AAC{:,:},...
@@ -561,3 +562,5 @@ fig = uitable('Data',Ratios_BC_BiC_AAC{:,:},...
     'ColumnName',[],...
     'Units','Normalized',...
     'Position',[0, 0, 1, 1]);
+%%
+less_than_1 = sum(temp_ratio_BC_BiC_AAC <1)/3375;
