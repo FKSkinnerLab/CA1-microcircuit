@@ -364,12 +364,8 @@ all_ipsc_on_BC_AAC_combo1 = [];
 all_epsc_on_BC_AAC_combo1 = [];
 
 for i = 1:1:15
-    for a = 1:1:15
-        t = mod(i + a, 15);
-        if t == 0
-            t = 15;
-        end
-
+    for t = 1:1:15
+        
         tot_cur_ipsc_on_BC_combo1 = current_BC_on_BC(:,i);
         tot_cur_ipsc_on_AAC_combo1 = current_BC_on_AAC(:,t);
 
@@ -380,7 +376,6 @@ for i = 1:1:15
         all_epsc_on_BC_AAC_combo1 = [all_epsc_on_BC_AAC_combo1 tot_cur_epsc_on_BC_AAC_combo1];
     end
 end
-
 %% Find the peaks of the summed IPSCs from BC and AAC onto BC, AAC - and EPSCs too
 
 peaks_all_PV_on_BC_AAC_combo1 = [];
@@ -430,15 +425,6 @@ for i = 1:1:225
     IPSC_all_on_BC_AAC_combo1 = [IPSC_all_on_BC_AAC_combo1 ipsc_all_on_BC_AAC_combo1];
 end
 
-for i = 15:15:225
-    IPSC_all_on_BC_AAC_table = IPSC_all_on_BC_AAC_combo1(:,i-14:i);
-    num = (1:15)';
-    IPSC_all_on_BC_AAC_table = array2table(IPSC_all_on_BC_AAC_table');
-    IPSC_all_on_BC_AAC_table.num = num;
-    IPSC_all_on_BC_AAC_table = [IPSC_all_on_BC_AAC_table(:,end) IPSC_all_on_BC_AAC_table(:,1) IPSC_all_on_BC_AAC_table(:,2)];
-    IPSC_all_on_BC_AAC_table.Properties.VariableNames = {'BC_and_AAC_Number', 'Mean_Peak', 'Standard_Deviation'};
-end
-
 %% Find Mean EPSC and SD onto BC, AAC
 
 EPSC_on_BC_AAC_combo1 = [];
@@ -470,3 +456,6 @@ fig = uitable('Data',Ratios_BC_AAC{:,:},...
     'ColumnName',[],...
     'Units','Normalized',...
     'Position',[0, 0, 1, 1]);
+%%
+
+less_than_1 = sum(temp_ratio_BC_AAC >1)/225;
