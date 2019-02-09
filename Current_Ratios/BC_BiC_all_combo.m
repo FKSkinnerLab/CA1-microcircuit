@@ -364,18 +364,13 @@ all_ipsc_on_BC_BiC_combo1 = [];
 all_epsc_on_BC_BiC_combo1 = [];
 
 for i = 1:1:15
-    for a = 1:1:15
-        t = mod(i + a, 15);
-        if t == 0
-            t = 15;
-        end
-
+    for t = 1:1:15
+        
         tot_cur_ipsc_on_BC_combo1 =  current_BiC_on_BC(:,i) + current_BC_on_BC(:,i);
         tot_cur_ipsc_on_BiC_combo1 =  current_BiC_on_BiC(:,t) + current_BC_on_BiC(:,t);
 
         tot_cur_ipsc_on_BC_BiC_combo1 = tot_cur_ipsc_on_BC_combo1 + tot_cur_ipsc_on_BiC_combo1;
         all_ipsc_on_BC_BiC_combo1 = [all_ipsc_on_BC_BiC_combo1 tot_cur_ipsc_on_BC_BiC_combo1];
-
 
         tot_cur_epsc_on_BC_BiC_combo1 =  current_PYR_on_BC(:,i) + current_PYR_on_BiC(:,t);
         all_epsc_on_BC_BiC_combo1 = [all_epsc_on_BC_BiC_combo1 tot_cur_epsc_on_BC_BiC_combo1];
@@ -471,3 +466,6 @@ fig = uitable('Data',Ratios_BC_BiC{:,:},...
     'ColumnName',[],...
     'Units','Normalized',...
     'Position',[0, 0, 1, 1]);
+%% 
+
+less_than_1 = sum(temp_ratio_BC_BiC <1)/225;
