@@ -1,84 +1,84 @@
-%% Calculate Excitatory/Inhibitory Ratios onto BiCs
+%% Calculate Excitatory/Inhibitory Ratios onto AACs
 %  Melisa Gumus
 %  May 2018 
 
 %% Load Data From Netclamp Results
 clear all
 close all
-clc 
+clc
  
-f = fullfile('/home','melisagumus','Documents', ...
-    'MATLAB','CA1_SimTracker','BiC',{...
-    'BiC_1470_1000';...
-    'BiC_1580_1000';...
-    'BiC_1635_1000';...
-    'BiC_1855_1000';...
-    'BiC_2020_1000';...
-    'BiC_2130_1000';...
-    'BiC_2350_1000';...
-    'BiC_2460_1000';...
-    'BiC_2570_1000';...
-    'BiC_2900_1000';...
-    'BiC_3010_1000';...
-    'BiC_3175_1000';...
-    'BiC_3340_1000';...
-    'BiC_3505_1000';...
-    'BiC_3615_1000'...
+f = fullfile('/Users','macklabadmin','Documents', ...
+    'other','AAC',{...
+    'AAC_0_1000';...
+    'AAC_36_1000';...
+    'AAC_180_1000';...
+    'AAC_288_1000';...
+    'AAC_360_1000';...
+    'AAC_468_1000';...
+    'AAC_576_1000';...
+    'AAC_720_1000';...
+    'AAC_828_1000';...
+    'AAC_900_1000';...
+    'AAC_1008_1000';...
+    'AAC_1152_1000';...
+    'AAC_1224_1000';...
+    'AAC_1332_1000';...
+    'AAC_1404_1000'...
     },{...
-    'mytrace_1470_syns.dat';...
-    'mytrace_1580_syns.dat';...
-    'mytrace_1635_syns.dat';...
-    'mytrace_1855_syns.dat';...
-    'mytrace_2020_syns.dat';...
-    'mytrace_2130_syns.dat';...
-    'mytrace_2350_syns.dat';...
-    'mytrace_2460_syns.dat';...
-    'mytrace_2570_syns.dat';...
-    'mytrace_2900_syns.dat';...
-    'mytrace_3010_syns.dat';...
-    'mytrace_3175_syns.dat';...
-    'mytrace_3340_syns.dat';...
-    'mytrace_3505_syns.dat';...
-    'mytrace_3615_syns.dat'...
+    'mytrace_0_syns.dat';...
+    'mytrace_36_syns.dat';...
+    'mytrace_180_syns.dat';...
+    'mytrace_288_syns.dat';...
+    'mytrace_360_syns.dat';...
+    'mytrace_468_syns.dat';...
+    'mytrace_576_syns.dat';...
+    'mytrace_720_syns.dat';...
+    'mytrace_828_syns.dat';...
+    'mytrace_900_syns.dat';...
+    'mytrace_1008_syns.dat';...
+    'mytrace_1152_syns.dat';...
+    'mytrace_1224_syns.dat';...
+    'mytrace_1332_syns.dat';...
+    'mytrace_1404_syns.dat'...
     });
 
-%% Load Data From Netclamp Results
+%%
 clear all
 close all
-clc 
+clc
  
-f = fullfile('/Users','melisagumus','Documents','other','bic',{...
-    'BiC_1470_1000';...
-    'BiC_1580_1000';...
-    'BiC_1635_1000';...
-    'BiC_1855_1000';...
-    'BiC_2020_1000';...
-    'BiC_2130_1000';...
-    'BiC_2350_1000';...
-    'BiC_2460_1000';...
-    'BiC_2570_1000';...
-    'BiC_2900_1000';...
-    'BiC_3010_1000';...
-    'BiC_3175_1000';...
-    'BiC_3340_1000';...
-    'BiC_3505_1000';...
-    'BiC_3615_1000'...
+f = fullfile('/Users','melisagumus','Documents','other','aac',{...
+    'AAC_0_1000';...
+    'AAC_36_1000';...
+    'AAC_180_1000';...
+    'AAC_288_1000';...
+    'AAC_360_1000';...
+    'AAC_468_1000';...
+    'AAC_576_1000';...
+    'AAC_720_1000';...
+    'AAC_828_1000';...
+    'AAC_900_1000';...
+    'AAC_1008_1000';...
+    'AAC_1152_1000';...
+    'AAC_1224_1000';...
+    'AAC_1332_1000';...
+    'AAC_1404_1000'...
     },{...
-    'mytrace_1470_syns.dat';...
-    'mytrace_1580_syns.dat';...
-    'mytrace_1635_syns.dat';...
-    'mytrace_1855_syns.dat';...
-    'mytrace_2020_syns.dat';...
-    'mytrace_2130_syns.dat';...
-    'mytrace_2350_syns.dat';...
-    'mytrace_2460_syns.dat';...
-    'mytrace_2570_syns.dat';...
-    'mytrace_2900_syns.dat';...
-    'mytrace_3010_syns.dat';...
-    'mytrace_3175_syns.dat';...
-    'mytrace_3340_syns.dat';...
-    'mytrace_3505_syns.dat';...
-    'mytrace_3615_syns.dat'...
+    'mytrace_0_syns.dat';...
+    'mytrace_36_syns.dat';...
+    'mytrace_180_syns.dat';...
+    'mytrace_288_syns.dat';...
+    'mytrace_360_syns.dat';...
+    'mytrace_468_syns.dat';...
+    'mytrace_576_syns.dat';...
+    'mytrace_720_syns.dat';...
+    'mytrace_828_syns.dat';...
+    'mytrace_900_syns.dat';...
+    'mytrace_1008_syns.dat';...
+    'mytrace_1152_syns.dat';...
+    'mytrace_1224_syns.dat';...
+    'mytrace_1332_syns.dat';...
+    'mytrace_1404_syns.dat'...
     });
 
 %% Write Data on Matrix
@@ -92,7 +92,7 @@ end
 data = mat2cell(alldata, 40000, ...
     [12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12]);
 
-%% Creates a big table consists of inputs from AAC, BiC, PYR, and BC... onto BiC 
+%% Creates a big table consists of inputs from BiC, PYR, and BC... onto AAC
 
 M = [];
 current_BC = [];
@@ -119,12 +119,12 @@ for m = 1:15  % number of cells
             t.Position = [0 0 1 1]; % (0,0) is the point of the bottom-left corner of the textbox,
             t.HorizontalAlignment = 'center'; % This places the title in the center of the textbox horizontally
             t.VerticalAlignment = 'top'; % This places the title in the top of the textbox vertically
-            t.String = ['Peak Detection on IPSCs from BiCs onto BiCs'];
+            t.String = ['Peak Detection on IPSCs from BiCs onto AACs'];
             subplot(5,3,m);
             [pks, locs] = findpeaks(data{m}(:,k),'MinPeakDistance',3000); % peak detection
             findpeaks(data{m}(:,k),'MinPeakDistance',3000);
             hold on; 
-            title (['BiC Number #' num2str(m)])
+            title (['AAC Number #' num2str(m)])
             xlabel('Time (1/40 ms)')
             ylabel('IPSC')
             temp_BiC = data{m}(:,k);
@@ -142,12 +142,12 @@ for m = 1:15  % number of cells
             t.Position = [0 0 1 1]; % (0,0) is the point of the bottom-left corner of the textbox,
             t.HorizontalAlignment = 'center'; % This places the title in the center of the textbox horizontally
             t.VerticalAlignment = 'top'; % This places the title in the top of the textbox vertically
-            t.String = ['Peak Detection on EPSCs onto BiCs'];
+            t.String = ['Peak Detection on EPSCs onto AACs'];
             subplot(5,3,m);
             [pks, locs] = findpeaks(-data{m}(:,k),'MinPeakDistance',3000); % peak detection
             findpeaks(-data{m}(:,k),'MinPeakDistance',3000);
             hold on; 
-            title (['BiC Number #' num2str(m)])
+            title (['AAC Number #' num2str(m)])
             xlabel('Time (1/40 ms)')
             ylabel('EPSC')
             temp_PYR = data{m}(:,k);
@@ -165,14 +165,15 @@ for m = 1:15  % number of cells
             t.Position = [0 0 1 1]; % (0,0) is the point of the bottom-left corner of the textbox,
             t.HorizontalAlignment = 'center'; % This places the title in the center of the textbox horizontally
             t.VerticalAlignment = 'top'; % This places the title in the top of the textbox vertically
-            t.String = ['Peak Detection on IPSCs from BCs onto BiCs'];
+            t.String = ['Peak Detection on IPSCs from BCs onto AACs'];
             subplot(5,3,m);
             [pks, locs] = findpeaks(data{m}(:,k),'MinPeakDistance',3000); % peak detection
             findpeaks(data{m}(:,k),'MinPeakDistance',3000);
             hold on;
-            title (['BiC Number #' num2str(m)])
+            title (['AAC Number #' num2str(m)])
             xlabel('Time (1/40 ms)')
             ylabel('IPSC')
+            %findpeaks(data{m}(:,k),M
             temp_BC = data{m}(:,k);
             allrows = (1:40000)';
             notpeak = setdiff(allrows,locs);
@@ -181,7 +182,6 @@ for m = 1:15  % number of cells
                 temp_BC(element,:) = 0;
             end 
             BC = temp_BC;
-            
         elseif k == 11
             temp_current_ca3 = data{m}(:,k);
             figure(figure4);
@@ -189,12 +189,12 @@ for m = 1:15  % number of cells
             t.Position = [0 0 1 1]; % (0,0) is the point of the bottom-left corner of the textbox,
             t.HorizontalAlignment = 'center'; % This places the title in the center of the textbox horizontally
             t.VerticalAlignment = 'top'; % This places the title in the top of the textbox vertically
-            t.String = ['Peak Detection on EPSCs from CA3 onto BiCs'];
+            t.String = ['Peak Detection on EPSCs from CA3 onto AACs'];
             subplot(5,3,m);
             [pks, locs] = findpeaks(-data{m}(:,k),'MinPeakDistance',3000); % peak detection
             findpeaks(-data{m}(:,k),'MinPeakDistance',3000);
             hold on; 
-            title (['BiC Number #' num2str(m)])
+            title (['AAC Number #' num2str(m)])
             xlabel('Time')
             ylabel('EPSC from CA3')
             temp_ca3 = data{m}(:,k);
@@ -205,19 +205,19 @@ for m = 1:15  % number of cells
                 temp_ca3(element,:) = 0;
             end 
             CA3 = temp_ca3;
-        elseif k == 12  % no current from EC ontp BC
+        elseif k == 12  
             temp_current_ec = data{m}(:,k);
             figure(figure5);
             t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character. 
             t.Position = [0 0 1 1]; % (0,0) is the point of the bottom-left corner of the textbox,
             t.HorizontalAlignment = 'center'; % This places the title in the center of the textbox horizontally
             t.VerticalAlignment = 'top'; % This places the title in the top of the textbox vertically
-            t.String = ['Peak Detection on EPSCs from EC onto BiCs'];
+            t.String = ['Peak Detection on EPSCs from EC onto AACs'];
             subplot(5,3,m);
             [pks, locs] = findpeaks(-data{m}(:,k),'MinPeakDistance',3000); % peak detection
             findpeaks(-data{m}(:,k),'MinPeakDistance',3000);
             hold on; 
-            title (['BiC Number #' num2str(m)])
+            title (['AAC Number #' num2str(m)])
             xlabel('Time')
             ylabel('EPSC from EC')
             temp_ec = data{m}(:,k);
@@ -242,7 +242,7 @@ for m = 1:15  % number of cells
     end
     current_PYR = [current_PYR temp_current_PYR];
     current_BiC = [current_BiC temp_current_BiC];
-    current_BC = [current_BC temp_current_BC];
+    current_BC = [current_BC temp_current_BC]; 
     current_cck = [current_cck temp_current_cck];
     current_ivy = [current_ivy temp_current_ivy];
     current_ngf = [current_ngf temp_current_ngf];
@@ -256,36 +256,35 @@ end
 allcells = mat2cell(M, 40000, ...
     [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5]); 
 
-%% Graph of EPSCs on BiC
-
+%% Graph of EPSCs from PYR onto AAC
 figure 
 for i = 1:1:15
     t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character. 
     t.Position = [0 0 1 1]; % (0,0) is the point of the bottom-left corner of the textbox,
     t.HorizontalAlignment = 'center'; % This places the title in the center of the textbox horizontally
     t.VerticalAlignment = 'top'; % This places the title in the top of the textbox vertically
-    t.String = ['Distribution of EPSCs on BiCs'];
+    t.String = ['Distribution of EPSCs on AACs'];
     temp = allcells{i}(:,2);
     temp(temp == 0) = [];   %get rid of zeros
     subplot(5,3,i)
     p = histfit(temp);
-    set(p(1),'facecolor',[0.1 0.6 0.6])
+    set(p(1),'facecolor',[0.1 0.6 0.6]);
     set(p(2),'color','k')
     hold on
-    title (['BiC Number #' num2str(i)]) 
+    title (['AAC Number #' num2str(i)])
     xlabel('EPSC')
     ylabel('Number of EPSCs')
 end 
-suptitle('Distribution of EPSCs on BiCs')
+suptitle('Distribution of EPSCs on AAC')
 
-%% Graph IPSCs from BiC onto BiC
+%% Graph of IPSCs from BiC onto AAC
 figure 
 for i = 1:1:15
     t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character. 
     t.Position = [0 0 1 1]; % (0,0) is the point of the bottom-left corner of the textbox,
     t.HorizontalAlignment = 'center'; % This places the title in the center of the textbox horizontally
     t.VerticalAlignment = 'top'; % This places the title in the top of the textbox vertically
-    t.String = ['Distribution of IPSCs from BiCs on BiCs'];
+    t.String = ['Distribution of IPSCs from BiCs on AACs'];
     temp = allcells{i}(:,1);
     temp(temp == 0) = [];   %get rid of zeros
     subplot(5,3,i)
@@ -293,20 +292,20 @@ for i = 1:1:15
     set(p(1),'facecolor',[0.1 0.6 0.6])
     set(p(2),'color','k')
     hold on 
-    title (['BiC Number #' num2str(i)]) 
-    xlabel('IPSCs from BiC')
+    title (['AAC Number #' num2str(i)])
+    xlabel('IPSCs from AAC')
     ylabel('Number of IPSCs')
 end 
-suptitle('Distribution of IPSCs from BiCs onto BiCs')
+suptitle('Distribution of IPSCs from BiC onto AAC')
 
-%% Graph of IPSCs from BC onto BiC
+%% Graph of IPSCs from BC onto AAC
 figure 
 for i = 1:1:15
     t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character. 
     t.Position = [0 0 1 1]; % (0,0) is the point of the bottom-left corner of the textbox,
     t.HorizontalAlignment = 'center'; % This places the title in the center of the textbox horizontally
     t.VerticalAlignment = 'top'; % This places the title in the top of the textbox vertically
-    t.String = ['Distribution of IPSCs from BCs on BiCs'];
+    t.String = ['Distribution of IPSCs from BCs on AACs'];
     temp = allcells{i}(:,3);
     temp(temp == 0) = [];   %get rid of zeros
     subplot(5,3,i)
@@ -314,13 +313,13 @@ for i = 1:1:15
     set(p(1),'facecolor',[0.1 0.6 0.6])
     set(p(2),'color','k')
     hold on 
-    title (['BiC Number #' num2str(i)]) 
-    xlabel('IPSCs from BCs')
+    title (['AAC Number #' num2str(i)])
+    xlabel('IPSCs from BC')
     ylabel('Number of IPSCs')
 end 
-suptitle('Distribution of IPSCs from BCs onto BiCs')
+suptitle('Distribution of IPSCs from BC onto AAC')
 
-%% EPSCs from PYR onto BiC
+%% Find Mean EPSCs and SD onto AAC
 EPSC = [];
 epsc = [];
 for i = 1:1:15 
@@ -338,8 +337,7 @@ EPSC_table = array2table(EPSC_table');
 EPSC_table.num = num;
 EPSC_table = [EPSC_table(:,end) EPSC_table(:,1) EPSC_table(:,2)];
 
-EPSC_table.Properties.VariableNames = {'BiC_Number', 'Mean_Peak', 'Standard_Deviation'};
-
+EPSC_table.Properties.VariableNames = {'AAC_Number', 'Mean_Peak', 'Standard_Deviation'};
 
 subplot(3,1,1)
 EPSC_mean = EPSC(1,:);
@@ -350,23 +348,23 @@ set(gca, 'XTickLabel',[]);
 a = [1:15]'; b =num2str(a); c=cellstr(b);
 dx=0.1; dEPSC_mean=0.1;
 text(x+dx, EPSC_mean+dEPSC_mean, c);
-xlabel('Individual BiCs','FontSize',13,'FontWeight','bold');
-ylabel('Mean Peak EPSCs','FontSize',13,'FontWeight','bold');
+xlabel('Individual AACs','FontSize',13,'FontWeight','bold');
+ylabel('Mean Peak EPSC','FontSize',13,'FontWeight','bold');
 hold on;
 errorbar(x,EPSC_mean,EPSC_std,'b','LineStyle','none')
-title('Mean Peak EPSCs onto BiCs','FontSize',15,'FontWeight','bold')
+title('Mean Peak EPSC onto AACs','FontSize',15,'FontWeight','bold')
 
-%% Mean Peak and Standard Deviation of EPSC onto BiCs
+%% Mean Peak and Standard Deviation of EPSC on AAC
 fig = uitable('Data',EPSC_table{:,:},...
     'RowName',[],...
-    'ColumnName',{'BiC Number','Mean Peak','Standard Deviation'},...
+    'ColumnName',{'AAC Number','Mean Peak','Standard Deviation'},...
     'Units','Normalized',...
     'Position',[0, 0, 1, 1]);
 
-%% IPSCs only from BiC onto BiCs
+%% IPSCs only from BiC onto AAC
 IPSC_BiC = [];
 ipsc_BiC = [];
-for i = 1:1:15 % number of PYR cells
+for i = 1:1:15 
     pks_ipsc_BiC = allcells{i}(:,1);
     pks_ipsc_BiC(pks_ipsc_BiC==0)=[];
     ipsc_BiC_mean = mean(pks_ipsc_BiC);
@@ -381,7 +379,7 @@ IPSC_BiC_table = array2table(IPSC_BiC_table');
 IPSC_BiC_table.num = num;
 IPSC_BiC_table = [IPSC_BiC_table(:,end) IPSC_BiC_table(:,1) IPSC_BiC_table(:,2)];
 
-IPSC_BiC_table.Properties.VariableNames = {'BiC_Number', 'Mean_Peak', 'Standard_Deviation'};
+IPSC_BiC_table.Properties.VariableNames = {'AAC_Number', 'Mean_Peak', 'Standard_Deviation'};
 
 subplot(3,1,2)
 IPSC_BiC_mean = IPSC_BiC(1,:);
@@ -392,20 +390,20 @@ set(gca, 'XTickLabel',[]);
 a = [1:15]'; b =num2str(a); c=cellstr(b);
 dx=0.1; dIPSC_BiC_mean=0.1;
 text(x+dx, IPSC_BiC_mean+dIPSC_BiC_mean, c);
-xlabel('Individual BiCs','FontSize',13,'FontWeight','bold');
-ylabel('Mean Peak IPSCs from BiCs','FontSize',13,'FontWeight','bold');
+xlabel('Individual AACs','FontSize',13,'FontWeight','bold');
+ylabel('Mean Peak IPSC from BiC','FontSize',13,'FontWeight','bold');
 hold on;
 errorbar(x,IPSC_BiC_mean,IPSC_BiC_std,'b','LineStyle','none')
-title('Mean Peak IPSCs from BiCs onto BiCs','FontSize',15,'FontWeight','bold')
+title('Mean Peak IPSC from BiCs onto AACs','FontSize',15,'FontWeight','bold')
 
-%% Mean Peak and Standard Deviation of IPSC from BiCs onto BiCs
+%% Mean Peak and Standard Deviation of IPSC from BiC onto AAC
 fig = uitable('Data',IPSC_BiC_table{:,:},...
     'RowName',[],...
-    'ColumnName',{'BiC Number','Mean Peak','Standard Deviation'},...
+    'ColumnName',{'AAC Number','Mean Peak','Standard Deviation'},...
     'Units','Normalized',...
     'Position',[0, 0, 1, 1]);
 
-%% IPSCs only from BC onto BiCs
+%% IPSCs only from BC onto AAC
 IPSC_BC = [];
 ipsc_BC = [];
 for i = 1:1:15 
@@ -423,7 +421,7 @@ IPSC_BC_table = array2table(IPSC_BC_table');
 IPSC_BC_table.num = num;
 IPSC_BC_table = [IPSC_BC_table(:,end) IPSC_BC_table(:,1) IPSC_BC_table(:,2)];
 
-IPSC_BC_table.Properties.VariableNames = {'BiC_Number', 'Mean_Peak', 'Standard_Deviation'};
+IPSC_BC_table.Properties.VariableNames = {'BC_Number', 'Mean_Peak', 'Standard_Deviation'};
 
 subplot(3,1,3)
 IPSC_BC_mean = IPSC_BC(1,:);
@@ -434,20 +432,20 @@ set(gca, 'XTickLabel',[]);
 a = [1:15]'; b =num2str(a); c=cellstr(b);
 dx=0.1; dIPSC_BC_mean=0.1;
 text(x+dx, IPSC_BC_mean+dIPSC_BC_mean, c);
-xlabel('Individual BiCs','FontSize',13,'FontWeight','bold');
-ylabel('Mean Peak IPSCs from BiC','FontSize',13,'FontWeight','bold');
+xlabel('Individual AACs','FontSize',13,'FontWeight','bold');
+ylabel('Mean Peak IPSC from BC','FontSize',13,'FontWeight','bold');
 hold on;
 errorbar(x,IPSC_BC_mean,IPSC_BC_std,'b','LineStyle','none')
-title('Mean Peak IPSCs from BCs onto BiCs','FontSize',15,'FontWeight','bold')
+title('Mean Peak IPSC from BCs onto AACs','FontSize',15,'FontWeight','bold')
 
-%% Mean Peak and Standard Deviation of IPSC from BC onto BiC
+%% Mean Peak and Standard Deviation of IPSC from BC onto AACs
 fig = uitable('Data',IPSC_BC_table{:,:},...
     'RowName',[],...
-    'ColumnName',{'BiC Number','Mean Peak','Standard Deviation'},...
+    'ColumnName',{'AAC Number','Mean Peak','Standard Deviation'},...
     'Units','Normalized',...
     'Position',[0, 0, 1, 1]);
 
-%% Calculate Mean IPSCs Gathered from BiC and BC onto BiC
+%% IPSCs Only from BC and BiC onto AAC gathered
 % Sum all ipsc currents
 all_ipsc = [];
 all_ipsc_together = [];
@@ -461,7 +459,6 @@ for i = 1:1:15
         +current_ngf(:,i)...
         +current_olm(:,i)...
         +current_sca(:,i);
-    
     all_ipsc = [all_ipsc tot_cur_ipsc];
     all_ipsc_together = [all_ipsc_together tot_ipsc_together];
 
@@ -470,19 +467,18 @@ end
 % Find the peaks of the summed ipsc currents - BC and BiC
 peaks_all_PV = [];
 f1 = figure;
-
 for k = 1:1:15
     figure(f1);
     t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character. 
     t.Position = [0 0 1 1]; % (0,0) is the point of the bottom-left corner of the textbox,
     t.HorizontalAlignment = 'center'; % This places the title in the center of the textbox horizontally
     t.VerticalAlignment = 'top'; % This places the title in the top of the textbox vertically
-    t.String = ['Peak Detection on IPSCs from BCs, BiCs on BiCs'];
+    t.String = ['Peak Detection on IPSCs from BCs, BiCs on AACs'];
     subplot(5,3,k);
     [pks, locs] = findpeaks(all_ipsc(:,k),'MinPeakDistance',3000); % peak detection
     findpeaks(all_ipsc(:,k),'MinPeakDistance',3000);
     hold on; 
-    title (['BiC Number #' num2str(k)])
+    title (['AAC Number #' num2str(k)])
     xlabel('Time (1/40 ms)')
     ylabel('IPSC')
     temp_cur = all_ipsc(:,k);
@@ -504,12 +500,12 @@ for k = 1:1:15
     t.Position = [0 0 1 1]; % (0,0) is the point of the bottom-left corner of the textbox,
     t.HorizontalAlignment = 'center'; % This places the title in the center of the textbox horizontally
     t.VerticalAlignment = 'top'; % This places the title in the top of the textbox vertically
-    t.String = ['Peak Detection on IPSCs from All Inhibitory Cells onto BiCs'];
+    t.String = ['Peak Detection on IPSCs from All Inhibitory Cells onto AACs'];
     subplot(5,3,k);
-    [pks, locs] = findpeaks(all_ipsc_together(:,k),'MinPeakDistance',3000); % peak detection
-    findpeaks(all_ipsc_together(:,k),'MinPeakDistance',3000);
+    [pks, locs] = findpeaks(all_ipsc_together(:,k),'MinPeakDistance',4000); % peak detection
+    findpeaks(all_ipsc_together(:,k),'MinPeakDistance',4000);
     hold on; 
-    title (['BiC Number #' num2str(k)])
+    title (['AAC Number #' num2str(k)])
     xlabel('Time (1/40 ms)')
     ylabel('IPSC')
     temp_cur_together = all_ipsc_together(:,k);
@@ -523,11 +519,10 @@ for k = 1:1:15
     peaks_all_PV_together = [peaks_all_PV_together peaks_all_together];
 end
 
-%% Mean IPSCs Gathered from BC and BiC onto BiC - Table and Graph
-
+%% IPSCs from BC and BiC onto AAC - graph and table
 IPSC_all = [];
 ipsc_all = [];
-for i = 1:1:15 
+for i = 1:1:15 % number of PYR cells
     pks_ipsc_all = peaks_all_PV(:,i);
     pks_ipsc_all(pks_ipsc_all == 0) = [];
     ipsc_all_mean = mean(pks_ipsc_all);
@@ -542,7 +537,7 @@ IPSC_all_table = array2table(IPSC_all_table');
 IPSC_all_table.num = num;
 IPSC_all_table = [IPSC_all_table(:,end) IPSC_all_table(:,1) IPSC_all_table(:,2)];
 
-IPSC_all_table.Properties.VariableNames = {'BiC_Number', 'Mean_Peak', 'Standard_Deviation'};
+IPSC_all_table.Properties.VariableNames = {'AAC_Number', 'Mean_Peak', 'Standard_Deviation'};
 
 IPSC_all_mean = IPSC_all(1,:);
 IPSC_all_std = IPSC_all(2,:);
@@ -553,24 +548,24 @@ set(gca, 'XTickLabel',[]);
 a = [1:15]'; b =num2str(a); c=cellstr(b);
 dx=0.1; dIPSC_all_mean=0.1;
 text(x+dx, IPSC_all_mean+dIPSC_all_mean, c);
-xlabel('Individual BiCs','FontSize',13,'FontWeight','bold');
-ylabel('Mean Peak IPSCs','FontSize',13,'FontWeight','bold');
+xlabel('Individual AACs','FontSize',13,'FontWeight','bold');
+ylabel('Mean Peak IPSC','FontSize',13,'FontWeight','bold');
 hold on;
 errorbar(x,IPSC_all_mean,IPSC_all_std,'b','LineStyle','none')
-title('Mean Peak IPSCs from BCs and BiCs onto BiCs','FontSize',15,'FontWeight','bold')
+title('Mean Peak IPSC from BCs and BiCs onto AACs','FontSize',15,'FontWeight','bold')
 
-%% Mean Peak and Standard Deviation of IPSCs from BiC, and BC onto PYR Cells
+%% Mean Peak and Standard Deviation of IPSCs Only from BiC and BC onto AACs
 fig = uitable('Data',IPSC_all_table{:,:},...
     'RowName',[],...
-    'ColumnName',{'BiC Number','Mean Peak','Standard Deviation'},...
+    'ColumnName',{'AAC Number','Mean Peak','Standard Deviation'},...
     'Units','Normalized',...
     'Position',[0, 0, 1, 1]);
 
-%% All IPSCs from All inhibitory Neurons onto BiC - graph and table
+%% All IPSCs from All Inhibitory Neurons onto AAC - graph and table
 
 IPSC_all_together = [];
 ipsc_all_together = [];
-for i = 1:1:15
+for i = 1:1:15 
     pks_ipsc_all_together = peaks_all_PV_together(:,i);
     pks_ipsc_all_together(pks_ipsc_all_together == 0) = [];
     ipsc_all_mean_together = mean(pks_ipsc_all_together);
@@ -585,31 +580,32 @@ IPSC_all_together_table = array2table(IPSC_all_together_table');
 IPSC_all_together_table.num = num;
 IPSC_all_together_table = [IPSC_all_together_table(:,end) IPSC_all_together_table(:,1) IPSC_all_together_table(:,2)];
 
-IPSC_all_together_table.Properties.VariableNames = {'BiC_Number', 'Mean_Peak', 'Standard_Deviation'};
+IPSC_all_together_table.Properties.VariableNames = {'AAC_Number', 'Mean_Peak', 'Standard_Deviation'};
 
+ 
 IPSC_all_together_mean = IPSC_all_together(1,:);
 IPSC_all_std_together = IPSC_all_together(2,:);
-x = linspace(1,15,length(IPSC_all_together_mean));
+x = linspace(0,14,length(IPSC_all_together_mean));
 figure
 scatter(x,IPSC_all_together_mean,'black','filled');
 set(gca, 'XTickLabel',[]);
 a = [1:15]'; b =num2str(a); c=cellstr(b);
 dx=0.1; dIPSC_all_together_mean=0.1;
 text(x+dx, IPSC_all_together_mean+dIPSC_all_together_mean, c);
-xlabel('Individual BiCs','FontSize',13,'FontWeight','bold');
-ylabel('Mean Peak IPSC','FontSize',13,'FontWeight','bold');
+xlabel('Individual AACs','FontSize',13,'FontWeight','bold');
+ylabel('Mean Peak IPSCs','FontSize',13,'FontWeight','bold');
 hold on;
 errorbar(x,IPSC_all_together_mean,IPSC_all_std_together,'b','LineStyle','none')
-title('Mean Peak IPSCs from All Inhibitory Cells onto BiCs','FontSize',15,'FontWeight','bold')
+title('Mean Peak IPSCs from All Inhibitory Cells onto AACs','FontSize',15,'FontWeight','bold')
 
-%% Mean Peak and Standard Deviation of IPSCs from All Inhibitory Neurons onto BiC
+%% Mean Peak and Standard Deviation of IPSCs from All Inhibitory Neurons onto AAC
 fig = uitable('Data',IPSC_all_together_table{:,:},...
     'RowName',[],...
-    'ColumnName',{'BiC Number','Mean Peak','Standard Deviation'},...
+    'ColumnName',{'AAC Number','Mean Peak','Standard Deviation'},...
     'Units','Normalized',...
     'Position',[0, 0, 1, 1]);
 
-%% Find Mean EPSCs and SD from CA3 onto BiC
+%% Find Mean EPSCs and SD from CA3 onto BC
 EPSC_ca3 = [];
 epsc_ca3 = [];
 for i = 1:1:15 % number of BC 
@@ -627,7 +623,7 @@ EPSC_ca3_table = array2table(EPSC_ca3_table');
 EPSC_ca3_table.num = num;
 EPSC_ca3_table = [EPSC_ca3_table(:,end) EPSC_ca3_table(:,1) EPSC_ca3_table(:,2)];
 
-EPSC_ca3_table.Properties.VariableNames = {'BiC_Number', 'Mean_Peak', 'Standard_Deviation'};
+EPSC_ca3_table.Properties.VariableNames = {'AAC_Number', 'Mean_Peak', 'Standard_Deviation'};
 
 subplot(3,1,1)
 EPSC_ca3_mean = EPSC_ca3(1,:);
@@ -638,80 +634,182 @@ set(gca, 'XTickLabel',[]);
 a = [1:15]'; b =num2str(a); c=cellstr(b);
 dx=0.1; dEPSC_ca3_mean=0.1;
 text(x+dx, EPSC_ca3_mean+dEPSC_ca3_mean, c);
-xlabel('Individual BCs','FontSize',13,'FontWeight','bold');
+xlabel('Individual AACs','FontSize',13,'FontWeight','bold');
 ylabel('Mean Peak EPSCs','FontSize',13,'FontWeight','bold');
 hold on;
 errorbar(x,EPSC_ca3_mean,EPSC_ca3_std,'b','LineStyle','none')
-title('Mean Peak EPSCs onto BiCs','FontSize',15,'FontWeight','bold')
+title('Mean Peak EPSCs onto BCs','FontSize',15,'FontWeight','bold')
 
 %% Mean Peak and Standard Deviation of EPSC from CA3 on BC
 fig = uitable('Data',EPSC_ca3_table{:,:},...
     'RowName',[],...
-    'ColumnName',{'BiC Number','Mean Peak','Standard Deviation'},...
+    'ColumnName',{'AAC Number','Mean Peak','Standard Deviation'},...
     'Units','Normalized',...
     'Position',[0, 0, 1, 1]);
-%% Excitatory/Inhibitory Ratios on BiC
-Ratios_BiC = [];
+%% Calculate Mean EPSCs Gathered from PYR and CA3 onto BC
+% Sum all ipsc currents
+all_epsc = [];
+for i = 1:1:15
+    tot_cur_epsc =  current_PYR(:,i) + current_ca3(:,i) + current_ec(:,i);  % no current from EC onto BC
+    all_epsc = [all_epsc tot_cur_epsc];
+end
+
+% Find the peaks of the summed epsc currents - only from BC and BiC
+epsc_peaks_all = [];
+f1 = figure;
+for k = 1:1:15
+    figure(f1);
+    t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character. 
+    t.Position = [0 0 1 1]; % (0,0) is the point of the bottom-left corner of the textbox,
+    t.HorizontalAlignment = 'center'; % This places the title in the center of the textbox horizontally
+    t.VerticalAlignment = 'top'; % This places the title in the top of the textbox vertically
+    t.String = ['Peak Detection on EPSCs from PYRs, ECs, CA3 on AACs'];
+    subplot(5,3,k);
+    [pks, locs] = findpeaks(all_epsc(:,k),'MinPeakDistance',3000); % peak detection
+    findpeaks(all_epsc(:,k),'MinPeakDistance',3000);
+    hold on; 
+    title (['AAC Number #' num2str(k)])
+    xlabel('Time (1/40 ms)')
+    ylabel('epsc')
+    temp_cur = all_epsc(:,k);
+    allrows = (1:40000)';
+    notpeak = setdiff(allrows,locs);
+    for t = 1:1:numel(notpeak)
+        element = notpeak(t,:);
+        temp_cur(element,:) = 0;
+    end
+    peaks_all = temp_cur;
+    epsc_peaks_all = [epsc_peaks_all peaks_all];
+end
+
+%% All EPSCs from All Excitatory Neurons onto AAC - graph and table
+
+EPSC_all_together = [];
+epsc_all_together = [];
+for i = 1:1:15
+    pks_epsc_all_together = epsc_peaks_all(:,i);
+    pks_epsc_all_together(pks_epsc_all_together == 0) = [];
+    epsc_all_mean_together = mean(pks_epsc_all_together);
+    epsc_all_std_together = std(pks_epsc_all_together);
+    epsc_all_together = [epsc_all_mean_together;epsc_all_std_together];
+    EPSC_all_together = [EPSC_all_together epsc_all_together];
+end 
+
+EPSC_all_together_table = EPSC_all_together;
+num = (1:15)';
+EPSC_all_together_table = array2table(EPSC_all_together_table');
+EPSC_all_together_table.num = num;
+EPSC_all_together_table = [EPSC_all_together_table(:,end) EPSC_all_together_table(:,1) EPSC_all_together_table(:,2)];
+
+EPSC_all_together_table.Properties.VariableNames = {'AAC_Number', 'Mean_Peak', 'Standard_Deviation'};
+ 
+EPSC_all_together_mean = EPSC_all_together(1,:);
+EPSC_all_std_together = EPSC_all_together(2,:);
+x = linspace(0,15,length(EPSC_all_together_mean));
+figure
+scatter(x,EPSC_all_together_mean,'black','filled');
+set(gca, 'XTickLabel',[]);
+a = [1:15]'; b =num2str(a); c=cellstr(b);
+dx=0.1; dEPSC_all_together_mean=0.1;
+text(x+dx, EPSC_all_together_mean+dEPSC_all_together_mean, c);
+xlabel('Individual AACs','FontSize',13,'FontWeight','bold');
+ylabel('Mean Peak EPSCs','FontSize',13,'FontWeight','bold');
+hold on;
+errorbar(x,EPSC_all_together_mean,EPSC_all_std_together,'b','LineStyle','none')
+title('Mean Peak EPSCs from All Excitatory Cells onto AACs','FontSize',15,'FontWeight','bold')
+
+%% Mean Peak and Standard Deviation of EPSCs from All Excitatory Neurons onto BCs
+fig = uitable('Data',EPSC_all_together_table{:,:},...
+    'RowName',[],...
+    'ColumnName',{'AAC Number','Mean Peak','Standard Deviation'},...
+    'Units','Normalized',...
+    'Position',[0, 0, 1, 1]);
+
+%% Excitatory/Inhibitory Ratios on PYR Cells
+Ratios_AAC = [];
 E_I_BC = abs(EPSC(1,:)./IPSC_BC(1,:))';
 E_I_BiC = abs(EPSC(1,:)./IPSC_BiC(1,:))';
 E_I_all = abs(EPSC(1,:)./IPSC_all(1,:))'; 
 E_I_all_together = abs(EPSC(1,:)./IPSC_all_together(1,:))';
 
+Ratios_AAC_with_ca3 = [];
+E_I_BC_with_ca3 = abs(EPSC_all_together(1,:)./IPSC_BC(1,:))';
+E_I_BiC_with_ca3 = abs(EPSC_all_together(1,:)./IPSC_BiC(1,:))';
+E_I_all_with_ca3 = abs(EPSC_all_together(1,:)./IPSC_all(1,:))';
+E_I_all_together_with_ca3 = abs(EPSC_all_together(1,:)./IPSC_all_together(1,:))';
+
 %% E/I Ratio - Table 
-bic = 1:15;
-Ratios_BiC = [Ratios_BiC bic' E_I_BC E_I_BiC E_I_all E_I_all_together];
-Ratios_BiC = array2table(Ratios_BiC);
+aac = 1:15;
+Ratios_AAC = [Ratios_AAC aac' E_I_BC E_I_BiC E_I_all E_I_all_together];
+Ratios_AAC = array2table(Ratios_AAC);
  
-Ratios_BiC.Properties.VariableNames = {'BiC_no' 'Ratio_BC_on_BiC'...
-    'Ratio_BiC_on_BiC' 'Ratio_BC_BiC_on_BiC' 'All_ipsc_onto_BiC'};
+Ratios_AAC.Properties.VariableNames = {'AAC_no' 'Ratio_BC_on_AAC'...
+    'Ratio_BiC_on_AAC' 'Ratio_BC_BiC_on_AAC' 'All_ipsc_onto_AAC'};
 
-%% Display the table as a figure
+%%
+aac = 1:15;
+Ratios_AAC_with_ca3 = [Ratios_AAC_with_ca3 aac' E_I_BC_with_ca3 E_I_BiC_with_ca3 E_I_all_with_ca3 E_I_all_together_with_ca3];
+Ratios_AAC_with_ca3 = array2table(Ratios_AAC_with_ca3);
+ 
+Ratios_BC_with_ca3.Properties.VariableNames = {'AAC_no' 'Ratio_BC_on_AAC'...
+    'Ratio_BiC_on_AAC' 'Ratio_BC_BiC_on_AAC' 'All_ipsc_onto_AAC'};
 
-uitable('Data',Ratios_BiC{:,:},...
+%% Display the E/I table as a figure
+
+uitable('Data',Ratios_AAC{:,:},...
     'RowName', [],...
-    'ColumnName',{'BiC Number',...
-    'BC to BiC',...
-    'BiC to BiC',...
-    'BC, BiC to BiC',...
-    'All Inhibitory Neurons to BiC'},...
+    'ColumnName',{'AAC Number',...
+    'BC to AAC',...
+    'BiC to AAC',...
+    'BC, BiC to AAC',...
+    'All Inhibitory Neurons to AAC'},...
     'Units', 'Normalized',...
     'Position',[0, 0, 1, 1]);
-
-%% Voltage 
+%%
+uitable('Data',Ratios_AAC_with_ca3{:,:},...
+    'RowName', [],...
+    'ColumnName',{'AAC Number',...
+    'BC to AAC',...
+    'BiC to AAC',...
+    'BC and BiC to AAC',...
+    'All Inhibitory Neurons to AAC'},...
+    'Units', 'Normalized',...
+    'Position',[0, 0, 1, 1]);
+%% Voltage
 
 g = fullfile('/home','melisagumus','Documents', ...
-    'MATLAB','CA1_SimTracker','BiC',{...
-    'BiC_1470_1000';...
-    'BiC_1580_1000';...
-    'BiC_1635_1000';...
-    'BiC_1855_1000';...
-    'BiC_2020_1000';...
-    'BiC_2130_1000';...
-    'BiC_2350_1000';...
-    'BiC_2460_1000';...
-    'BiC_2570_1000';...
-    'BiC_2900_1000';...
-    'BiC_3010_1000';...
-    'BiC_3175_1000';...
-    'BiC_3340_1000';...
-    'BiC_3505_1000';...
-    'BiC_3615_1000'...
+    'MATLAB','CA1_SimTracker','AAC',{...
+    'AAC_0_1000';...
+    'AAC_36_1000';...
+    'AAC_180_1000';...
+    'AAC_288_1000';...
+    'AAC_360_1000';...
+    'AAC_468_1000';...
+    'AAC_576_1000';...
+    'AAC_720_1000';...
+    'AAC_828_1000';...
+    'AAC_900_1000';...
+    'AAC_1008_1000';...
+    'AAC_1152_1000';...
+    'AAC_1224_1000';...
+    'AAC_1332_1000';...
+    'AAC_1404_1000'...
     },{...
-    'mytrace_1470_soma.dat';...
-    'mytrace_1580_soma.dat';...
-    'mytrace_1635_soma.dat';...
-    'mytrace_1855_soma.dat';...
-    'mytrace_2020_soma.dat';...
-    'mytrace_2130_soma.dat';...
-    'mytrace_2350_soma.dat';...
-    'mytrace_2460_soma.dat';...
-    'mytrace_2570_soma.dat';...
-    'mytrace_2900_soma.dat';...
-    'mytrace_3010_soma.dat';...
-    'mytrace_3175_soma.dat';...
-    'mytrace_3340_soma.dat';...
-    'mytrace_3505_soma.dat';...
-    'mytrace_3615_soma.dat'...
+    'mytrace_0_soma.dat';...
+    'mytrace_36_soma.dat';...
+    'mytrace_180_soma.dat';...
+    'mytrace_288_soma.dat';...
+    'mytrace_360_soma.dat';...
+    'mytrace_468_soma.dat';...
+    'mytrace_576_soma.dat';...
+    'mytrace_720_soma.dat';...
+    'mytrace_828_soma.dat';...
+    'mytrace_900_soma.dat';...
+    'mytrace_1008_soma.dat';...
+    'mytrace_1152_soma.dat';...
+    'mytrace_1224_soma.dat';...
+    'mytrace_1332_soma.dat';...
+    'mytrace_1404_soma.dat'...
     });
 
 %%
@@ -726,7 +824,7 @@ end
 vol = mat2cell(allvol, 40000,...
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]);
 
-%% Graph of Voltage of BiC
+%% Graph of Voltage of AAC
 figure 
 for i = 1:1:15
     temp = vol{i};
@@ -734,12 +832,14 @@ for i = 1:1:15
     subplot(5,3,i)
     plot(temp);
     hold on
-    title (['BiC Number #' num2str(i)]) 
+    title (['AAC Number #' num2str(i)]) 
     xlabel('Time')
     ylabel('Voltage')
 end 
 
 %%
+
+
 
 
 

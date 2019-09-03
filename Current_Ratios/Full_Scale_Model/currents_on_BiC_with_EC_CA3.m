@@ -612,7 +612,7 @@ fig = uitable('Data',IPSC_all_together_table{:,:},...
 %% Find Mean EPSCs and SD from CA3 onto BiC
 EPSC_ca3 = [];
 epsc_ca3 = [];
-for i = 1:1:15 % number of BC 
+for i = 1:1:15 % number of BiC 
     pks_epsc_ca3 = allcells{i}(:,4);
     pks_epsc_ca3(pks_epsc_ca3==0)=[];
     epsc_ca3_mean = mean(pks_epsc_ca3);
@@ -650,6 +650,86 @@ fig = uitable('Data',EPSC_ca3_table{:,:},...
     'ColumnName',{'BiC Number','Mean Peak','Standard Deviation'},...
     'Units','Normalized',...
     'Position',[0, 0, 1, 1]);
+
+%% Calculate Mean EPSCs Gathered from PYR and CA3 onto BC
+% Sum all ipsc currents
+all_epsc = [];
+for i = 1:1:15
+    tot_cur_epsc =  current_PYR(:,i) + current_ca3(:,i) + current_ec(:,i);  % no current from EC onto BC
+    all_epsc = [all_epsc tot_cur_epsc];
+end
+
+% Find the peaks of the summed epsc currents - only from BC and BiC
+epsc_peaks_all = [];
+f1 = figure;
+for k = 1:1:15
+    figure(f1);
+    t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character. 
+    t.Position = [0 0 1 1]; % (0,0) is the point of the bottom-left corner of the textbox,
+    t.HorizontalAlignment = 'center'; % This places the title in the center of the textbox horizontally
+    t.VerticalAlignment = 'top'; % This places the title in the top of the textbox vertically
+    t.String = ['Peak Detection on EPSCs from PYRs, ECs, CA3 on BiCs'];
+    subplot(5,3,k);
+    [pks, locs] = findpeaks(all_epsc(:,k),'MinPeakDistance',3000); % peak detection
+    findpeaks(all_epsc(:,k),'MinPeakDistance',3000);
+    hold on; 
+    title (['BiC Number #' num2str(k)])
+    xlabel('Time (1/40 ms)')
+    ylabel('epsc')
+    temp_cur = all_epsc(:,k);
+    allrows = (1:40000)';
+    notpeak = setdiff(allrows,locs);
+    for t = 1:1:numel(notpeak)
+        element = notpeak(t,:);
+        temp_cur(element,:) = 0;
+    end
+    peaks_all = temp_cur;
+    epsc_peaks_all = [epsc_peaks_all peaks_all];
+end
+
+%% All EPSCs from All Excitatory Neurons onto BC - graph and table
+
+EPSC_all_together = [];
+epsc_all_together = [];
+for i = 1:1:15
+    pks_epsc_all_together = epsc_peaks_all(:,i);
+    pks_epsc_all_together(pks_epsc_all_together == 0) = [];
+    epsc_all_mean_together = mean(pks_epsc_all_together);
+    epsc_all_std_together = std(pks_epsc_all_together);
+    epsc_all_together = [epsc_all_mean_together;epsc_all_std_together];
+    EPSC_all_together = [EPSC_all_together epsc_all_together];
+end 
+
+EPSC_all_together_table = EPSC_all_together;
+num = (1:15)';
+EPSC_all_together_table = array2table(EPSC_all_together_table');
+EPSC_all_together_table.num = num;
+EPSC_all_together_table = [EPSC_all_together_table(:,end) EPSC_all_together_table(:,1) EPSC_all_together_table(:,2)];
+
+EPSC_all_together_table.Properties.VariableNames = {'BiC_Number', 'Mean_Peak', 'Standard_Deviation'};
+ 
+EPSC_all_together_mean = EPSC_all_together(1,:);
+EPSC_all_std_together = EPSC_all_together(2,:);
+x = linspace(0,15,length(EPSC_all_together_mean));
+figure
+scatter(x,EPSC_all_together_mean,'black','filled');
+set(gca, 'XTickLabel',[]);
+a = [1:15]'; b =num2str(a); c=cellstr(b);
+dx=0.1; dEPSC_all_together_mean=0.1;
+text(x+dx, EPSC_all_together_mean+dEPSC_all_together_mean, c);
+xlabel('Individual BiCs','FontSize',13,'FontWeight','bold');
+ylabel('Mean Peak EPSCs','FontSize',13,'FontWeight','bold');
+hold on;
+errorbar(x,EPSC_all_together_mean,EPSC_all_std_together,'b','LineStyle','none')
+title('Mean Peak EPSCs from All Excitatory Cells onto BiCs','FontSize',15,'FontWeight','bold')
+
+%% Mean Peak and Standard Deviation of EPSCs from All Excitatory Neurons onto BCs
+fig = uitable('Data',EPSC_all_together_table{:,:},...
+    'RowName',[],...
+    'ColumnName',{'BiC Number','Mean Peak','Standard Deviation'},...
+    'Units','Normalized',...
+    'Position',[0, 0, 1, 1]);
+
 %% Excitatory/Inhibitory Ratios on BiC
 Ratios_BiC = [];
 E_I_BC = abs(EPSC(1,:)./IPSC_BC(1,:))';
@@ -657,12 +737,26 @@ E_I_BiC = abs(EPSC(1,:)./IPSC_BiC(1,:))';
 E_I_all = abs(EPSC(1,:)./IPSC_all(1,:))'; 
 E_I_all_together = abs(EPSC(1,:)./IPSC_all_together(1,:))';
 
+Ratios_BiC_with_ca3 = [];
+E_I_BC_with_ca3 = abs(EPSC_all_together(1,:)./IPSC_BC(1,:))';
+E_I_BiC_with_ca3 = abs(EPSC_all_together(1,:)./IPSC_BiC(1,:))';
+E_I_all_with_ca3 = abs(EPSC_all_together(1,:)./IPSC_all(1,:))';
+E_I_all_together_with_ca3 = abs(EPSC_all_together(1,:)./IPSC_all_together(1,:))';
+
+
 %% E/I Ratio - Table 
 bic = 1:15;
 Ratios_BiC = [Ratios_BiC bic' E_I_BC E_I_BiC E_I_all E_I_all_together];
 Ratios_BiC = array2table(Ratios_BiC);
  
 Ratios_BiC.Properties.VariableNames = {'BiC_no' 'Ratio_BC_on_BiC'...
+    'Ratio_BiC_on_BiC' 'Ratio_BC_BiC_on_BiC' 'All_ipsc_onto_BiC'};
+%%
+bic = 1:15;
+Ratios_BiC_with_ca3 = [Ratios_BiC_with_ca3 bic' E_I_BC_with_ca3 E_I_BiC_with_ca3 E_I_all_with_ca3 E_I_all_together_with_ca3];
+Ratios_BiC_with_ca3 = array2table(Ratios_BiC_with_ca3);
+ 
+Ratios_BC_with_ca3.Properties.VariableNames = {'BiC_no' 'Ratio_BC_on_BiC'...
     'Ratio_BiC_on_BiC' 'Ratio_BC_BiC_on_BiC' 'All_ipsc_onto_BiC'};
 
 %% Display the table as a figure
@@ -677,6 +771,16 @@ uitable('Data',Ratios_BiC{:,:},...
     'Units', 'Normalized',...
     'Position',[0, 0, 1, 1]);
 
+%%
+uitable('Data',Ratios_BiC_with_ca3{:,:},...
+    'RowName', [],...
+    'ColumnName',{'BiC Number',...
+    'BC to BiC',...
+    'BiC to BiC',...
+    'BC and BiC to BiC',...
+    'All Inhibitory Neurons to BiC'},...
+    'Units', 'Normalized',...
+    'Position',[0, 0, 1, 1]);
 %% Voltage 
 
 g = fullfile('/home','melisagumus','Documents', ...
