@@ -1,52 +1,12 @@
 %% Calculate Excitatory/Inhibitory Ratios onto BiCs
 %  Melisa Gumus
-%  May 2018 
+%  May 2018
 
 %% Load Data From Netclamp Results
 clear all
 close all
-clc 
- 
-f = fullfile('/home','melisagumus','Documents', ...
-    'MATLAB','CA1_SimTracker','BiC',{...
-    'BiC_1470_1000';...
-    'BiC_1580_1000';...
-    'BiC_1635_1000';...
-    'BiC_1855_1000';...
-    'BiC_2020_1000';...
-    'BiC_2130_1000';...
-    'BiC_2350_1000';...
-    'BiC_2460_1000';...
-    'BiC_2570_1000';...
-    'BiC_2900_1000';...
-    'BiC_3010_1000';...
-    'BiC_3175_1000';...
-    'BiC_3340_1000';...
-    'BiC_3505_1000';...
-    'BiC_3615_1000'...
-    },{...
-    'mytrace_1470_syns.dat';...
-    'mytrace_1580_syns.dat';...
-    'mytrace_1635_syns.dat';...
-    'mytrace_1855_syns.dat';...
-    'mytrace_2020_syns.dat';...
-    'mytrace_2130_syns.dat';...
-    'mytrace_2350_syns.dat';...
-    'mytrace_2460_syns.dat';...
-    'mytrace_2570_syns.dat';...
-    'mytrace_2900_syns.dat';...
-    'mytrace_3010_syns.dat';...
-    'mytrace_3175_syns.dat';...
-    'mytrace_3340_syns.dat';...
-    'mytrace_3505_syns.dat';...
-    'mytrace_3615_syns.dat'...
-    });
+clc
 
-%% Load Data From Netclamp Results
-clear all
-close all
-clc 
- 
 f = fullfile('/Users','melisagumus','Documents','other','bic',{...
     'BiC_1470_1000';...
     'BiC_1580_1000';...
@@ -92,7 +52,7 @@ end
 data = mat2cell(alldata, 40000, ...
     [12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12]);
 
-%% Creates a big table consists of inputs from AAC, BiC, PYR, and BC... onto BiC 
+%% Creates a big table consists of inputs from AAC, BiC, PYR, and BC... onto BiC
 
 M = [];
 current_BC = [];
@@ -110,12 +70,12 @@ figure2 = figure;
 figure3 = figure;
 figure4 = figure;
 figure5 = figure;
-for m = 1:15  % number of cells 
-    for k = 2:12  % number of input 
+for m = 1:15  % number of cells
+    for k = 2:12  % number of input
         if k == 3
             temp_current_BiC = data{m}(:,k);
             figure(figure1);
-            t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character. 
+            t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character.
             t.Position = [0 0 1 1]; % (0,0) is the point of the bottom-left corner of the textbox,
             t.HorizontalAlignment = 'center'; % This places the title in the center of the textbox horizontally
             t.VerticalAlignment = 'top'; % This places the title in the top of the textbox vertically
@@ -123,7 +83,7 @@ for m = 1:15  % number of cells
             subplot(5,3,m);
             [pks, locs] = findpeaks(data{m}(:,k),'MinPeakDistance',3000); % peak detection
             findpeaks(data{m}(:,k),'MinPeakDistance',3000);
-            hold on; 
+            hold on;
             title (['BiC Number #' num2str(m)])
             xlabel('Time (1/40 ms)')
             ylabel('IPSC')
@@ -133,12 +93,12 @@ for m = 1:15  % number of cells
             for t = 1:1:numel(notpeak)
                 element = notpeak(t,:);
                 temp_BiC(element,:) = 0;
-            end 
+            end
             BiC = temp_BiC;
         elseif k == 8
             temp_current_PYR = data{m}(:,k);
             figure(figure2);
-            t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character. 
+            t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character.
             t.Position = [0 0 1 1]; % (0,0) is the point of the bottom-left corner of the textbox,
             t.HorizontalAlignment = 'center'; % This places the title in the center of the textbox horizontally
             t.VerticalAlignment = 'top'; % This places the title in the top of the textbox vertically
@@ -146,7 +106,7 @@ for m = 1:15  % number of cells
             subplot(5,3,m);
             [pks, locs] = findpeaks(-data{m}(:,k),'MinPeakDistance',3000); % peak detection
             findpeaks(-data{m}(:,k),'MinPeakDistance',3000);
-            hold on; 
+            hold on;
             title (['BiC Number #' num2str(m)])
             xlabel('Time (1/40 ms)')
             ylabel('EPSC')
@@ -156,12 +116,12 @@ for m = 1:15  % number of cells
             for t = 1:1:numel(notpeak)
                 element = notpeak(t,:);
                 temp_PYR(element,:) = 0;
-            end 
+            end
             PYR = temp_PYR;
         elseif k == 9
             temp_current_BC = data{m}(:,k);
             figure(figure3);
-            t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character. 
+            t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character.
             t.Position = [0 0 1 1]; % (0,0) is the point of the bottom-left corner of the textbox,
             t.HorizontalAlignment = 'center'; % This places the title in the center of the textbox horizontally
             t.VerticalAlignment = 'top'; % This places the title in the top of the textbox vertically
@@ -179,13 +139,13 @@ for m = 1:15  % number of cells
             for t = 1:1:numel(notpeak)
                 element = notpeak(t,:);
                 temp_BC(element,:) = 0;
-            end 
+            end
             BC = temp_BC;
-            
+
         elseif k == 11
             temp_current_ca3 = data{m}(:,k);
             figure(figure4);
-            t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character. 
+            t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character.
             t.Position = [0 0 1 1]; % (0,0) is the point of the bottom-left corner of the textbox,
             t.HorizontalAlignment = 'center'; % This places the title in the center of the textbox horizontally
             t.VerticalAlignment = 'top'; % This places the title in the top of the textbox vertically
@@ -193,7 +153,7 @@ for m = 1:15  % number of cells
             subplot(5,3,m);
             [pks, locs] = findpeaks(-data{m}(:,k),'MinPeakDistance',3000); % peak detection
             findpeaks(-data{m}(:,k),'MinPeakDistance',3000);
-            hold on; 
+            hold on;
             title (['BiC Number #' num2str(m)])
             xlabel('Time')
             ylabel('EPSC from CA3')
@@ -203,12 +163,12 @@ for m = 1:15  % number of cells
             for t = 1:1:numel(notpeak)
                 element = notpeak(t,:);
                 temp_ca3(element,:) = 0;
-            end 
+            end
             CA3 = temp_ca3;
         elseif k == 12  % no current from EC ontp BC
             temp_current_ec = data{m}(:,k);
             figure(figure5);
-            t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character. 
+            t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character.
             t.Position = [0 0 1 1]; % (0,0) is the point of the bottom-left corner of the textbox,
             t.HorizontalAlignment = 'center'; % This places the title in the center of the textbox horizontally
             t.VerticalAlignment = 'top'; % This places the title in the top of the textbox vertically
@@ -216,7 +176,7 @@ for m = 1:15  % number of cells
             subplot(5,3,m);
             [pks, locs] = findpeaks(-data{m}(:,k),'MinPeakDistance',3000); % peak detection
             findpeaks(-data{m}(:,k),'MinPeakDistance',3000);
-            hold on; 
+            hold on;
             title (['BiC Number #' num2str(m)])
             xlabel('Time')
             ylabel('EPSC from EC')
@@ -226,7 +186,7 @@ for m = 1:15  % number of cells
             for t = 1:1:numel(notpeak)
                 element = notpeak(t,:);
                 temp_ec(element,:) = 0;
-            end 
+            end
             EC = temp_ec;
         elseif k == 4
             temp_current_cck = data{m}(:,k);
@@ -238,7 +198,7 @@ for m = 1:15  % number of cells
             temp_current_olm = data{m}(:,k);
         elseif k == 10
             temp_current_sca = data{m}(:,k);
-        end 
+        end
     end
     current_PYR = [current_PYR temp_current_PYR];
     current_BiC = [current_BiC temp_current_BiC];
@@ -251,16 +211,16 @@ for m = 1:15  % number of cells
     current_ca3 = [current_ca3 temp_current_ca3];
     current_ec = [current_ec temp_current_ec];
     M = [M BiC PYR BC CA3 EC];
-end 
+end
 
 allcells = mat2cell(M, 40000, ...
-    [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5]); 
+    [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5]);
 
 %% Graph of EPSCs on BiC
 
-figure 
+figure
 for i = 1:1:15
-    t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character. 
+    t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character.
     t.Position = [0 0 1 1]; % (0,0) is the point of the bottom-left corner of the textbox,
     t.HorizontalAlignment = 'center'; % This places the title in the center of the textbox horizontally
     t.VerticalAlignment = 'top'; % This places the title in the top of the textbox vertically
@@ -272,16 +232,16 @@ for i = 1:1:15
     set(p(1),'facecolor',[0.1 0.6 0.6])
     set(p(2),'color','k')
     hold on
-    title (['BiC Number #' num2str(i)]) 
+    title (['BiC Number #' num2str(i)])
     xlabel('EPSC')
     ylabel('Number of EPSCs')
-end 
+end
 suptitle('Distribution of EPSCs on BiCs')
 
 %% Graph IPSCs from BiC onto BiC
-figure 
+figure
 for i = 1:1:15
-    t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character. 
+    t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character.
     t.Position = [0 0 1 1]; % (0,0) is the point of the bottom-left corner of the textbox,
     t.HorizontalAlignment = 'center'; % This places the title in the center of the textbox horizontally
     t.VerticalAlignment = 'top'; % This places the title in the top of the textbox vertically
@@ -292,17 +252,17 @@ for i = 1:1:15
     p = histfit(temp);
     set(p(1),'facecolor',[0.1 0.6 0.6])
     set(p(2),'color','k')
-    hold on 
-    title (['BiC Number #' num2str(i)]) 
+    hold on
+    title (['BiC Number #' num2str(i)])
     xlabel('IPSCs from BiC')
     ylabel('Number of IPSCs')
-end 
+end
 suptitle('Distribution of IPSCs from BiCs onto BiCs')
 
 %% Graph of IPSCs from BC onto BiC
-figure 
+figure
 for i = 1:1:15
-    t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character. 
+    t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character.
     t.Position = [0 0 1 1]; % (0,0) is the point of the bottom-left corner of the textbox,
     t.HorizontalAlignment = 'center'; % This places the title in the center of the textbox horizontally
     t.VerticalAlignment = 'top'; % This places the title in the top of the textbox vertically
@@ -313,24 +273,24 @@ for i = 1:1:15
     p = histfit(temp);
     set(p(1),'facecolor',[0.1 0.6 0.6])
     set(p(2),'color','k')
-    hold on 
-    title (['BiC Number #' num2str(i)]) 
+    hold on
+    title (['BiC Number #' num2str(i)])
     xlabel('IPSCs from BCs')
     ylabel('Number of IPSCs')
-end 
+end
 suptitle('Distribution of IPSCs from BCs onto BiCs')
 
 %% EPSCs from PYR onto BiC
 EPSC = [];
 epsc = [];
-for i = 1:1:15 
+for i = 1:1:15
     pks_epsc = allcells{i}(:,2);
     pks_epsc(pks_epsc==0)=[];
     epsc_mean = mean(pks_epsc);
     epsc_std = std(pks_epsc);
     epsc = [epsc_mean;epsc_std];
     EPSC = [EPSC epsc];
-end 
+end
 
 EPSC_table = EPSC;
 num = (1:15)';
@@ -373,7 +333,7 @@ for i = 1:1:15 % number of PYR cells
     ipsc_BiC_std = std(pks_ipsc_BiC);
     ipsc_BiC = [ipsc_BiC_mean;ipsc_BiC_std];
     IPSC_BiC = [IPSC_BiC ipsc_BiC];
-end 
+end
 
 IPSC_BiC_table = IPSC_BiC;
 num = (1:15)';
@@ -408,14 +368,14 @@ fig = uitable('Data',IPSC_BiC_table{:,:},...
 %% IPSCs only from BC onto BiCs
 IPSC_BC = [];
 ipsc_BC = [];
-for i = 1:1:15 
+for i = 1:1:15
     pks_ipsc_BC = allcells{i}(:,3);
     pks_ipsc_BC(pks_ipsc_BC==0)=[];
     ipsc_BC_mean = mean(pks_ipsc_BC);
     ipsc_BC_std = std(pks_ipsc_BC);
     ipsc_BC = [ipsc_BC_mean;ipsc_BC_std];
     IPSC_BC = [IPSC_BC ipsc_BC];
-end 
+end
 
 IPSC_BC_table = IPSC_BC;
 num = (1:15)';
@@ -461,7 +421,7 @@ for i = 1:1:15
         +current_ngf(:,i)...
         +current_olm(:,i)...
         +current_sca(:,i);
-    
+
     all_ipsc = [all_ipsc tot_cur_ipsc];
     all_ipsc_together = [all_ipsc_together tot_ipsc_together];
 
@@ -473,7 +433,7 @@ f1 = figure;
 
 for k = 1:1:15
     figure(f1);
-    t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character. 
+    t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character.
     t.Position = [0 0 1 1]; % (0,0) is the point of the bottom-left corner of the textbox,
     t.HorizontalAlignment = 'center'; % This places the title in the center of the textbox horizontally
     t.VerticalAlignment = 'top'; % This places the title in the top of the textbox vertically
@@ -481,7 +441,7 @@ for k = 1:1:15
     subplot(5,3,k);
     [pks, locs] = findpeaks(all_ipsc(:,k),'MinPeakDistance',3000); % peak detection
     findpeaks(all_ipsc(:,k),'MinPeakDistance',3000);
-    hold on; 
+    hold on;
     title (['BiC Number #' num2str(k)])
     xlabel('Time (1/40 ms)')
     ylabel('IPSC')
@@ -500,7 +460,7 @@ peaks_all_PV_together = [];
 f2 = figure;
 for k = 1:1:15
     figure(f2);
-    t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character. 
+    t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character.
     t.Position = [0 0 1 1]; % (0,0) is the point of the bottom-left corner of the textbox,
     t.HorizontalAlignment = 'center'; % This places the title in the center of the textbox horizontally
     t.VerticalAlignment = 'top'; % This places the title in the top of the textbox vertically
@@ -508,7 +468,7 @@ for k = 1:1:15
     subplot(5,3,k);
     [pks, locs] = findpeaks(all_ipsc_together(:,k),'MinPeakDistance',3000); % peak detection
     findpeaks(all_ipsc_together(:,k),'MinPeakDistance',3000);
-    hold on; 
+    hold on;
     title (['BiC Number #' num2str(k)])
     xlabel('Time (1/40 ms)')
     ylabel('IPSC')
@@ -527,14 +487,14 @@ end
 
 IPSC_all = [];
 ipsc_all = [];
-for i = 1:1:15 
+for i = 1:1:15
     pks_ipsc_all = peaks_all_PV(:,i);
     pks_ipsc_all(pks_ipsc_all == 0) = [];
     ipsc_all_mean = mean(pks_ipsc_all);
     ipsc_all_std = std(pks_ipsc_all);
     ipsc_all = [ipsc_all_mean;ipsc_all_std];
     IPSC_all = [IPSC_all ipsc_all];
-end 
+end
 
 IPSC_all_table = IPSC_all;
 num = (1:15)';
@@ -577,7 +537,7 @@ for i = 1:1:15
     ipsc_all_std_together = std(pks_ipsc_all_together);
     ipsc_all_together = [ipsc_all_mean_together;ipsc_all_std_together];
     IPSC_all_together = [IPSC_all_together ipsc_all_together];
-end 
+end
 
 IPSC_all_together_table = IPSC_all_together;
 num = (1:15)';
@@ -612,14 +572,14 @@ fig = uitable('Data',IPSC_all_together_table{:,:},...
 %% Find Mean EPSCs and SD from CA3 onto BiC
 EPSC_ca3 = [];
 epsc_ca3 = [];
-for i = 1:1:15 % number of BiC 
+for i = 1:1:15 % number of BiC
     pks_epsc_ca3 = allcells{i}(:,4);
     pks_epsc_ca3(pks_epsc_ca3==0)=[];
     epsc_ca3_mean = mean(pks_epsc_ca3);
     epsc_ca3_std = std(pks_epsc_ca3);
     epsc_ca3 = [epsc_ca3_mean;epsc_ca3_std];
     EPSC_ca3 = [EPSC_ca3 epsc_ca3];
-end 
+end
 
 EPSC_ca3_table = EPSC_ca3;
 num = (1:15)';
@@ -644,14 +604,14 @@ hold on;
 errorbar(x,EPSC_ca3_mean,EPSC_ca3_std,'b','LineStyle','none')
 title('Mean Peak EPSCs onto BiCs','FontSize',15,'FontWeight','bold')
 
-%% Mean Peak and Standard Deviation of EPSC from CA3 on BC
+%% Mean Peak and Standard Deviation of EPSC from CA3 on BiC
 fig = uitable('Data',EPSC_ca3_table{:,:},...
     'RowName',[],...
     'ColumnName',{'BiC Number','Mean Peak','Standard Deviation'},...
     'Units','Normalized',...
     'Position',[0, 0, 1, 1]);
 
-%% Calculate Mean EPSCs Gathered from PYR and CA3 onto BC
+%% Calculate Mean EPSCs Gathered from PYR and CA3 and EC onto BiC
 % Sum all ipsc currents
 all_epsc = [];
 for i = 1:1:15
@@ -664,7 +624,7 @@ epsc_peaks_all = [];
 f1 = figure;
 for k = 1:1:15
     figure(f1);
-    t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character. 
+    t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character.
     t.Position = [0 0 1 1]; % (0,0) is the point of the bottom-left corner of the textbox,
     t.HorizontalAlignment = 'center'; % This places the title in the center of the textbox horizontally
     t.VerticalAlignment = 'top'; % This places the title in the top of the textbox vertically
@@ -672,7 +632,7 @@ for k = 1:1:15
     subplot(5,3,k);
     [pks, locs] = findpeaks(-all_epsc(:,k),'MinPeakDistance',3000); % peak detection
     findpeaks(-all_epsc(:,k),'MinPeakDistance',3000);
-    hold on; 
+    hold on;
     title (['BiC Number #' num2str(k)])
     xlabel('Time (1/40 ms)')
     ylabel('epsc')
@@ -687,7 +647,7 @@ for k = 1:1:15
     epsc_peaks_all = [epsc_peaks_all peaks_all];
 end
 
-%% All EPSCs from All Excitatory Neurons onto BC - graph and table
+%% All EPSCs from All Excitatory Neurons onto BiC - graph and table
 
 EPSC_all_together = [];
 epsc_all_together = [];
@@ -698,7 +658,7 @@ for i = 1:1:15
     epsc_all_std_together = std(pks_epsc_all_together);
     epsc_all_together = [epsc_all_mean_together;epsc_all_std_together];
     EPSC_all_together = [EPSC_all_together epsc_all_together];
-end 
+end
 
 EPSC_all_together_table = EPSC_all_together;
 num = (1:15)';
@@ -707,7 +667,7 @@ EPSC_all_together_table.num = num;
 EPSC_all_together_table = [EPSC_all_together_table(:,end) EPSC_all_together_table(:,1) EPSC_all_together_table(:,2)];
 
 EPSC_all_together_table.Properties.VariableNames = {'BiC_Number', 'Mean_Peak', 'Standard_Deviation'};
- 
+
 EPSC_all_together_mean = EPSC_all_together(1,:);
 EPSC_all_std_together = EPSC_all_together(2,:);
 x = linspace(0,15,length(EPSC_all_together_mean));
@@ -734,7 +694,7 @@ fig = uitable('Data',EPSC_all_together_table{:,:},...
 Ratios_BiC = [];
 E_I_BC = abs(EPSC(1,:)./IPSC_BC(1,:))';
 E_I_BiC = abs(EPSC(1,:)./IPSC_BiC(1,:))';
-E_I_all = abs(EPSC(1,:)./IPSC_all(1,:))'; 
+E_I_all = abs(EPSC(1,:)./IPSC_all(1,:))';
 E_I_all_together = abs(EPSC(1,:)./IPSC_all_together(1,:))';
 
 Ratios_BiC_with_ca3 = [];
@@ -744,18 +704,18 @@ E_I_all_with_ca3 = abs(EPSC_all_together(1,:)./IPSC_all(1,:))';
 E_I_all_together_with_ca3 = abs(EPSC_all_together(1,:)./IPSC_all_together(1,:))';
 
 
-%% E/I Ratio - Table 
+%% E/I Ratio - Table
 bic = 1:15;
 Ratios_BiC = [Ratios_BiC bic' E_I_BC E_I_BiC E_I_all E_I_all_together];
 Ratios_BiC = array2table(Ratios_BiC);
- 
+
 Ratios_BiC.Properties.VariableNames = {'BiC_no' 'Ratio_BC_on_BiC'...
     'Ratio_BiC_on_BiC' 'Ratio_BC_BiC_on_BiC' 'All_ipsc_onto_BiC'};
 %%
 bic = 1:15;
 Ratios_BiC_with_ca3 = [Ratios_BiC_with_ca3 bic' E_I_BC_with_ca3 E_I_BiC_with_ca3 E_I_all_with_ca3 E_I_all_together_with_ca3];
 Ratios_BiC_with_ca3 = array2table(Ratios_BiC_with_ca3);
- 
+
 Ratios_BC_with_ca3.Properties.VariableNames = {'BiC_no' 'Ratio_BC_on_BiC'...
     'Ratio_BiC_on_BiC' 'Ratio_BC_BiC_on_BiC' 'All_ipsc_onto_BiC'};
 
@@ -781,7 +741,7 @@ uitable('Data',Ratios_BiC_with_ca3{:,:},...
     'All Inhibitory Neurons to BiC'},...
     'Units', 'Normalized',...
     'Position',[0, 0, 1, 1]);
-%% Voltage 
+%% Voltage
 
 g = fullfile('/home','melisagumus','Documents', ...
     'MATLAB','CA1_SimTracker','BiC',{...
@@ -831,21 +791,16 @@ vol = mat2cell(allvol, 40000,...
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]);
 
 %% Graph of Voltage of BiC
-figure 
+figure
 for i = 1:1:15
     temp = vol{i};
     %temp(temp == 0) = [];   %get rid of zeros
     subplot(5,3,i)
     plot(temp);
     hold on
-    title (['BiC Number #' num2str(i)]) 
+    title (['BiC Number #' num2str(i)])
     xlabel('Time')
     ylabel('Voltage')
-end 
+end
 
 %%
-
-
-
-
-
