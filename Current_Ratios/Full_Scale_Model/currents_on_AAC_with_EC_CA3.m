@@ -142,7 +142,7 @@ for m = 1:15  % number of cells
             t.Position = [0 0 1 1]; % (0,0) is the point of the bottom-left corner of the textbox,
             t.HorizontalAlignment = 'center'; % This places the title in the center of the textbox horizontally
             t.VerticalAlignment = 'top'; % This places the title in the top of the textbox vertically
-            t.String = ['Peak Detection on EPSCs onto AACs'];
+            t.String = ['Peak Detection on EPSCs from PYR onto AACs'];
             subplot(5,3,m);
             [pks, locs] = findpeaks(-data{m}(:,k),'MinPeakDistance',3000); % peak detection
             findpeaks(-data{m}(:,k),'MinPeakDistance',3000);
@@ -665,8 +665,8 @@ for k = 1:1:15
     t.VerticalAlignment = 'top'; % This places the title in the top of the textbox vertically
     t.String = ['Peak Detection on EPSCs from PYRs, ECs, CA3 on AACs'];
     subplot(5,3,k);
-    [pks, locs] = findpeaks(all_epsc(:,k),'MinPeakDistance',3000); % peak detection
-    findpeaks(all_epsc(:,k),'MinPeakDistance',3000);
+    [pks, locs] = findpeaks(-all_epsc(:,k),'MinPeakDistance',3000); % peak detection
+    findpeaks(-all_epsc(:,k),'MinPeakDistance',3000);
     hold on; 
     title (['AAC Number #' num2str(k)])
     xlabel('Time (1/40 ms)')

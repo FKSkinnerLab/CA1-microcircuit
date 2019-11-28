@@ -103,7 +103,7 @@ current_ivy = [];
 current_ngf = [];
 current_olm = [];
 current_sca = [];
-current_ca3 = [];
+current_ca = [];
 current_ec = [];
 figure1 = figure;
 figure2 = figure;
@@ -142,7 +142,7 @@ for m = 1:15  % number of cells
             t.Position = [0 0 1 1]; % (0,0) is the point of the bottom-left corner of the textbox,
             t.HorizontalAlignment = 'center'; % This places the title in the center of the textbox horizontally
             t.VerticalAlignment = 'top'; % This places the title in the top of the textbox vertically
-            t.String = ['Peak Detection on EPSCs onto BCs'];
+            t.String = ['Peak Detection on EPSCs from PYR onto BCs'];
             subplot(5,3,m);
             [pks, locs] = findpeaks(-data{m}(:,k),'MinPeakDistance',3000); % peak detection
             findpeaks(-data{m}(:,k),'MinPeakDistance',3000);
@@ -182,7 +182,7 @@ for m = 1:15  % number of cells
             end 
             BC = temp_BC;
         elseif k == 11
-            temp_current_ca3 = data{m}(:,k);
+            temp_current_ca = data{m}(:,k);
             figure(figure4);
             t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character. 
             t.Position = [0 0 1 1]; % (0,0) is the point of the bottom-left corner of the textbox,
@@ -196,14 +196,14 @@ for m = 1:15  % number of cells
             title (['BC Number #' num2str(m)])
             xlabel('Time')
             ylabel('EPSC from CA3')
-            temp_ca3 = data{m}(:,k);
+            temp_ca = data{m}(:,k);
             allrows = (1:40000)';
             notpeak = setdiff(allrows,locs);
             for t = 1:1:numel(notpeak)
                 element = notpeak(t,:);
-                temp_ca3(element,:) = 0;
+                temp_ca(element,:) = 0;
             end 
-            CA3 = temp_ca3;
+            CA = temp_ca;
         elseif k == 12  % no current from EC ontp BC
             temp_current_ec = data{m}(:,k);
             figure(figure5);
@@ -248,10 +248,10 @@ for m = 1:15  % number of cells
     current_ngf = [current_ngf temp_current_ngf];
     current_olm = [current_olm temp_current_olm];
     current_sca = [current_sca temp_current_sca];
-    current_ca3 = [current_ca3 temp_current_ca3];
+    current_ca = [current_ca temp_current_ca];
     current_ec = [current_ec temp_current_ec];
 
-    M = [M BiC PYR BC CA3 EC];
+    M = [M BiC PYR BC CA EC];
 end 
 
 allcells = mat2cell(M, 40000, ...
@@ -606,42 +606,42 @@ fig = uitable('Data',IPSC_all_together_table{:,:},...
     'Position',[0, 0, 1, 1]);
 
 %% Find Mean EPSCs and SD from CA3 onto BC
-EPSC_ca3 = [];
-epsc_ca3 = [];
+EPSC_ca = [];
+epsc_ca = [];
 for i = 1:1:15 % number of BC 
-    pks_epsc_ca3 = allcells{i}(:,4);
-    pks_epsc_ca3(pks_epsc_ca3==0)=[];
-    epsc_ca3_mean = mean(pks_epsc_ca3);
-    epsc_ca3_std = std(pks_epsc_ca3);
-    epsc_ca3 = [epsc_ca3_mean;epsc_ca3_std];
-    EPSC_ca3 = [EPSC_ca3 epsc_ca3];
+    pks_epsc_ca = allcells{i}(:,4);
+    pks_epsc_ca(pks_epsc_ca==0)=[];
+    epsc_ca_mean = mean(pks_epsc_ca);
+    epsc_ca_std = std(pks_epsc_ca);
+    epsc_ca = [epsc_ca_mean;epsc_ca_std];
+    EPSC_ca = [EPSC_ca epsc_ca];
 end 
 
-EPSC_ca3_table = EPSC_ca3;
+EPSC_ca_table = EPSC_ca;
 num = (1:15)';
-EPSC_ca3_table = array2table(EPSC_ca3_table');
-EPSC_ca3_table.num = num;
-EPSC_ca3_table = [EPSC_ca3_table(:,end) EPSC_ca3_table(:,1) EPSC_ca3_table(:,2)];
+EPSC_ca_table = array2table(EPSC_ca_table');
+EPSC_ca_table.num = num;
+EPSC_ca_table = [EPSC_ca_table(:,end) EPSC_ca_table(:,1) EPSC_ca_table(:,2)];
 
-EPSC_ca3_table.Properties.VariableNames = {'BC_Number', 'Mean_Peak', 'Standard_Deviation'};
+EPSC_ca_table.Properties.VariableNames = {'BC_Number', 'Mean_Peak', 'Standard_Deviation'};
 
 subplot(3,1,1)
-EPSC_ca3_mean = EPSC_ca3(1,:);
-EPSC_ca3_std = EPSC_ca3(2,:);
-x = linspace(0,14,length(EPSC_ca3_mean));
-scatter(x,EPSC_ca3_mean,'black','filled');
+EPSC_ca_mean = EPSC_ca(1,:);
+EPSC_ca_std = EPSC_ca(2,:);
+x = linspace(0,14,length(EPSC_ca_mean));
+scatter(x,EPSC_ca_mean,'black','filled');
 set(gca, 'XTickLabel',[]);
 a = [1:15]'; b =num2str(a); c=cellstr(b);
-dx=0.1; dEPSC_ca3_mean=0.1;
-text(x+dx, EPSC_ca3_mean+dEPSC_ca3_mean, c);
+dx=0.1; dEPSC_ca_mean=0.1;
+text(x+dx, EPSC_ca_mean+dEPSC_ca_mean, c);
 xlabel('Individual BCs','FontSize',13,'FontWeight','bold');
 ylabel('Mean Peak EPSCs','FontSize',13,'FontWeight','bold');
 hold on;
-errorbar(x,EPSC_ca3_mean,EPSC_ca3_std,'b','LineStyle','none')
+errorbar(x,EPSC_ca_mean,EPSC_ca_std,'b','LineStyle','none')
 title('Mean Peak EPSCs onto BCs','FontSize',15,'FontWeight','bold')
 
 %% Mean Peak and Standard Deviation of EPSC from CA3 on BC
-fig = uitable('Data',EPSC_ca3_table{:,:},...
+fig = uitable('Data',EPSC_ca_table{:,:},...
     'RowName',[],...
     'ColumnName',{'BC Number','Mean Peak','Standard Deviation'},...
     'Units','Normalized',...
@@ -650,7 +650,7 @@ fig = uitable('Data',EPSC_ca3_table{:,:},...
 % Sum all ipsc currents
 all_epsc = [];
 for i = 1:1:15
-    tot_cur_epsc =  current_PYR(:,i) + current_ca3(:,i);  % no current from EC onto BC
+    tot_cur_epsc =  current_ca(:,i) + current_PYR(:,i);  % no current from EC onto BC
     all_epsc = [all_epsc tot_cur_epsc];
 end
 
@@ -663,10 +663,10 @@ for k = 1:1:15
     t.Position = [0 0 1 1]; % (0,0) is the point of the bottom-left corner of the textbox,
     t.HorizontalAlignment = 'center'; % This places the title in the center of the textbox horizontally
     t.VerticalAlignment = 'top'; % This places the title in the top of the textbox vertically
-    t.String = ['Peak Detection on EPSCs from PYRs, ECs on BCs'];
+    t.String = ['Peak Detection on EPSCs from PYRs, CA3s on BCs'];
     subplot(5,3,k);
-    [pks, locs] = findpeaks(all_epsc(:,k),'MinPeakDistance',3000); % peak detection
-    findpeaks(all_epsc(:,k),'MinPeakDistance',3000);
+    [pks, locs] = findpeaks(-all_epsc(:,k),'MinPeakDistance',3000); % peak detection
+    findpeaks(-all_epsc(:,k),'MinPeakDistance',3000);
     hold on; 
     title (['BC Number #' num2str(k)])
     xlabel('Time (1/40 ms)')
@@ -731,12 +731,12 @@ E_I_BC = abs(EPSC(1,:)./IPSC_BC(1,:))';
 E_I_BiC = abs(EPSC(1,:)./IPSC_BiC(1,:))';
 E_I_all = abs(EPSC(1,:)./IPSC_all(1,:))';
 E_I_all_together = abs(EPSC(1,:)./IPSC_all_together(1,:))';
-
-Ratios_BC_with_ca3 = [];
-E_I_BC_with_ca3 = abs(EPSC_all_together(1,:)./IPSC_BC(1,:))';
-E_I_BiC_with_ca3 = abs(EPSC_all_together(1,:)./IPSC_BiC(1,:))';
-E_I_all_with_ca3 = abs(EPSC_all_together(1,:)./IPSC_all(1,:))';
-E_I_all_together_with_ca3 = abs(EPSC_all_together(1,:)./IPSC_all_together(1,:))';
+%%
+Ratios_BC_with_ca = [];
+E_I_BC_with_ca = abs(EPSC_all_together(1,:)./IPSC_BC(1,:))';
+E_I_BiC_with_ca = abs(EPSC_all_together(1,:)./IPSC_BiC(1,:))';
+E_I_all_with_ca = abs(EPSC_all_together(1,:)./IPSC_all(1,:))';
+E_I_all_together_with_ca = abs(EPSC_all_together(1,:)./IPSC_all_together(1,:))';
 
 %% E/I Ratio - Table 
 bc = 1:15;
@@ -747,10 +747,10 @@ Ratios_BC.Properties.VariableNames = {'BC_no' 'Ratio_BC_on_BC'...
     'Ratio_BiC_on_BC' 'Ratio_BC_BiC_on_BC' 'All_ipsc_onto_BC'};
 %%
 bc = 1:15;
-Ratios_BC_with_ca3 = [Ratios_BC_with_ca3 bc' E_I_BC_with_ca3 E_I_BiC_with_ca3 E_I_all_with_ca3 E_I_all_together_with_ca3];
-Ratios_BC_with_ca3 = array2table(Ratios_BC_with_ca3);
+Ratios_BC_with_ca = [Ratios_BC_with_ca bc' E_I_BC_with_ca E_I_BiC_with_ca E_I_all_with_ca E_I_all_together_with_ca];
+Ratios_BC_with_ca = array2table(Ratios_BC_with_ca);
  
-Ratios_BC_with_ca3.Properties.VariableNames = {'BC_no' 'Ratio_BC_on_BC'...
+Ratios_BC_with_ca.Properties.VariableNames = {'BC_no' 'Ratio_BC_on_BC'...
     'Ratio_BiC_on_BC' 'Ratio_BC_BiC_on_BC' 'All_ipsc_onto_BC'};
 
 %% Display the E/I table as a figure
@@ -765,7 +765,7 @@ uitable('Data',Ratios_BC{:,:},...
     'Units', 'Normalized',...
     'Position',[0, 0, 1, 1]);
 %%
-uitable('Data',Ratios_BC_with_ca3{:,:},...
+uitable('Data',Ratios_BC_with_ca{:,:},...
     'RowName', [],...
     'ColumnName',{'BC Number',...
     'BC to BC',...
