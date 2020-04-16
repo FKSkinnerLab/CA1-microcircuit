@@ -379,30 +379,30 @@ for i = 1:1:15
 %             s = mod(t + b, 15);
 %             if s == 0
 %                 s = 15;
-%             end            
+%             end
         tot_cur_ipsc_on_BC_combo1 =  current_BiC_on_BC(:,i) + current_BC_on_BC(:,i);
         tot_cur_ipsc_on_BiC_combo1 =  current_BiC_on_BiC(:,t) + current_BC_on_BiC(:,t);
         tot_cur_ipsc_on_AAC_combo1 =  current_BiC_on_AAC(:,s) + current_BC_on_AAC(:,s);
-             
+
         tot_cur_ipsc_on_BC_BiC_combo1 = tot_cur_ipsc_on_BC_combo1 + tot_cur_ipsc_on_BiC_combo1;
         tot_cur_ipsc_on_BC_BiC_AAC_combo1 = tot_cur_ipsc_on_BC_combo1 + tot_cur_ipsc_on_AAC_combo1 + tot_cur_ipsc_on_BiC_combo1;
         tot_cur_ipsc_on_BC_AAC_combo1 = tot_cur_ipsc_on_BC_combo1 + tot_cur_ipsc_on_AAC_combo1;
-    
+
         all_ipsc_on_BC_BiC_combo1 = [all_ipsc_on_BC_BiC_combo1 tot_cur_ipsc_on_BC_BiC_combo1];
         all_ipsc_on_BC_BiC_AAC_combo1 = [all_ipsc_on_BC_BiC_AAC_combo1 tot_cur_ipsc_on_BC_BiC_AAC_combo1];
         all_ipsc_on_BC_AAC_combo1 = [all_ipsc_on_BC_AAC_combo1 tot_cur_ipsc_on_BC_AAC_combo1];
-    
+
         tot_cur_epsc_on_BC_BiC_AAC_combo1 =  current_PYR_on_BC(:,i) + current_PYR_on_BiC(:,t) + current_PYR_on_AAC(:,s);
         all_epsc_on_BC_BiC_AAC_combo1 = [all_epsc_on_BC_BiC_AAC_combo1 tot_cur_epsc_on_BC_BiC_AAC_combo1];
-    
+
         tot_cur_epsc_on_BC_AAC_combo1 =  current_PYR_on_BC(:,i) + current_PYR_on_AAC(:,s);
         all_epsc_on_BC_AAC_combo1 = [all_epsc_on_BC_AAC_combo1 tot_cur_epsc_on_BC_AAC_combo1];
-  
+
         tot_cur_epsc_on_BC_BiC_combo1 =  current_PYR_on_BC(:,i) + current_PYR_on_BiC(:,t);
         all_epsc_on_BC_BiC_combo1 = [all_epsc_on_BC_BiC_combo1 tot_cur_epsc_on_BC_BiC_combo1];
-        end 
-    end 
-end 
+        end
+    end
+end
 
 %% Find the peaks of the summed IPSCs from BC and BiC onto BC, BiC - and EPSCs too
 % IPSC peaks onto BC, BiC

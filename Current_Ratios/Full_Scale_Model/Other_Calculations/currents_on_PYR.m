@@ -66,20 +66,16 @@ current_ivy = [];
 current_ngf = [];
 current_olm = [];
 current_sca = [];
-current_ca3 = [];
-current_ec = [];
 figure1 = figure;
 figure2 = figure;
 figure3 = figure;
 figure4 = figure;
-figure5 = figure;
-figure6 = figure;
 for m = 1:15  % number of cells
     for k = 2:12  % number of input - excluding first column (time)
         if k ==2
             temp_current_AAC = data{m}(:,k);
             figure(figure1);
-            t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character. 
+            t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character.
             t.Position = [0 0 1 1]; % (0,0) is the point of the bottom-left corner of the textbox,
             t.HorizontalAlignment = 'center'; % This places the title in the center of the textbox horizontally
             t.VerticalAlignment = 'top'; % This places the title in the top of the textbox vertically
@@ -87,7 +83,7 @@ for m = 1:15  % number of cells
             subplot(5,3,m);
             [pks, locs] = findpeaks(data{m}(:,k),'MinPeakDistance',3000); % peak detection with interval based threshold
             findpeaks(data{m}(:,k),'MinPeakDistance',3000);
-            hold on; 
+            hold on;
             title (['PYR Number #' num2str(m)])
             xlabel('Time (1/40 ms)')
             ylabel('IPSCs from AACs')
@@ -102,7 +98,7 @@ for m = 1:15  % number of cells
         elseif k == 3
             temp_current_BiC = data{m}(:,k);
             figure(figure2);
-            t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character. 
+            t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character.
             t.Position = [0 0 1 1]; % (0,0) is the point of the bottom-left corner of the textbox,
             t.HorizontalAlignment = 'center'; % This places the title in the center of the textbox horizontally
             t.VerticalAlignment = 'top'; % This places the title in the top of the textbox vertically
@@ -110,7 +106,7 @@ for m = 1:15  % number of cells
             subplot(5,3,m);
             [pks, locs] = findpeaks(data{m}(:,k),'MinPeakDistance',3000); % peak detection
             findpeaks(data{m}(:,k),'MinPeakDistance',3000);
-            hold on; 
+            hold on;
             title (['PYR Number #' num2str(m)])
             xlabel('Time (1/40 ms)')
             ylabel('IPSCs from BiCs')
@@ -125,15 +121,15 @@ for m = 1:15  % number of cells
         elseif k == 8
             temp_current_PYR = data{m}(:,k);
             figure(figure3);
-            t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character. 
+            t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character.
             t.Position = [0 0 1 1]; % (0,0) is the point of the bottom-left corner of the textbox,
             t.HorizontalAlignment = 'center'; % This places the title in the center of the textbox horizontally
             t.VerticalAlignment = 'top'; % This places the title in the top of the textbox vertically
-            t.String = ['Peak Detection on EPSCs from PYR onto PYR'];
+            t.String = ['Peak Detection on EPSCs onto PYR'];
             subplot(5,3,m);
-            [pks, locs] = findpeaks(data{m}(:,k),'MinPeakDistance',3000); % peak detection
-            findpeaks(data{m}(:,k),'MinPeakDistance',3000);
-            hold on; 
+            [pks, locs] = findpeaks(-data{m}(:,k),'MinPeakDistance',3000); % peak detection
+            findpeaks(-data{m}(:,k),'MinPeakDistance',3000);
+            hold on;
             title (['PYR Number #' num2str(m)])
             xlabel('Time (1/40 ms)')
             ylabel('EPSCs from PYRs')
@@ -148,7 +144,7 @@ for m = 1:15  % number of cells
         elseif k == 9
             temp_current_BC = data{m}(:,k);
             figure(figure4);
-            t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character. 
+            t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character.
             t.Position = [0 0 1 1]; % (0,0) is the point of the bottom-left corner of the textbox,
             t.HorizontalAlignment = 'center'; % This places the title in the center of the textbox horizontally
             t.VerticalAlignment = 'top'; % This places the title in the top of the textbox vertically
@@ -156,7 +152,7 @@ for m = 1:15  % number of cells
             subplot(5,3,m);
             [pks, locs] = findpeaks(data{m}(:,k),'MinPeakDistance',3000); % peak detection
             findpeaks(data{m}(:,k),'MinPeakDistance',3000);
-            hold on; 
+            hold on;
             title (['PYR Number #' num2str(m)])
             xlabel('Time (1/40 ms)')
             ylabel('IPSCs from BCs')
@@ -168,52 +164,6 @@ for m = 1:15  % number of cells
                 temp_BC(element,:) = 0;
             end
             BC = temp_BC;
-        elseif k == 11
-            temp_current_ca3 = data{m}(:,k);
-            figure(figure5);
-            t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character. 
-            t.Position = [0 0 1 1]; % (0,0) is the point of the bottom-left corner of the textbox,
-            t.HorizontalAlignment = 'center'; % This places the title in the center of the textbox horizontally
-            t.VerticalAlignment = 'top'; % This places the title in the top of the textbox vertically
-            t.String = ['Peak Detection on EPSCs from CA3 onto PYRs'];
-            subplot(5,3,m);
-            [pks, locs] = findpeaks(data{m}(:,k),'MinPeakDistance',3000); % peak detection
-            findpeaks(data{m}(:,k),'MinPeakDistance',3000);
-            hold on; 
-            title (['BC Number #' num2str(m)])
-            xlabel('Time')
-            ylabel('EPSC from CA3')
-            temp_ca3 = data{m}(:,k);
-            allrows = (1:40000)';
-            notpeak = setdiff(allrows,locs);
-            for t = 1:1:numel(notpeak)
-                element = notpeak(t,:);
-                temp_ca3(element,:) = 0;
-            end 
-            CA3 = temp_ca3;
-        elseif k == 12
-            temp_current_ec = data{m}(:,k);
-            figure(figure6);
-            t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character. 
-            t.Position = [0 0 1 1]; % (0,0) is the point of the bottom-left corner of the textbox,
-            t.HorizontalAlignment = 'center'; % This places the title in the center of the textbox horizontally
-            t.VerticalAlignment = 'top'; % This places the title in the top of the textbox vertically
-            t.String = ['Peak Detection on EPSCs from EC onto PYRs'];
-            subplot(5,3,m);
-            [pks, locs] = findpeaks(data{m}(:,k),'MinPeakDistance',3000); % peak detection
-            findpeaks(data{m}(:,k),'MinPeakDistance',3000);
-            hold on; 
-            title (['BC Number #' num2str(m)])
-            xlabel('Time')
-            ylabel('EPSC from EC')
-            temp_ec = data{m}(:,k);
-            allrows = (1:40000)';
-            notpeak = setdiff(allrows,locs);
-            for t = 1:1:numel(notpeak)
-                element = notpeak(t,:);
-                temp_ec(element,:) = 0;
-            end 
-            EC = temp_ec;
         elseif k == 4
             temp_current_cck = data{m}(:,k);
         elseif k == 5
@@ -235,25 +185,22 @@ for m = 1:15  % number of cells
     current_ngf = [current_ngf temp_current_ngf];
     current_olm = [current_olm temp_current_olm];
     current_sca = [current_sca temp_current_sca];
-    current_ca3 = [current_ca3 temp_current_ca3];
-    current_ec = [current_ec temp_current_ec];
-    
-    M = [M AAC BiC PYR BC CA3 EC];
+    M = [M AAC BiC PYR BC];
 end
 
 allcells = mat2cell(M, 40000, ...
-    [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6]);
+    [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4]);
 
 %% Graph of EPSCs onto PYR
 f1 = figure;
 for i = 1:1:15
     figure(f1);
-    t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character. 
+    t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character.
     t.Position = [0 0 1 1]; % (0,0) is the point of the bottom-left corner of the textbox,
     t.HorizontalAlignment = 'center'; % This places the title in the center of the textbox horizontally
     t.VerticalAlignment = 'top'; % This places the title in the top of the textbox vertically
     t.String = ['Distribution of EPSCs on PYRs'];
-    temp = allcells{i}(:,3); 
+    temp = allcells{i}(:,3);
     temp(temp == 0) = [];   %get rid of zeros
     s1 = subplot(5,3,i);
     p = histfit(temp);
@@ -270,7 +217,7 @@ end
 f2 = figure;
 for i = 1:1:15
     figure(f2);
-    t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character. 
+    t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character.
     t.Position = [0 0 1 1]; % (0,0) is the point of the bottom-left corner of the textbox,
     t.HorizontalAlignment = 'center'; % This places the title in the center of the textbox horizontally
     t.VerticalAlignment = 'top'; % This places the title in the top of the textbox vertically
@@ -293,7 +240,7 @@ end
 f3 = figure;
 for i = 1:1:15
     figure(f3);
-    t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character. 
+    t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character.
     t.Position = [0 0 1 1]; % (0,0) is the point of the bottom-left corner of the textbox,
     t.HorizontalAlignment = 'center'; % This places the title in the center of the textbox horizontally
     t.VerticalAlignment = 'top'; % This places the title in the top of the textbox vertically
@@ -315,7 +262,7 @@ end
 f4 = figure;
 for i = 1:1:15
     figure(f4);
-    t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character. 
+    t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character.
     t.Position = [0 0 1 1]; % (0,0) is the point of the bottom-left corner of the textbox,
     t.HorizontalAlignment = 'center'; % This places the title in the center of the textbox horizontally
     t.VerticalAlignment = 'top'; % This places the title in the top of the textbox vertically
@@ -379,7 +326,7 @@ fig = uitable('Data',EPSC_table{:,:},...
 %     'Units','Normalized',...
 %     'String','pyr',...
 %     'Position',[0.1, 0.9, 0.47, 1]);
-    
+
 
 %% IPSCs only from AAC onto PYR
 IPSC_AAC = [];
@@ -523,7 +470,7 @@ for i = 1:1:15
         +current_ngf(:,i)...
         +current_olm(:,i)...
         +current_sca(:,i);
-    
+
     all_ipsc = [all_ipsc tot_cur_ipsc];
     all_ipsc_together = [all_ipsc_together tot_ipsc_together];
 end
@@ -533,7 +480,7 @@ peaks_all_PV = [];
 f1 = figure;
 for k = 1:1:15
     figure(f1);
-    t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character. 
+    t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character.
     t.Position = [0 0 1 1]; % (0,0) is the point of the bottom-left corner of the textbox,
     t.HorizontalAlignment = 'center'; % This places the title in the center of the textbox horizontally
     t.VerticalAlignment = 'top'; % This places the title in the top of the textbox vertically
@@ -541,7 +488,7 @@ for k = 1:1:15
     subplot(5,3,k);
     [pks, locs] = findpeaks(all_ipsc(:,k),'MinPeakDistance',3000); % peak detection
     findpeaks(all_ipsc(:,k),'MinPeakDistance',3000);
-    hold on; 
+    hold on;
     title (['PYR Number #' num2str(k)])
     xlabel('Time (1/40 ms)')
     ylabel('IPSC')
@@ -560,7 +507,7 @@ peaks_all_PV_together = [];
 f2 = figure;
 for k = 1:1:15
     figure(f2);
-    t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character. 
+    t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character.
     t.Position = [0 0 1 1]; % (0,0) is the point of the bottom-left corner of the textbox,
     t.HorizontalAlignment = 'center'; % This places the title in the center of the textbox horizontally
     t.VerticalAlignment = 'top'; % This places the title in the top of the textbox vertically
@@ -568,7 +515,7 @@ for k = 1:1:15
     subplot(5,3,k);
     [pks, locs] = findpeaks(all_ipsc_together(:,k),'MinPeakDistance',3000); % peak detection
     findpeaks(all_ipsc_together(:,k),'MinPeakDistance',3000);
-    hold on; 
+    hold on;
     title (['PYR Number #' num2str(k)])
     xlabel('Time (1/40 ms)')
     ylabel('IPSC')
@@ -637,7 +584,7 @@ for i = 1:1:15% number of PYR cells
     ipsc_all_std_together = std(pks_ipsc_all_together);
     ipsc_all_together = [ipsc_all_mean_together;ipsc_all_std_together];
     IPSC_all_together = [IPSC_all_together ipsc_all_together];
-end 
+end
 
 IPSC_all_together_table = IPSC_all_together;
 num = (1:15)';
@@ -683,7 +630,7 @@ peaks_AAC_BC = [];
 f1 = figure;
 for k = 1:1:15
     figure(f1);
-    t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character. 
+    t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character.
     t.Position = [0 0 1 1]; % (0,0) is the point of the bottom-left corner of the textbox,
     t.HorizontalAlignment = 'center'; % This places the title in the center of the textbox horizontally
     t.VerticalAlignment = 'top'; % This places the title in the top of the textbox vertically
@@ -691,7 +638,7 @@ for k = 1:1:15
     subplot(5,3,k);
     [pks, locs] = findpeaks(AAC_BC_ipsc(:,k),'MinPeakDistance',3000); % peak detection
     findpeaks(AAC_BC_ipsc(:,k),'MinPeakDistance',3000);
-    hold on; 
+    hold on;
     title (['PYR Number #' num2str(k)])
     xlabel('Time (1/40 ms)')
     ylabel('IPSC')
@@ -761,7 +708,7 @@ peaks_BiC_BC = [];
 f1 = figure;
 for k = 1:1:15
     figure(f1);
-    t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character. 
+    t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character.
     t.Position = [0 0 1 1]; % (0,0) is the point of the bottom-left corner of the textbox,
     t.HorizontalAlignment = 'center'; % This places the title in the center of the textbox horizontally
     t.VerticalAlignment = 'top'; % This places the title in the top of the textbox vertically
@@ -769,7 +716,7 @@ for k = 1:1:15
     subplot(5,3,k);
     [pks, locs] = findpeaks(BiC_BC_ipsc(:,k),'MinPeakDistance',3000); % peak detection
     findpeaks(BiC_BC_ipsc(:,k),'MinPeakDistance',3000);
-    hold on; 
+    hold on;
     title (['PYR Number #' num2str(k)])
     xlabel('Time (1/40 ms)')
     ylabel('IPSC')
@@ -825,77 +772,6 @@ fig = uitable('Data',IPSC_BiC_BC_table{:,:},...
     'ColumnName',{'Pyramidal Cell Number','Mean Peak','Standard Deviation'},...
     'Units','Normalized',...
     'Position',[0, 0, 1, 1]);
-%% Calculate Mean EPSCs Gathered from PYR and CA3, EC onto PYR
-% Sum all ipsc currents
-all_epsc = [];
-for i = 1:1:15
-    tot_cur_epsc =  current_PYR(:,i) + current_ca3(:,i) + current_ec(:,i);  
-    all_epsc = [all_epsc tot_cur_epsc];
-end
-
-% Find the peaks of the summed epsc currents - only from BC and BiC
-epsc_peaks_all = [];
-f1 = figure;
-for k = 1:1:15
-    figure(f1);
-    t = annotation('textbox','FontSize',18,'FontWeight','bold'); % This declares the textbox and the options for the character. 
-    t.Position = [0 0 1 1]; % (0,0) is the point of the bottom-left corner of the textbox,
-    t.HorizontalAlignment = 'center'; % This places the title in the center of the textbox horizontally
-    t.VerticalAlignment = 'top'; % This places the title in the top of the textbox vertically
-    t.String = ['Peak Detection on EPSCs from PYRs, ECs, CA3s on PYRs'];
-    subplot(5,3,k);
-    [pks, locs] = findpeaks(-all_epsc(:,k),'MinPeakDistance',3000); % peak detection
-    findpeaks(-all_epsc(:,k),'MinPeakDistance',3000);
-    hold on; 
-    title (['PYR Number #' num2str(k)])
-    xlabel('Time (1/40 ms)')
-    ylabel('epsc')
-    temp_cur = all_epsc(:,k);
-    allrows = (1:40000)';
-    notpeak = setdiff(allrows,locs);
-    for t = 1:1:numel(notpeak)
-        element = notpeak(t,:);
-        temp_cur(element,:) = 0;
-    end
-    peaks_all = temp_cur;
-    epsc_peaks_all = [epsc_peaks_all peaks_all];
-end
-
-%% All EPSCs from All Excitatory Neurons onto PYR - graph and table
-
-EPSC_all_together = [];
-epsc_all_together = [];
-for i = 1:1:15
-    pks_epsc_all_together = epsc_peaks_all(:,i);
-    pks_epsc_all_together(pks_epsc_all_together == 0) = [];
-    epsc_all_mean_together = mean(pks_epsc_all_together);
-    epsc_all_std_together = std(pks_epsc_all_together);
-    epsc_all_together = [epsc_all_mean_together;epsc_all_std_together];
-    EPSC_all_together = [EPSC_all_together epsc_all_together];
-end 
-
-EPSC_all_together_table = EPSC_all_together;
-num = (1:15)';
-EPSC_all_together_table = array2table(EPSC_all_together_table');
-EPSC_all_together_table.num = num;
-EPSC_all_together_table = [EPSC_all_together_table(:,end) EPSC_all_together_table(:,1) EPSC_all_together_table(:,2)];
-
-EPSC_all_together_table.Properties.VariableNames = {'PYR_Number', 'Mean_Peak', 'Standard_Deviation'};
- 
-EPSC_all_together_mean = EPSC_all_together(1,:);
-EPSC_all_std_together = EPSC_all_together(2,:);
-x = linspace(0,15,length(EPSC_all_together_mean));
-figure
-scatter(x,EPSC_all_together_mean,'black','filled');
-set(gca, 'XTickLabel',[]);
-a = [1:15]'; b =num2str(a); c=cellstr(b);
-dx=0.1; dEPSC_all_together_mean=0.1;
-text(x+dx, EPSC_all_together_mean+dEPSC_all_together_mean, c);
-xlabel('Individual PYRs','FontSize',13,'FontWeight','bold');
-ylabel('Mean Peak EPSCs','FontSize',13,'FontWeight','bold');
-hold on;
-errorbar(x,EPSC_all_together_mean,EPSC_all_std_together,'b','LineStyle','none')
-title('Mean Peak EPSCs from All Excitatory Cells onto BiCs','FontSize',15,'FontWeight','bold')
 
 %% Excitatory/Inhibitory Ratios on PYR Cells
 Ratios_PYR = [];
@@ -908,56 +784,20 @@ E_I_BiC_BC = abs(EPSC(1,:)./IPSC_BiC_BC(1,:))';
 E_I_all = abs(EPSC(1,:)./IPSC_all(1,:))';
 E_I_all_together = abs(EPSC(1,:)./IPSC_all_together(1,:))';
 
-%%
-E_I_AAC_with_ca3 = abs(EPSC_all_together(1,:)./IPSC_AAC(1,:))';
-E_I_BC_with_ca3 = abs(EPSC_all_together(1,:)./IPSC_BC(1,:))';
-E_I_BiC_with_ca3 = abs(EPSC_all_together(1,:)./IPSC_BiC(1,:))';
-E_I_AAC_BC_with_ca3 = abs(EPSC_all_together(1,:)./IPSC_AAC_BC(1,:))';
-E_I_BiC_BC_with_ca3 = abs(EPSC_all_together(1,:)./IPSC_BiC_BC(1,:))';
-
-E_I_all_with_ca3 = abs(EPSC_all_together(1,:)./IPSC_all(1,:))';
-E_I_all_together_with_ca3 = abs(EPSC_all_together(1,:)./IPSC_all_together(1,:))';
-
-
-%% E/I Ratio - Table 
+%% E/I Ratio - Table
 pyr = 1:15;
 Ratios_PYR = [pyr' E_I_AAC E_I_BC E_I_BiC E_I_AAC_BC E_I_BiC_BC E_I_all E_I_all_together];
 Ratios_PYR = array2table(Ratios_PYR);
-%%
+
 Ratios_PYR.Properties.VariableNames = {'pyr_no' 'Ratio_AAC_on_PYR'...
     'Ratio_BC_on_PYR' 'Ratio_BiC_on_PYR' ...
     'Ratio_AAC_BC_on_PYR'...
     'Ratio_BiC_BC_on_PYR'...
     'Ratio_AAC_BiC_BC_on_PYR' 'All_ipsc_onto_PYR'};
-%%
-pyr = 1:15;
-Ratios_PYR_with_ca3 = [pyr' E_I_AAC_with_ca3 E_I_BC_with_ca3 ...
-    E_I_BiC_with_ca3 E_I_AAC_BC_with_ca3 E_I_BiC_BC_with_ca3 E_I_all_with_ca3...
-    E_I_all_together_with_ca3];
-Ratios_PYR_with_ca3 = array2table(Ratios_PYR_with_ca3);
 
-Ratios_PYR_with_ca3.Properties.VariableNames = {'pyr_no' 'Ratio_AAC_on_PYR'...
-    'Ratio_BC_on_PYR' 'Ratio_BiC_on_PYR' ...
-    'Ratio_AAC_BC_on_PYR'...
-    'Ratio_BiC_BC_on_PYR'...
-    'Ratio_AAC_BiC_BC_on_PYR' 'All_ipsc_onto_PYR'};
 %% Display the E/I table as a figure
 
 uitable('Data',Ratios_PYR{:,:},...
-    'RowName', [],...
-    'ColumnName',{'Pyramidal Cell Number',...
-    'AAC to PYR',...
-    'BC to PYR',...
-    'BiC to PYR',...
-    'AAC, BC onto PYR',...
-    'BiC, BC onto PYR',...
-    'AAC, BiC and BC to PYR',...
-    'All Inhibitory Neurons to PYR'},...
-    'Units', 'Normalized',...
-    'Position',[0, 0, 1, 1]);
-
-%%
-uitable('Data',Ratios_PYR_with_ca3{:,:},...
     'RowName', [],...
     'ColumnName',{'Pyramidal Cell Number',...
     'AAC to PYR',...
@@ -1021,24 +861,16 @@ vol = mat2cell(allvol, 40000,...
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]);
 
 %% Graph of Voltage of BC
-figure 
+figure
 for i = 1:1:15
     temp = vol{i};
     %temp(temp == 0) = [];   %get rid of zeros
     subplot(5,3,i)
     plot(temp);
     hold on
-    title (['PYR Number #' num2str(i)]) 
+    title (['PYR Number #' num2str(i)])
     xlabel('Time')
     ylabel('Voltage')
-end 
+end
 
 %%
-
-
-
-
-
-
-
-
